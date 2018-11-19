@@ -6,4 +6,5 @@ class InitMessage {
     var sysVersion = ""
     var deviceUUID =""
     var mobileName =""
+    var traffic_channel : String? =""
 }

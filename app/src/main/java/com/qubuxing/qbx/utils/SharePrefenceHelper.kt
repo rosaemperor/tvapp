@@ -24,8 +24,11 @@ class SharePrefenceHelper {
         fun get(key : String) : String{
             if (mContext == null) mContext=QBXApplication.instance.applicationContext
             if (preferences == null) mContext!!.getSharedPreferences(mContext!!.packageName, Context.MODE_PRIVATE)
-
-            return preferences!!.getString(key,"")
+            try {
+                return preferences!!.getString(key,"")
+            }catch (kot: KotlinNullPointerException){
+                return ""
+            }
         }
     }
 

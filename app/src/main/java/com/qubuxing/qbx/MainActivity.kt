@@ -25,6 +25,9 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import android.widget.Toast
 import cn.jpush.android.api.JPushInterface
+import com.bumptech.glide.Glide
+import com.bumptech.glide.GlideBuilder
+import com.bumptech.glide.load.DecodeFormat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.qubuxing.qbx.databinding.ActivityMainBinding
@@ -33,6 +36,7 @@ import com.qubuxing.qbx.http.beans.StepGetEvent
 import com.qubuxing.qbx.parts.WVWebViewClient
 import com.qubuxing.qbx.service.StepCounterService
 import com.qubuxing.qbx.utils.DialogUtils
+import com.qubuxing.qbx.utils.JumpSetting
 import com.qubuxing.qbx.utils.SharePrefenceHelper
 import com.qubuxing.qbx.utils.SplashScreen
 import com.qubuxing.qbx.viewModels.MainViewModel
@@ -64,6 +68,7 @@ class MainActivity : BaseActivity() {
 
     @SuppressLint("ResourceAsColor")
     override fun initViewModel() {
+//        Glide.setup(GlideBuilder(this@MainActivity).setDecodeFormat(DecodeFormat.ALWAYS_ARGB_8888))
         viewModel = MainViewModel()
         viewModel.getUpdateMessage(this@MainActivity)
         binding.swipeLayout.isEnabled = false
@@ -100,7 +105,7 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_BACK){
-//            DialogUtils.showUpdateDia(this@MainActivity)
+//            JumpSetting.jumpStartInterface(this@MainActivity)
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)

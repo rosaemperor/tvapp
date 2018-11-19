@@ -1,5 +1,6 @@
 package com.qubuxing.qbx.http
 
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
@@ -7,6 +8,7 @@ import com.qubuxing.qbx.HttpService
 import com.qubuxing.qbx.QBXApplication
 import com.qubuxing.qbx.config
 import com.qubuxing.qbx.http.beans.ResponseEntity
+import com.qubuxing.qbx.utils.SharePrefenceHelper
 import okhttp3.*
 
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,6 +17,7 @@ import org.json.JSONObject
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class RetrofitUtil private constructor() {
@@ -33,23 +36,20 @@ class RetrofitUtil private constructor() {
         loggingInterceptor!!.level = HttpLoggingInterceptor.Level.BODY
         client = OkHttpClient.Builder().addInterceptor(object : Interceptor {
             override fun intercept(chain: Interceptor.Chain?): Response {
-//                var response = chain!!.proceed(chain.request())
-//                Log.d("TAG", "" + response.body()!!.string())
 
+              var requestUUID = ""+ UUID.randomUUID().toString()
+                var deviceID= ""
+                if (SharePrefenceHelper.get("deviceID")==""){
+                    deviceID = ""+UUID.randomUUID().toString()
+                    SharePrefenceHelper.save("deviceID",deviceID)
+                }else deviceID =  SharePrefenceHelper.get("deviceID")
                 val request = chain!!.request().newBuilder()
+                        .addHeader("version","1.0.1")
+                        .addHeader("device_uuid",deviceID)
+                        .addHeader("channel_code","android")
+                        .addHeader("request_uuid","$requestUUID")
                         .addHeader("Content-Type", "text/html; charset=UTF-8")
                         .build()
-//                var responseBody : ResponseBody
-//                var gson = Gson()
-//                var strings = response.body().string()
-//                var jsonobject= JSONObject()
-//                if (jsonobject.getInt("code") == 0){
-//                    val type = MediaType.parse("image/jpeg; charset=utf-8")
-//                    responseBody = ResponseBody.create(type, ""+jsonobject.get("data"))
-//                    response = response.newBuilder().body(responseBody).build()
-//                }else{
-//                    Toast.makeText(QBXApplication.instance.applicationContext, jsonobject.getString("msg"),Toast.LENGTH_LONG).show()
-//                }
 
                 var response = chain.proceed(request)
                 var responseBody: ResponseBody? = null
@@ -58,7 +58,7 @@ class RetrofitUtil private constructor() {
                 if(jsonObject.getInt("code") == 0 ){
                     val data = jsonObject.get("data").toString() + ""
                     val type = MediaType.parse("image/jpeg; charset=utf-8")
-                    Log.d("TAG","data:"+data)
+                    Log.d("TAG", "data:$data")
                     responseBody = ResponseBody.create(type, data)
                 }else{
 //                 Toast.makeText(QBXApplication.instance.applicationContext, jsonObject.getString("msg"),Toast.LENGTH_LONG).show()

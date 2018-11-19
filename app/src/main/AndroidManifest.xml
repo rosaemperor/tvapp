@@ -118,7 +118,11 @@
 
         <meta-data
             android:name="CHANNEL_CODE"
-            android:value="lanyou" />
+            android:value="${CHANNEL_CODE}" />
+        <!--<meta-data-->
+            <!--android:name="com.qubuxing.qbx.http.MyGlideModule"-->
+            <!--android:value="GlideModule"-->
+            <!--/>-->
 
     </application>
 
