@@ -20,11 +20,12 @@ abstract class BaseActivity : AppCompatActivity(){
     lateinit var httpHelp : HttpService
     internal var PERMISSION_REQUEST_CODE = 101
 
-    internal var needPermissions = arrayOf(Manifest.permission.READ_SMS,
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_CALL_LOG,
-            Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION,
+    internal var needPermissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initBinding()
@@ -35,6 +36,7 @@ abstract class BaseActivity : AppCompatActivity(){
         requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
     }
 
     abstract fun initBinding()

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="event"
+            type="android.view.View.OnClickListener"/>
+    </data>
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        tools:context=".activity.MainActivity">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:id="@+id/title"
+            android:background="#ffffff">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:onClick="@{event}"
+                android:id="@+id/back"
+                android:layout_marginLeft="25dp"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/nav_icon_back"
+                />
+            <!--android:background="@drawable/circle_shape"-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="@string/app_name"
+                android:layout_centerInParent="true"
+                android:textSize="18sp"
+                android:textColor="@color/title_color"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/id_swipe_ly"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <WebView
+                    android:id="@+id/main_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+                <LinearLayout
+                    android:id="@+id/ll_network_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#f2f7ff"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <!--<LinearLayout-->
+
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:orientation="vertical">-->
+
+                        <ImageView
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/home_img_no_network" />
+
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="网络请求失败"
+                            android:textColor="#aaaaaa"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="请检查您的网络重新加载吧~"
+                            android:textColor="#aaaaaa"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btn_reload"
+                            android:layout_width="150dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="40dp"
+                            android:onClick="@{event}"
+                            android:background="@drawable/reload_back_shape"
+                            android:text="重新加载"
+                            android:textColor="@android:color/white"
+                            android:textSize="20sp" />
+                        <!--</LinearLayout>-->
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+            </FrameLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout></layout>

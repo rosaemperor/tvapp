@@ -30,7 +30,16 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ly.adpoymer.interfaces.BannerListener
+import com.ly.adpoymer.interfaces.InsertListener
+import com.ly.adpoymer.interfaces.SpreadListener
+import com.ly.adpoymer.interfaces.VideoListener
+import com.ly.adpoymer.manager.BannerManager
+import com.ly.adpoymer.manager.InsertManager
+import com.ly.adpoymer.manager.SpreadManager
+import com.ly.adpoymer.manager.VideoManager
 import com.qubuxing.qbx.databinding.ActivityMainBinding
+import com.qubuxing.qbx.databinding.ActivityThirdBrowserBinding
 import com.qubuxing.qbx.http.beans.Step
 import com.qubuxing.qbx.http.beans.StepGetEvent
 import com.qubuxing.qbx.parts.WVWebViewClient
@@ -46,6 +55,7 @@ import com.qubuxing.step.TodayStepService
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.modelmsg.WXTextObject
+import kotlinx.android.synthetic.main.activity_main.*
 
 import kotlinx.android.synthetic.main.activity_main.view.*
 import org.greenrobot.eventbus.Subscribe
@@ -55,15 +65,16 @@ import java.util.*
 class MainActivity : BaseActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var client: WVWebViewClient
+    lateinit var activityThirdBrowserBinding : ActivityThirdBrowserBinding
     lateinit var viewModel : MainViewModel
     lateinit var iSportStepInterface: IStepGetAidlInterface
     var mStepSum = 0
-
+    var cameraList = ArrayList<String>()
 
     var dontGrantedPermissions: MutableList<String> = ArrayList()
     override fun initBinding() {
-        SplashScreen.show(this@MainActivity)
         binding = DataBindingUtil.setContentView(this@MainActivity,R.layout.activity_main)
+        SplashScreen.show(this@MainActivity)
     }
 
     @SuppressLint("ResourceAsColor")
@@ -89,6 +100,10 @@ class MainActivity : BaseActivity() {
             binding.llNetworkError.visibility = View.GONE
             binding.webView.loadUrl(config.BASE_SERVER_WEBUI_URL)
         }
+        binding.delete.setOnClickListener {
+            binding.adLayout.removeAllViewsInLayout()
+            binding.adLayout.invalidate()
+        }
     }
 
 
@@ -105,7 +120,26 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_BACK){
-//            JumpSetting.jumpStartInterface(this@MainActivity)
+//                var bannerListener = object : BannerListener{
+//                    override fun onAdFailed(p0: String?) {
+//
+//                    }
+//
+//                    override fun onAdDisplay(p0: String?) {
+//                    }
+//
+//                    override fun onAdClick(p0: String?) {
+//                    }
+//
+//                    override fun onAdReady(p0: String?) {
+//                    }
+//
+//                    override fun onAdClose(p0: String?) {
+//
+//                    }
+//                }
+//                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+//                BannerManager.getInstance(webView.context).requestAd(webView.context,"7550",bannerListener,binding!!.adLayout,3)
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)
@@ -130,7 +164,16 @@ class MainActivity : BaseActivity() {
         when(requestCode){
             client.CAMERA_REQUEST_CODE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
             client.READ_PHONE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
+            10010->{
+                cameraList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                cameraList.add(Manifest.permission.READ_PHONE_STATE)
+                cameraList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+                cameraList.add(Manifest.permission.ACCESS_FINE_LOCATION)
+                cameraList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestPermissions(SplashScreen.cameraList.toTypedArray(),10010)
+            }
         }
+
 
 
     }
