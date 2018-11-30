@@ -1,0 +1,164 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    signingConfigs {
+        debugConfig {
+            keyPassword 'aoshitiandi@2'
+            storeFile file('/Users/administrator/Desktop/lld-android-app-release.keystore')
+            storePassword 'aoshitiandi@2'
+            keyAlias 'lld-android-app-release'
+        }
+    }
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.qubuxing.qbx"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 2
+        versionName "1.1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        dataBinding {
+            enabled = true
+        }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "83a1b4a81c68be03438000bb", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "CHANNEL_CODE", //暂时填写默认值即可.
+        ]
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debugConfig
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    flavorDimensions("default")
+    productFlavors {
+
+        yingyongbao {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "YINGYONGBAO"]
+        }
+        sanliulingzhushou {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "QIHOO360"]
+        }
+        defaulted {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "lanyou"]
+        }
+        vivo {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "VIVO"]
+        }
+        oppo {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "OPPO"]
+        }
+        meizu {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "MEIZU"]
+        }
+        huawei {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "HUAWEI"]
+        }
+        xiaomi {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "XIAOMI"]
+        }
+        baidu {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "BAIDU"]
+        }
+        wandoujia {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "WANDOUJIA"]
+        }
+        anzhi {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "ANZHI"]
+        }
+        woshangdian {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_CODE: "WOSHANGDIAN"]
+        }
+
+
+
+    }
+    android.applicationVariants.all {variant ->
+        variant.outputs.all {
+            if(variant.buildType.name.equals('debug')){
+                outputFileName = "趣步行-${variant.productFlavors[0].name}-${versionName}-测试版.apk"
+            }
+            if(variant.buildType.name.equals('release')){
+                outputFileName = "趣步行-${variant.productFlavors[0].name}-${versionName}-正式版.apk"
+            }
+
+        }
+
+    }
+
+}
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //retrofit2.0 导入
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.4.0'
+    implementation 'com.alibaba:fastjson:1.2.33'
+    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.github.lzyzsd:jsbridge:1.0.4'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    //Google的ViewModel和lifeCircle
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    kapt "android.arch.lifecycle:compiler:1.1.1"
+    // 如果需要支持 Java8 的组件，需要引入 lifecycle:common-java8
+    implementation 'android.arch.lifecycle:common-java8:1.1.1'
+    implementation files('libs/microlog4android-1.0.0.jar')
+    //极光推送
+    implementation 'cn.jiguang.sdk:jpush:3.1.6'
+    // 此处以JPush 3.0.9
+    implementation 'cn.jiguang.sdk:jcore:1.2.5'
+    // 此处以JCore 1.1.7
+        implementation 'com.github.bumptech.glide:glide:3.7.0'
+//    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    //    implementation 'com.squareup.picasso:picasso:2.5.1'
+    //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
+    implementation(name: 'open_ad_sdk1.9.62', ext: 'aar')
+    implementation(name: 'adpoymer-3.4.74', ext: 'aar')
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
+}

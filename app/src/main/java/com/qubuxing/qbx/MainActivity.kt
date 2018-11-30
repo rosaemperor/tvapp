@@ -94,12 +94,15 @@ class MainActivity : BaseActivity() {
         client = WVWebViewClient(binding.webView)
         binding.webView.webViewClient = client
         var link : Uri = Uri.parse(config.BASE_SERVER_WEBUI_URL)
-        initStepGet()
         binding.webView.loadUrl(link.toString())
+        initStepGet()
         binding.btnReload.setOnClickListener{
             binding.llNetworkError.visibility = View.GONE
             binding.webView.loadUrl(config.BASE_SERVER_WEBUI_URL)
         }
+//        binding.splashLayout.setOnClickListener {
+//            Toast.makeText(this@MainActivity,"wo sjdfajsdklf",Toast.LENGTH_LONG).show()
+//        }
         binding.delete.setOnClickListener {
             binding.adLayout.removeAllViewsInLayout()
             binding.adLayout.invalidate()
@@ -164,14 +167,14 @@ class MainActivity : BaseActivity() {
         when(requestCode){
             client.CAMERA_REQUEST_CODE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
             client.READ_PHONE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
-            10010->{
-                cameraList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                cameraList.add(Manifest.permission.READ_PHONE_STATE)
-                cameraList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-                cameraList.add(Manifest.permission.ACCESS_FINE_LOCATION)
-                cameraList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-                requestPermissions(SplashScreen.cameraList.toTypedArray(),10010)
-            }
+//            10010->{
+//                cameraList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                cameraList.add(Manifest.permission.READ_PHONE_STATE)
+//                cameraList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+//                cameraList.add(Manifest.permission.ACCESS_FINE_LOCATION)
+//                cameraList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+//                requestPermissions(SplashScreen.cameraList.toTypedArray(),10010)
+//            }
         }
 
 

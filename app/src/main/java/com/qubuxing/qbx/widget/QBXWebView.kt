@@ -43,7 +43,7 @@ class QBXWebView : WebView {
         settings.builtInZoomControls = true
         settings.displayZoomControls = false
         settings.cacheMode = WebSettings.LOAD_DEFAULT
-        settings.userAgentString = settings.userAgentString + " VayNhanh-android"
+        settings.userAgentString = settings.userAgentString + " QBX-android"
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.setAppCachePath(mContext.applicationContext.cacheDir.absolutePath)
