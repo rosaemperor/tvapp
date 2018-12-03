@@ -7,13 +7,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
-import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.telephony.TelephonyManager
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.webkit.WebResourceError
@@ -22,12 +20,8 @@ import android.webkit.WebView
 import android.widget.Toast
 import cn.jpush.android.api.JPushInterface
 import com.bumptech.glide.Glide
-import com.bumptech.glide.GlideBuilder
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.module.GlideModule
 
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
 import com.qubuxing.ThridBroeserActivity
@@ -43,16 +37,9 @@ import com.qubuxing.qbx.http.RetrofitUtil
 import com.qubuxing.qbx.http.beans.*
 import com.qubuxing.qbx.service.StepCounterService
 import com.qubuxing.qbx.utils.*
-import com.qubuxing.qbx.utils.SharePrefenceHelper.Companion.mContext
 import com.tencent.mm.opensdk.modelmsg.*
-import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -183,7 +170,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     var tm = webView.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                     initMessage.deviceUUID = tm.imei
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
-                    initMessage.traffic_channel= applicationInfo.metaData.getString("CHANNEL_CODE")
+                    initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
                     callback!!.callback(gson.toJson(initMessage))
                 }else{
@@ -432,6 +419,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdDisplay(p0: String?) {
+                        Log.d("banner","$p0")
                     }
 
                     override fun onAdClick(p0: String?) {
@@ -507,6 +495,60 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 VideoManager.getInstance(webView.context).request(webView.context,"$id","RewardName","123456",1,1,listener)
             }
         })
+        registerHandler("showAdVideoWithParam",object : WVJBWebViewClient.WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+
+                var jsonObject = data as org.json.JSONObject
+                var videoEntity = gson.fromJson<VideoEntity>(jsonObject.toString(),VideoEntity::class.java)
+
+                var listener = object : VideoListener {
+                    override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
+                        callback?.let {
+                            callback.callback("onRewardVerify")
+                        }
+                    }
+
+                    override fun onAdFailed(p0: String?) {
+                        callback?.let {
+                            callHandler("videoCallback","onVideoComplete",null)
+                            callback.callback("onAdFailed")
+                        }
+                    }
+
+                    override fun onAdShow() {
+                    }
+
+                    override fun onAdVideoBarClick() {
+
+                        callback?.let {
+                            callback.callback("onClick")
+                        }
+                    }
+
+                    override fun onVideoComplete() {
+                        callback?.let {
+                            callHandler("videoCallback","onVideoComplete",null)
+//                            callback.callback("onVideoComplete")
+                        }
+                    }
+
+                    override fun onAdClose() {
+                        callback?.let {
+                            callHandler("videoCallback","onAdClose",null)
+//                            callback.callback("onAdClose")
+                        }
+                    }
+
+                    override fun onRewardVideoCached() {
+                        callback?.let {
+                            callHandler("videoCallback","onRewardVideoCached",null)
+//                            callback.callback("onRewardVideoCached")
+                        }
+                    }
+                }
+                VideoManager.getInstance(webView.context).request(webView.context,videoEntity.spaceId,videoEntity.RewardName,videoEntity.UserId,videoEntity.type.toInt(),videoEntity.amount.toInt(),listener)
+            }
+        })
         registerHandler("showAdVideoNow",object : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 if(VideoManager.getInstance(webView.context).isReady){
@@ -514,6 +556,193 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 }
             }
         })
+        registerHandler("showAdWithType",object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var jsonObject = data as org.json.JSONObject
+                var adWithTypeEntity = gson.fromJson<AdWithTypeEntity>(jsonObject.toString(),AdWithTypeEntity::class.java)
+                when(adWithTypeEntity.supplierType){
+                    "LY" ->{
+                        showLYAd(adWithTypeEntity,callback)
+                    }
+                    "GDT" ->{
+                        showGDTAd(adWithTypeEntity,callback)
+                    }
+                   "JRTT" ->{
+                       showJRTTAd(adWithTypeEntity,callback)
+                   }
+                }
+            }
+        })
+
+    }
+
+    private fun showLYAd(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?) {
+        when(adWithTypeEntity.ADType){
+            //"banner" "video" "splash" "insert"
+            "banner" ->{
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                binding!!.adLayout.removeAllViewsInLayout()
+                binding.adLayout.invalidate()
+                var bannerListener = object : BannerListener{
+                    override fun onAdFailed(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdFailed")
+                        }
+                    }
+
+                    override fun onAdDisplay(p0: String?) {
+                        Log.d("banner","$p0")
+                    }
+
+                    override fun onAdClick(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdClick")
+                        }
+                    }
+
+                    override fun onAdReady(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdReady")
+                        }
+                    }
+
+                    override fun onAdClose(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdClose")
+                        }
+                    }
+                }
+                BannerManager.getInstance(webView.context).requestAd(webView.context,"${adWithTypeEntity.spaceId}",bannerListener,binding!!.adLayout,3)
+            }
+            "video" ->{
+                var listener = object : VideoListener {
+                    override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
+                        callback?.let {
+                            callback.callback("onRewardVerify")
+                        }
+                    }
+
+                    override fun onAdFailed(p0: String?) {
+                        callback?.let {
+                            callHandler("videoCallback","onVideoComplete",null)
+                            callback.callback("onAdFailed")
+                        }
+                    }
+
+                    override fun onAdShow() {
+                    }
+
+                    override fun onAdVideoBarClick() {
+
+                        callback?.let {
+                            callback.callback("onClick")
+                        }
+                    }
+
+                    override fun onVideoComplete() {
+                        callback?.let {
+                            callHandler("videoCallback","onVideoComplete",null)
+//                            callback.callback("onVideoComplete")
+                        }
+                    }
+
+                    override fun onAdClose() {
+                        callback?.let {
+                            callHandler("videoCallback","onAdClose",null)
+//                            callback.callback("onAdClose")
+                        }
+                    }
+
+                    override fun onRewardVideoCached() {
+                        callback?.let {
+                            callHandler("videoCallback","onRewardVideoCached",null)
+//                            callback.callback("onRewardVideoCached")
+                        }
+                    }
+                }
+                VideoManager.getInstance(webView.context).request(webView.context,"$adWithTypeEntity.spaceId",adWithTypeEntity.RewardName,adWithTypeEntity.UserId,adWithTypeEntity.type.toInt(),adWithTypeEntity.amount.toInt(),listener)
+            }
+            "splash"->{
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var spreadListener = object : SpreadListener{
+                    override fun onAdFailed(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdFailed")
+                        }
+                    }
+
+                    override fun onAdDisplay(p0: String?) {
+                    }
+
+                    override fun onAdReceived(p0: String?) {
+                    }
+
+                    override fun onAdClick() {
+                        callback?.let {
+                            callback.callback("onAdClick")
+                        }
+                    }
+
+                    override fun onAdClose(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdClose")
+                            binding!!.splashLayout.removeAllViews()
+                            binding.splashLayout.invalidate()
+                        }
+                    }
+                }
+
+                SpreadManager.getInstance(webView.context as Activity).request(webView.context as Activity,"${adWithTypeEntity.spaceId}",binding!!.splashLayout,spreadListener)
+            }
+            "insert"->{
+                var insertListener = object : InsertListener {
+                    override fun onAdDismiss(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdClose")
+                        }
+                    }
+
+                    override fun onAdFailed(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdFailed")
+                        }
+                    }
+
+                    override fun onAdDisplay(p0: String?) {
+                    }
+
+                    override fun onAdReceived(p0: String?) {
+                        if (InsertManager.getInstance(webView.context).isReady) {
+                            InsertManager.getInstance(webView.context).showAd()
+                        }
+                    }
+
+                    override fun onAdClick(p0: String?) {
+                        callback?.let {
+                            callback.callback("onAdClick")
+                        }
+                    }
+
+                }
+                var count = 3
+//                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                InsertManager.getInstance(webView.context).requestAd(webView.context,"${adWithTypeEntity.spaceId}",insertListener,count)
+            }
+        }
+
+    }
+    private fun showGDTAd(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?) {
+        when(adWithTypeEntity.ADType){
+            "banner"->{
+
+            }
+            "splash"->{
+
+            }
+        }
+
+    }
+    private fun showJRTTAd(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?) {
 
     }
 
@@ -553,7 +782,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     var tm = webView.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                     initMessage.deviceUUID = tm.imei
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
-                    initMessage.traffic_channel= applicationInfo.metaData.getString("CHANNEL_CODE")
+                    initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
                     UUIDCallback!!.callback(gson.toJson(initMessage))
                 }else{
@@ -564,7 +793,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     initMessage.deviceUUID = UUID.randomUUID().toString()
                     SharePrefenceHelper.save("deviceID",initMessage.deviceUUID)
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
-                    initMessage.traffic_channel= applicationInfo.metaData.getString("CHANNEL_CODE")
+                    initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
                     UUIDCallback!!.callback(gson.toJson(initMessage))
                 }

@@ -129,8 +129,8 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
-            android:name="CHANNEL_CODE"
-            android:value="${CHANNEL_CODE}" />
+            android:name="JPUSH_CHANNEL"
+            android:value="${JPUSH_CHANNEL}" />
         <!--<meta-data-->
             <!--android:name="com.qubuxing.qbx.http.MyGlideModule"-->
             <!--android:value="GlideModule"-->

@@ -3,6 +3,7 @@ package com.qubuxing.qbx
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import cn.jpush.android.api.JPushInterface
 import com.ly.adpoymer.config.AdConfig
 import com.ly.adpoymer.manager.*
 import com.qubuxing.qbx.utils.SharePrefenceHelper
@@ -34,8 +35,8 @@ class QBXApplication : Application(){
     }
 
     private fun registJPush() {
-//        JPushInterface.setDebugMode(true)
-//        JPushInterface.init(this)
+        JPushInterface.setDebugMode(true)
+        JPushInterface.init(this)
     }
 
     private fun registToWX() {

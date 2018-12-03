@@ -167,14 +167,6 @@ class MainActivity : BaseActivity() {
         when(requestCode){
             client.CAMERA_REQUEST_CODE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
             client.READ_PHONE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
-//            10010->{
-//                cameraList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                cameraList.add(Manifest.permission.READ_PHONE_STATE)
-//                cameraList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-//                cameraList.add(Manifest.permission.ACCESS_FINE_LOCATION)
-//                cameraList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-//                requestPermissions(SplashScreen.cameraList.toTypedArray(),10010)
-//            }
         }
 
 

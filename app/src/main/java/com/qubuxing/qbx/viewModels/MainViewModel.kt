@@ -1,5 +1,6 @@
 package com.qubuxing.qbx.viewModels
 
+import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 import android.content.pm.PackageManager
 import android.databinding.ObservableField
@@ -26,6 +27,7 @@ class MainViewModel : BaseViewModel(){
     }
 
     override fun initData() {
+
     }
 
     fun getUpdateMessage(context: Context){
@@ -35,7 +37,7 @@ class MainViewModel : BaseViewModel(){
         var packageInfo = QBXApplication.instance.packageManager.getPackageInfo(QBXApplication.instance.packageName,0)
         updateEntity.verName = packageInfo.versionName
         updateEntity.verCode = ""+packageInfo.versionCode
-        updateEntity.channelCode = applicationInfo.metaData.getString("CHANNEL_CODE")
+        updateEntity.channelCode = applicationInfo.metaData.getString("JPUSH_CHANNEL")
         var call = RetrofitUtil.instance.help.checkUpdate(updateEntity)
         call.enqueue(object : Callback<UpdateResultEntity>{
             override fun onFailure(call: Call<UpdateResultEntity>, t: Throwable) {
@@ -51,5 +53,6 @@ class MainViewModel : BaseViewModel(){
         })
 
     }
+
 
 }
