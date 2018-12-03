@@ -20,17 +20,22 @@ import android.webkit.WebView
 import android.widget.Toast
 import cn.jpush.android.api.JPushInterface
 import com.bumptech.glide.Glide
+import com.bytedance.sdk.openadsdk.*
 
 import com.google.gson.Gson
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
+import com.qq.e.ads.banner.ADSize
+import com.qq.e.ads.banner.AbstractBannerADListener
+import com.qq.e.ads.banner.BannerView
+import com.qq.e.ads.splash.SplashAD
+import com.qq.e.ads.splash.SplashADListener
+import com.qq.e.comm.util.AdError
 import com.qubuxing.ThridBroeserActivity
-
-
-import com.qubuxing.qbx.HttpService
-import com.qubuxing.qbx.MainActivity
-import com.qubuxing.qbx.QBXApplication
+import com.qubuxing.qbx.*
 import com.qubuxing.qbx.R
+
+
 import com.qubuxing.qbx.databinding.ActivityMainBinding
 import com.qubuxing.qbx.http.RetrofitUtil
 
@@ -59,6 +64,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
      var stepCallback: WVJBResponseCallback? = null
     var httpHelper : HttpService = RetrofitUtil.instance.help
     var haveStepToday : Int = 0
+    var mTTAdNative : TTAdNative
+    lateinit var adSlot : AdSlot
+
+    var mttRewardVideoAd :TTRewardVideoAd? = null
+
     constructor(webView: WebView) : this(webView ,object :WVJBHandler{
         override fun request(data: Any?, callback: WVJBResponseCallback?) {
             callback!!.callback("Response for message from ObjC!")
@@ -66,6 +76,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     })
     init {
 //微信登录调起
+
+        mTTAdNative = QBXApplication.ttAdManager.createAdNative(webView.context)
         registerHandler("submitWechatLogin", object : WVJBHandler {
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 val req = SendAuth.Req()
@@ -333,7 +345,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         callback?.let {
                             callback.callback("onAdClose")
                             binding!!.splashLayout.removeAllViews()
-                            binding.splashLayout.invalidate()
+                            binding!!.splashLayout.invalidate()
                         }
                     }
                 }
@@ -413,6 +425,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var id  =""+ ( data as JSONObject).get("id")
                 var bannerListener = object : BannerListener{
                     override fun onAdFailed(p0: String?) {
+                        callHandler("bannerCallback","onAdFailed",null)
                         callback?.let {
                             callback.callback("onAdFailed")
                         }
@@ -423,18 +436,22 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdClick(p0: String?) {
+                        Log.d("banner","onAdClick")
+                        callHandler("bannerCallback","onAdClick",null)
                         callback?.let {
                             callback.callback("onAdClick")
                         }
                     }
 
                     override fun onAdReady(p0: String?) {
+                        callHandler("bannerCallback","onAdReady",null)
                         callback?.let {
                             callback.callback("onAdReady")
                         }
                     }
 
                     override fun onAdClose(p0: String?) {
+                        callHandler("bannerCallback","onAdClose",null)
                         callback?.let {
                             callback.callback("onAdClose")
                         }
@@ -549,11 +566,55 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 VideoManager.getInstance(webView.context).request(webView.context,videoEntity.spaceId,videoEntity.RewardName,videoEntity.UserId,videoEntity.type.toInt(),videoEntity.amount.toInt(),listener)
             }
         })
+        registerHandler("showGDTBanner",object : WVJBWebViewClient.WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var bannerview : BannerView?=null
+                if(bannerview != null){
+                    binding!!.adLayout.removeView(bannerview)
+                    bannerview.destroy()
+                }
+                bannerview = BannerView(webView.context as Activity , ADSize.BANNER ,"","")
+                bannerview.setRefresh(30)
+                bannerview.setADListener(object : AbstractBannerADListener(){
+                    override fun onNoAD(p0: AdError?) {
+                        callHandler("bannerCallback","onAdFailed",null)
+                    }
+
+                    override fun onADReceiv() {
+                    }
+
+                    override fun onADClicked() {
+                        callHandler("bannerCallback","onAdClick",null)
+                    }
+                })
+                binding!!.adLayout.addView(bannerview)
+                bannerview.loadAD()
+            }
+        })
         registerHandler("showAdVideoNow",object : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 if(VideoManager.getInstance(webView.context).isReady){
                     VideoManager.getInstance(webView.context).showAd()
                 }
+            }
+        })
+        registerHandler("showAdVideoWithType",object : WVJBWebViewClient.WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var jsonObject = data as org.json.JSONObject
+                var videoType = jsonObject.getString("videoType")
+                when(videoType){
+                    "LYVideo"->{
+                        if(VideoManager.getInstance(webView.context).isReady){
+                            VideoManager.getInstance(webView.context).showAd()
+                        }
+                    }
+                    "JRTTVideo" ->{
+                        mttRewardVideoAd!!.showRewardVideoAd(webView.context as Activity)
+                    }
+                }
+
+
             }
         })
         registerHandler("showAdWithType",object : WVJBHandler{
@@ -585,6 +646,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 binding.adLayout.invalidate()
                 var bannerListener = object : BannerListener{
                     override fun onAdFailed(p0: String?) {
+                        callHandler("bannerCallback","onAdFailed",null)
                         callback?.let {
                             callback.callback("onAdFailed")
                         }
@@ -595,18 +657,21 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdClick(p0: String?) {
+                        callHandler("bannerCallback","onAdClick",null)
                         callback?.let {
                             callback.callback("onAdClick")
                         }
                     }
 
                     override fun onAdReady(p0: String?) {
+                        callHandler("bannerCallback","onAdReady",null)
                         callback?.let {
                             callback.callback("onAdReady")
                         }
                     }
 
                     override fun onAdClose(p0: String?) {
+                        callHandler("bannerCallback","onAdClose",null)
                         callback?.let {
                             callback.callback("onAdClose")
                         }
@@ -734,15 +799,187 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     private fun showGDTAd(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?) {
         when(adWithTypeEntity.ADType){
             "banner"->{
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var bannerview : BannerView?=null
+                if(bannerview != null){
+                    binding!!.adLayout.removeView(bannerview)
+                    bannerview.destroy()
+                }
+                bannerview = BannerView(webView.context as Activity , ADSize.BANNER ,"","")
+                bannerview.setRefresh(30)
+                bannerview.setADListener(object : AbstractBannerADListener(){
+                    override fun onNoAD(p0: AdError?) {
+                        callHandler("bannerCallback","onAdFailed",null)
+                    }
 
+                    override fun onADReceiv() {
+                    }
+
+                    override fun onADClicked() {
+                        callHandler("bannerCallback","onAdClick",null)
+                    }
+                })
+                binding!!.adLayout.addView(bannerview)
+                bannerview.loadAD()
             }
             "splash"->{
+               var  fetchSplashADTime = System.currentTimeMillis()
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var adListener =object : SplashADListener {
+                    override fun onADExposure() {
+                        Log.d("Splash","广点通闪屏onADExposure")            }
 
+                    override fun onADDismissed() {
+                        Log.d("Splash","广点通闪屏点击")
+
+                    }
+
+                    override fun onADPresent() {
+                    }
+
+                    override fun onNoAD(p0: AdError?) {
+                        Log.d("Splash","广点通没有闪屏广告")
+                    }
+
+                    override fun onADClicked() {
+                        Log.d("Splash","广点通闪屏点击")
+
+                    }
+
+                    override fun onADTick(p0: Long) {
+                        Log.d("Splash","广点通闪屏计时")               }
+
+                }
+                Log.d("TAG","广点通暂不提供开屏")
+//                var splashAD = SplashAD(webView.context as Activity, binding!!.splashLayout, skipView, appId, posId, adListener, 0)
             }
         }
 
     }
     private fun showJRTTAd(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?) {
+        adSlot = initSlot(adWithTypeEntity)
+        var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+        when(adWithTypeEntity.ADType){
+            //"banner" "video" "splash" "insert"
+            "banner" ->{
+
+                mTTAdNative.loadBannerAd(adSlot, object : TTAdNative.BannerAdListener{
+                    override fun onBannerAdLoad(p0: TTBannerAd?) {
+                        var bannerView = p0!!.bannerView
+                        bannerView?.let {
+                            binding!!.adLayout.removeAllViews()
+                            binding!!.adLayout.addView(bannerView)
+                        }
+                        p0.setBannerInteractionListener(object : TTBannerAd.AdInteractionListener{
+                            override fun onAdClicked(p0: View?, p1: Int) {
+
+                            }
+
+                            override fun onAdShow(p0: View?, p1: Int) {
+                            }
+                        })
+                    }
+
+                    override fun onError(p0: Int, p1: String?) {
+                    }
+                })
+            }
+            "video" ->{
+                mTTAdNative.loadRewardVideoAd(adSlot,object : TTAdNative.RewardVideoAdListener{
+                    override fun onRewardVideoAdLoad(p0: TTRewardVideoAd?) {
+                        mttRewardVideoAd =p0
+                        p0!!.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener{
+                            override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdShow() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdVideoBarClick() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onVideoComplete() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdClose() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+                        })
+                    }
+
+                    override fun onRewardVideoCached() {
+                    }
+
+                    override fun onError(p0: Int, p1: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+            }
+            "splash" ->{
+                mTTAdNative.loadSplashAd(adSlot,object : TTAdNative.SplashAdListener{
+                    override fun onSplashAdLoad(p0: TTSplashAd?) {
+                        var view = p0!!.splashView
+                        binding!!.splashLayout.removeAllViews()
+                        binding!!.splashLayout.addView(view)
+                        p0.setSplashInteractionListener(object : TTSplashAd.AdInteractionListener{
+                            override fun onAdClicked(p0: View?, p1: Int) {
+
+                            }
+
+                            override fun onAdSkip() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdShow(p0: View?, p1: Int) {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdTimeOver() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+                        })
+                    }
+
+                    override fun onTimeout() {
+                    }
+
+                    override fun onError(p0: Int, p1: String?) {
+                    }
+                })
+
+            }
+            "insert" ->{
+                mTTAdNative.loadInteractionAd(adSlot, object : TTAdNative.InteractionAdListener{
+                    override fun onInteractionAdLoad(p0: TTInteractionAd?) {
+                        p0!!.setAdInteractionListener(object : TTInteractionAd.AdInteractionListener{
+                            override fun onAdDismiss() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdClicked() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onAdShow() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+                        })
+                        p0.showInteractionAd(webView.context as Activity)
+                    }
+
+                    override fun onError(p0: Int, p1: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+            }
+
+        }
 
     }
 
@@ -848,8 +1085,29 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
     fun callBackStep(step : Float){
         var jsonEvent = JsonEvent()
-        jsonEvent.step = step.toLong()
+        jsonEvent.step = step.toInt()
         stepCallback!!.callback(gson.toJson(jsonEvent))
+    }
+
+    private fun initSlot(adWithTypeEntity: AdWithTypeEntity) : AdSlot{
+        adSlot = AdSlot.Builder().
+                setCodeId("$adWithTypeEntity.spaceId").
+                setImageAcceptedSize(640,320).
+                setSupportDeepLink(true)
+                .setAdCount(2)
+                //激励视频奖励的名称，针对激励视频参数
+                .setRewardName(adWithTypeEntity.RewardName)
+                //激励视频奖励个数
+                .setRewardAmount(adWithTypeEntity.amount.toInt())
+                //用户ID,使用激励视频必传参数
+                //表来标识应用侧唯一用户；若非服务器回调模式或不需sdk透传，可设置为空字符串
+                .setUserID("${adWithTypeEntity.UserId}")
+                //设置期望视频播放的方向，为TTAdConstant.HORIZONTAL或TTAdConstant.VERTICAL
+                .setOrientation(TTAdConstant.VERTICAL)
+                //激励视频奖励透传参数，字符串，如果用json对象，必须使用序列化为String类型,可为空
+                .setMediaExtra("media_extra")
+                .build()
+        return adSlot
     }
 
 

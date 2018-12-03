@@ -8,8 +8,7 @@ object config {
 
 
     private var WEB_UI_URL_PROD : String = "https://m.qubuxing.com"
-    private var WEB_UI_URL_DEV : String = "https://qubuxing.lanlingdai.net/"
-
+    private var WEB_UI_URL_DEV : String = "http://10.0.6.208:5004/"
 
     val WXAPP_ID ="wx2d2573d29537aede"
 

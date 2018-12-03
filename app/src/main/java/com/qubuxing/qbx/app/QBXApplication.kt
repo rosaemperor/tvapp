@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import cn.jpush.android.api.JPushInterface
+import com.bytedance.sdk.openadsdk.TTAdManager
+import com.bytedance.sdk.openadsdk.TTAdManagerFactory
 import com.ly.adpoymer.config.AdConfig
 import com.ly.adpoymer.manager.*
 import com.qubuxing.qbx.utils.SharePrefenceHelper
@@ -16,6 +18,7 @@ class QBXApplication : Application(){
         lateinit var  instance : QBXApplication
         var buildCode = "20181015"
         lateinit var api : IWXAPI
+        lateinit  var ttAdManager : TTAdManager
     }
 
     val tag : String = "Application"
@@ -80,6 +83,13 @@ class QBXApplication : Application(){
         BannerManager.getInstance(this@QBXApplication).init(adconfig)
         NativeManager.getInstance(this@QBXApplication).init(adconfig)
         VideoManager.getInstance(this@QBXApplication).init(adconfig)
+
+        //初始化今日头条SDK
+        ttAdManager = TTAdManagerFactory.getInstance(this)
+        ttAdManager.setAppId("5007813")
+        ttAdManager.setName("趣步行")
+        ttAdManager.setAllowShowNotifiFromSDK(false)
+
     }
     fun getWXAPI(): IWXAPI {
         return api

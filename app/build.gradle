@@ -37,10 +37,17 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            resValue "string", "app_name", "趣步行"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            resValue "string", "app_name", "趣步行-debug"
             signingConfig signingConfigs.debugConfig
+        }
+        debugTest{
+            initWith debug
+            resValue "string", "app_name", "趣步行-test"
+            buildConfigField('boolean','TEST','true')
         }
     }
     compileOptions {
@@ -159,6 +166,7 @@ dependencies {
     //    implementation 'com.squareup.picasso:picasso:2.5.1'
     //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
     implementation(name: 'open_ad_sdk1.9.62', ext: 'aar')
+//    implementation(name: 'open_ad_sdk', ext: 'aar')
     implementation(name: 'adpoymer-3.4.74', ext: 'aar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
 }
