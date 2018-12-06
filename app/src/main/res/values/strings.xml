@@ -1,4 +1,5 @@
 <resources>
     <!--<string name="app_name">趣步行</string>-->
     <string name="double_click_to_quit">再按一次退出趣步行</string>
+    <string name="click_to_skip">点击跳过</string>
 </resources>

@@ -171,7 +171,7 @@ open class WVJBWebViewClient @JvmOverloads constructor(protected var webView: We
             for (i in 0 until messages.length()) {
                 val jo: JSONObject = messages.getJSONObject(i)
 
-                //                log("RCVD", jo);
+                                log("RCVD", jo);
 
                 val message = JSONObject2WVJBMessage(jo)
                 if (message.responseId != null) {

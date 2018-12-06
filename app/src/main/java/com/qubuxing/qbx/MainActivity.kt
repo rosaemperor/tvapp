@@ -123,26 +123,7 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_BACK){
-//                var bannerListener = object : BannerListener{
-//                    override fun onAdFailed(p0: String?) {
-//
-//                    }
-//
-//                    override fun onAdDisplay(p0: String?) {
-//                    }
-//
-//                    override fun onAdClick(p0: String?) {
-//                    }
-//
-//                    override fun onAdReady(p0: String?) {
-//                    }
-//
-//                    override fun onAdClose(p0: String?) {
-//
-//                    }
-//                }
-//                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-//                BannerManager.getInstance(webView.context).requestAd(webView.context,"7550",bannerListener,binding!!.adLayout,3)
+//            JumpSetting.jumpStartInterface(this@MainActivity)
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)
@@ -187,6 +168,7 @@ class MainActivity : BaseActivity() {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 iSportStepInterface = IStepGetAidlInterface.Stub.asInterface(service) as IStepGetAidlInterface
                 mStepSum = iSportStepInterface.currentTimeSportStep
+                Log.d("TAG","$mStepSum")
 
             }
         }, Context.BIND_AUTO_CREATE)
@@ -222,6 +204,7 @@ class MainActivity : BaseActivity() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun stepGetEvent(event : StepGetEvent){
+        if (!client.backStep) return
         var diff = 0.0f
         if(client.haveStepToday != 0){
             diff = event.setps - SharePrefenceHelper.get("stepSum").toFloat()
@@ -233,9 +216,15 @@ class MainActivity : BaseActivity() {
             return
         }else{
             SharePrefenceHelper.save("stepSum",""+event.setps)
-            var long =  SystemClock.elapsedRealtimeNanos() / 1000000 -System.currentTimeMillis()/1000000
-            var dayStep = event.setps/(long/(60 * 60*1000))
-            SharePrefenceHelper.save("dayStep",""+dayStep)
+            var long =  SystemClock.elapsedRealtimeNanos() / 1000000000
+//            Log.d("TAGS","currentTimeMillis:${System.currentTimeMillis()}")
+//            Log.d("TAGS","elapsedRealtimeNanos:${SystemClock.elapsedRealtimeNanos()}")
+//            Log.d("TAGS","${long}")
+//            Log.d("TAGS","${long/(60 * 60)}")
+            var spendHour = long/(60 * 60)
+            if (spendHour<= 0) spendHour =1
+            var dayStep = event.setps/(spendHour)
+            SharePrefenceHelper.save("dayStep","$dayStep")
             makeStepNumber()
         }
     }
@@ -243,8 +232,19 @@ class MainActivity : BaseActivity() {
     fun makeStepNumber(){
         var dayStep = SharePrefenceHelper.get("dayStep").toFloat()
         var calendar = Calendar.getInstance()
-        var hours = calendar.get(Calendar.HOUR_OF_DAY)-6
+        var hours : Float = (calendar.get(Calendar.HOUR_OF_DAY)-6).toFloat()
+        var mins = calendar.get(Calendar.MINUTE).toFloat()
+        if(mins in 1..58){
+            hours += mins / 60
+            Log.d("TAGS","hours :$hours")
+        }
+
+        if (hours <0f ) hours = 0f
         var steps = dayStep* hours
+        if (steps.isNaN()) steps =0f
+        Log.d("TAGS","dayStep:$dayStep hours:$hours ")
+        if (steps < mStepSum)
+            steps =  mStepSum.toFloat()
         client.callBackStep(steps)
     }
 

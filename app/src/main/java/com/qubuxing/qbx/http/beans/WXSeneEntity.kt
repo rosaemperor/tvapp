@@ -5,4 +5,7 @@ class WXSeneEntity {
     var information = ""
     var webpageUrl =""
     var imageurl = ""
+    var description = ""
+    var path =""
+    var userName = ""
 }

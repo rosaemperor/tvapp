@@ -110,15 +110,13 @@
 
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ad_layout"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_height="wrap_content">
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/splash_layout"
