@@ -938,7 +938,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         }
                     }
                 }
-                VideoManager.getInstance(webView.context).request(webView.context,"$adWithTypeEntity.spaceId",adWithTypeEntity.RewardName,adWithTypeEntity.UserId,adWithTypeEntity.type.toInt(),adWithTypeEntity.amount.toInt(),listener)
+                VideoManager.getInstance(webView.context).request(webView.context,"${adWithTypeEntity.spaceId}",adWithTypeEntity.RewardName,adWithTypeEntity.UserId,adWithTypeEntity.type.toInt(),adWithTypeEntity.amount.toInt(),listener)
             }
             "splash"->{
                 var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)

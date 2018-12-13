@@ -161,12 +161,10 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkAnzhiDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkAnzhiRealReleaseClasspath" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkBaiduDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkBaiduRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugTestClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedRealReleaseClasspath" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkHuaweiRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkJifengRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkLenovoRealReleaseClasspath" />

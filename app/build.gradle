@@ -135,7 +135,7 @@ android {
                 outputFileName = "趣步行-${variant.productFlavors[0].name}-${versionName}-研发自测版.apk"
             }
             if(variant.buildType.name.equals('realRelease')){
-                outputFileName = "qbx-${variant.productFlavors[0].name}-latest.apk"
+                outputFileName = "qbx-${variant.productFlavors[0].name}-${versionName}.apk"
             }
             if(variant.buildType.name.equals('debugTest')){
                 outputFileName = "趣步行-${variant.productFlavors[0].name}-${versionName}-预发版.apk"

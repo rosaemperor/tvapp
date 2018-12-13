@@ -187,7 +187,7 @@ object SplashScreen {
                         }
                     }
                 }
-                SpreadManager.getInstance(activity).request(activity, splashAdEntity.adSrc, view, spreadListener)
+                SpreadManager.getInstance(activity).request(activity, splashAdEntity.adSrcId, view, spreadListener)
             }
             "ad-gdt" -> {
                 skipView.visibility = View.VISIBLE
