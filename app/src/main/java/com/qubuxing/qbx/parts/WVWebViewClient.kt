@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -98,6 +99,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 QBXApplication.instance.getWXAPI().sendReq(req)
                 codeCallback = callback            }
         })
+        registerHandler("jumpSetting",object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                JumpSetting.jumpStartInterface(webView.context)
+            }
+        })
         registerHandler("LaunchMiniProgramCard",object : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var miniProgrameObj = WXMiniProgramObject()
@@ -116,7 +122,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
 //                    msg.setThumbImage(bitmap)
-                    msg.thumbData = ByteBuffer.allocate(bitmap!!.byteCount).array()
+                    msg.setThumbImage(bitmap)
                     req.message = msg
                     req.scene = SendMessageToWX.Req.WXSceneSession
                     req.transaction = entity.webpageUrl
@@ -695,6 +701,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         })
         registerHandler("removeBanner  ",object  : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
+//                Toast.makeText(webView.context, "removeBanner", Toast.LENGTH_LONG).show()
                 var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
                 binding!!.adLayout.removeAllViews()
                 binding.adLayout.invalidate()
@@ -707,12 +714,13 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var binding =DataBindingUtil.findBinding<ActivityMainBinding>(webView)
                 var layoutParams = binding!!.adLayout.layoutParams as ConstraintLayout.LayoutParams
                 if (adWithTypeEntity.local.equals("bottom")){
-
+                    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
                     layoutParams.bottomMargin = 0
                     binding.adLayout.layoutParams = layoutParams
 
                 }else{
                     layoutParams.bottomMargin = ScreenUtils.dip2px(webView.context,50f)
+                    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
                     binding.adLayout.layoutParams = layoutParams
                 }
                 binding.adLayout.invalidate()
@@ -1085,9 +1093,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 mTTAdNative.loadBannerAd(adSlot, object : TTAdNative.BannerAdListener{
                     override fun onBannerAdLoad(p0: TTBannerAd?) {
                         var bannerView = p0!!.bannerView
+                        var layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT)
+                        bannerView.layoutParams= layoutParams
                         bannerView?.let {
                             binding!!.adLayout.removeAllViews()
                             binding!!.adLayout.addView(bannerView)
+                            binding.adLayout.invalidate()
                         }
                         p0.setBannerInteractionListener(object : TTBannerAd.AdInteractionListener{
                             override fun onAdClicked(p0: View?, p1: Int) {

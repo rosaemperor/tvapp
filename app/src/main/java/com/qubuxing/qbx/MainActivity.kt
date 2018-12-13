@@ -248,5 +248,9 @@ class MainActivity : BaseActivity() {
         client.callBackStep(steps)
     }
 
+    override fun onRestart() {
+        client.callHandler("duibaCallback","active",null)
+        super.onRestart()
+    }
 
 }

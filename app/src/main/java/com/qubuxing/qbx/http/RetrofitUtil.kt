@@ -61,8 +61,16 @@ class RetrofitUtil private constructor() {
                     val type = MediaType.parse("image/jpeg; charset=utf-8")
                     Log.d("TAG", "data:$data")
                     responseBody = ResponseBody.create(type, data)
-                }else{
-//                 Toast.makeText(QBXApplication.instance.applicationContext, jsonObject.getString("msg"),Toast.LENGTH_LONG).show()
+                }else if(jsonObject.getInt("code") == 9000 ){
+                    val data = jsonObject.get("data").toString() + ""
+                    val type = MediaType.parse("image/jpeg; charset=utf-8")
+                    Log.d("TAG", "data:$data")
+                    responseBody = ResponseBody.create(type, data)
+                    response = response.newBuilder().body(responseBody).build()
+                    return response
+                }
+                else{
+
                 }
 
 

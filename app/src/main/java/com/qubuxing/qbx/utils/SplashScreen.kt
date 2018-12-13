@@ -249,6 +249,10 @@ object SplashScreen {
                             }
 
                             override fun onAdTimeOver() {
+                                adShowed = true
+                                if ((activity as MainActivity).client.pageGetFinished) {
+                                    hide(activity)
+                                }
 
                             }
                         })
