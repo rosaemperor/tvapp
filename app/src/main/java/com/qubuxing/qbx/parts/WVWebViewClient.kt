@@ -10,11 +10,13 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -24,6 +26,7 @@ import com.bumptech.glide.Glide
 import com.bytedance.sdk.openadsdk.*
 
 import com.google.gson.Gson
+import com.iflytek.voiceads.*
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
 import com.qq.e.ads.banner.ADSize
@@ -68,9 +71,13 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
      var stepCallback: WVJBResponseCallback? = null
     var httpHelper : HttpService = RetrofitUtil.instance.help
     var backStep = false
+    lateinit var videoAd : IFLYVideoAd
     var haveStepToday : Int = 0
+    lateinit var adView : ViewGroup
     var mTTAdNative : TTAdNative
     lateinit var adSlot : AdSlot
+     var result = VideoBack()
+    lateinit var videoADDataRef :VideoADDataRef
 
     var mttRewardVideoAd :TTRewardVideoAd? = null
 
@@ -91,43 +98,43 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 QBXApplication.instance.getWXAPI().sendReq(req)
                 codeCallback = callback            }
         })
-//        registerHandler("LaunchMiniProgramCard",object : WVJBWebViewClient.WVJBHandler{
-//            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-//                var miniProgrameObj = WXMiniProgramObject()
-//                var entity = gson.fromJson<WXSeneEntity>(data.toString(),WXSeneEntity::class.java)
-//                miniProgrameObj.webpageUrl = entity.webpageUrl
-//                miniProgrameObj.userName = entity.userName
-//                miniProgrameObj.path = entity.path
-//                var msg = WXMediaMessage(miniProgrameObj)
-//                msg.title = entity.title
-//                msg.description = buildTransaction("webpage")
-////                msg.thumbData =
-//                var req = SendMessageToWX.Req()
-//                var bitmap: Bitmap? = null
-//                thread = Thread(Runnable{
-//                    //                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).into(500,500).get()
-//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
-//                    bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
-////                    msg.setThumbImage(bitmap)
-//                    msg.thumbData = ByteBuffer.allocate(bitmap!!.byteCount).array()
-//                    req.message = msg
-//                    req.scene = SendMessageToWX.Req.WXSceneSession
-//                    req.transaction = entity.webpageUrl
-//                    var api = QBXApplication.api
-//                    api.sendReq(req)
-//                })
-//                thread!!.start()
-//            }
-//        })
-//        registerHandler("LaunchMiniProgram",object : WVJBHandler{
-//            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-//                var req = WXLaunchMiniProgram.Req()
-//                var entity = gson.fromJson<WXSeneEntity>(data.toString(),WXSeneEntity::class.java)
-//                req.userName = entity.userName
-//                req.path = entity.path
-//                QBXApplication.api.sendReq(req)
-//            }
-//        })
+        registerHandler("LaunchMiniProgramCard",object : WVJBWebViewClient.WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var miniProgrameObj = WXMiniProgramObject()
+                var entity = gson.fromJson<WXSeneEntity>(data.toString(),WXSeneEntity::class.java)
+                miniProgrameObj.webpageUrl = entity.webpageUrl
+                miniProgrameObj.userName = entity.userName
+                miniProgrameObj.path = entity.path
+                var msg = WXMediaMessage(miniProgrameObj)
+                msg.title = entity.title
+                msg.description = buildTransaction("webpage")
+//                msg.thumbData =
+                var req = SendMessageToWX.Req()
+                var bitmap: Bitmap? = null
+                thread = Thread(Runnable{
+                    //                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).into(500,500).get()
+                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
+                    bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
+//                    msg.setThumbImage(bitmap)
+                    msg.thumbData = ByteBuffer.allocate(bitmap!!.byteCount).array()
+                    req.message = msg
+                    req.scene = SendMessageToWX.Req.WXSceneSession
+                    req.transaction = entity.webpageUrl
+                    var api = QBXApplication.api
+                    api.sendReq(req)
+                })
+                thread!!.start()
+            }
+        })
+        registerHandler("LaunchMiniProgram",object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var req = WXLaunchMiniProgram.Req()
+                var entity = gson.fromJson<WXSeneEntity>(data.toString(),WXSeneEntity::class.java)
+                req.userName = entity.userName
+                req.path = entity.path
+                QBXApplication.api.sendReq(req)
+            }
+        })
         registerHandler("getVersion", object : WVJBHandler {
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 try {
@@ -663,42 +670,163 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 }
             }
         })
-//        registerHandler("showAdVideoWithType",object : WVJBWebViewClient.WVJBHandler{
-//            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-//                var jsonObject = data as org.json.JSONObject
-//                var videoType = jsonObject.getString("videoType")
-//                when(videoType){
-//                    "LYVideo"->{
-//                        if(VideoManager.getInstance(webView.context).isReady){
-//                            VideoManager.getInstance(webView.context).showAd()
-//                        }
-//                    }
-//                    "JRTTVideo" ->{
-//                        mttRewardVideoAd!!.showRewardVideoAd(webView.context as Activity)
-//                    }
-//                }
-//
-//
-//            }
-//        })
-//        registerHandler("showAdWithType",object : WVJBHandler{
-//            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-//                var jsonObject = data as org.json.JSONObject
-//                var adWithTypeEntity = gson.fromJson<AdWithTypeEntity>(jsonObject.toString(),AdWithTypeEntity::class.java)
-//                when(adWithTypeEntity.supplierType){
-//                    "LY" ->{
-//                        showLYAd(adWithTypeEntity,callback)
-//                    }
-//                    "GDT" ->{
-//                        showGDTAd(adWithTypeEntity,callback)
-//                    }
-//                   "JRTT" ->{
-//                       showJRTTAd(adWithTypeEntity,callback)
-//                   }
-//                }
-//            }
-//        })
+        registerHandler("showAdVideoWithType",object : WVJBWebViewClient.WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var jsonObject = data as org.json.JSONObject
+                var videoType = jsonObject.getString("videoType")
+                when(videoType){
+                    "LYVideo"->{
+                        if(VideoManager.getInstance(webView.context).isReady){
+                            VideoManager.getInstance(webView.context).showAd()
+                        }
+                    }
+                    "JRTTVideo" ->{
+                        mttRewardVideoAd!!.showRewardVideoAd(webView.context as Activity)
+                    }
+                    "KDXFVideo" ->{
+                        var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                        binding!!.splashLayout.addView(adView)
+                        videoAd.showAd(0, 0)
+                    }
+                }
 
+
+            }
+        })
+        registerHandler("removeBanner  ",object  : WVJBWebViewClient.WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                binding!!.adLayout.removeAllViews()
+                binding.adLayout.invalidate()
+            }
+        })
+        registerHandler("showAdWithType",object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var jsonObject = data as org.json.JSONObject
+                var adWithTypeEntity = gson.fromJson<AdWithTypeEntity>(jsonObject.toString(),AdWithTypeEntity::class.java)
+                var binding =DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var layoutParams = binding!!.adLayout.layoutParams as ConstraintLayout.LayoutParams
+                if (adWithTypeEntity.local.equals("bottom")){
+
+                    layoutParams.bottomMargin = 0
+                    binding.adLayout.layoutParams = layoutParams
+
+                }else{
+                    layoutParams.bottomMargin = ScreenUtils.dip2px(webView.context,50f)
+                    binding.adLayout.layoutParams = layoutParams
+                }
+                binding.adLayout.invalidate()
+                when(adWithTypeEntity.supplierType){
+                    "LY" ->{
+                        showLYAd(adWithTypeEntity,callback)
+                    }
+                    "GDT" ->{
+                        showGDTAd(adWithTypeEntity,callback)
+                    }
+                   "JRTT" ->{
+                       showJRTTAd(adWithTypeEntity,callback)
+                   }
+                    "KDXF"->{
+                        showKDXF(adWithTypeEntity,callback)
+                    }
+                }
+            }
+        })
+
+    }
+    fun showKDXF(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
+        when(adWithTypeEntity.ADType){
+            "banner" ->{
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var bannerView = IFLYBannerAd.createBannerAd(webView.context , adWithTypeEntity.spaceId)
+                bannerView.setAdSize(IFLYAdSize.BANNER)
+                binding!!.adLayout.removeAllViews()
+                binding.adLayout.invalidate()
+                binding.adLayout.addView(bannerView)
+                var mAdListener = object : IFLYAdListener{
+                    override fun onAdFailed(p0: com.iflytek.voiceads.AdError?) {
+                        callHandler("bannerCallback","onAdFailed",null)
+                    }
+
+                    override fun onAdExposure() {
+
+                    }
+
+                    override fun onCancel() {
+                    }
+
+                    override fun onConfirm() {
+                    }
+
+                    override fun onAdClick() {
+                    }
+
+                    override fun onAdClose() {
+                        callHandler("bannerCallback","onAdClose",null)
+                    }
+
+                    override fun onAdReceive() {
+
+                        bannerView.showAd()
+                    }
+                }
+                bannerView.loadAd(mAdListener)
+
+            }
+             "video" ->{
+                 var mVideoAdListener =object :IFLYVideoAdListener{
+                     override fun onAdFailed(p0: com.iflytek.voiceads.AdError?) {
+                         result.result = "onAdFailed"
+                         result.supplierType = adWithTypeEntity.supplierType
+                         callHandler("videoCallback",gson.toJson(result),null)
+                     }
+
+                     override fun onAdPlayComplete() {
+                         var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                         result.result = "onAdClose"
+                         result.supplierType = adWithTypeEntity.supplierType
+                         callHandler("videoCallback",gson.toJson(result),null)
+                         binding!!.splashLayout.removeAllViews()
+                         binding.splashLayout.invalidate()
+                     }
+
+                     override fun onAdSkip() {
+                     }
+
+                     override fun onCancel() {
+                     }
+
+                     override fun onAdPlayError() {
+                         result.result = "onAdFailed"
+                         result.supplierType = adWithTypeEntity.supplierType
+                         callHandler("videoCallback",gson.toJson(result),null)
+                     }
+
+                     override fun onConfirm() {
+                     }
+
+                     override fun onAdClick() {
+                     }
+
+                     override fun onAdLoaded(p0: MutableList<VideoADDataRef>?) {
+                         if (p0!!.size > 0 && videoAd != null) {
+                             videoADDataRef = p0!!.get(0)
+                              adView = videoAd.adView
+                             adView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                             result.result = "onRewardVideoCached"
+                             result.supplierType = adWithTypeEntity.supplierType
+                             callHandler("videoCallback",gson.toJson(result),null)
+
+                         }
+                     }
+
+                     override fun onAdStartPlay() {
+                     }
+                 }
+                 videoAd = IFLYVideoAd(webView.context ,adWithTypeEntity.spaceId ,mVideoAdListener ,IFLYVideoAd.REWARDED_VIDEO_AD)
+                 videoAd.loadAd(1)
+             }
+        }
     }
 
     private fun showLYAd(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?) {
@@ -761,8 +889,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
                     override fun onAdFailed(p0: String?) {
                         callback?.let {
-                            callHandler("videoCallback","onVideoComplete",null)
-                            callback.callback("onAdFailed")
+                            result.result = "onAdFailed"
+                            result.supplierType = adWithTypeEntity.supplierType
+                            callHandler("videoCallback",gson.toJson(result),null)
                         }
                     }
 
@@ -785,14 +914,18 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
                     override fun onAdClose() {
                         callback?.let {
-                            callHandler("videoCallback","onAdClose",null)
-//                            callback.callback("onAdClose")
+                            result.result = "onAdClose"
+                            result.supplierType = adWithTypeEntity.supplierType
+                            callHandler("videoCallback",gson.toJson(result),null)
                         }
                     }
 
                     override fun onRewardVideoCached() {
                         callback?.let {
                             callHandler("videoCallback","onRewardVideoCached",null)
+                            result.result = "onRewardVideoCached"
+                            result.supplierType = adWithTypeEntity.supplierType
+                            callHandler("videoCallback",gson.toJson(result),null)
 //                            callback.callback("onRewardVideoCached")
                         }
                     }
@@ -977,32 +1110,49 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         mttRewardVideoAd =p0
                         p0!!.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener{
                             override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
-                                callHandler("videoCallback","onRewardVerify",null)
+                                result.result = "onRewardVerify"
+                                result.supplierType = adWithTypeEntity.supplierType
+                                callHandler("videoCallback",gson.toJson(result),null)
                             }
 
                             override fun onAdShow() {
                             }
 
                             override fun onAdVideoBarClick() {
-                                callHandler("videoCallback","onAdClick",null)
+                                result.result = "onAdVideoBarClick"
+                                result.supplierType = adWithTypeEntity.supplierType
+                                callHandler("videoCallback",gson.toJson(result),null)
+//                                callHandler("videoCallback","onAdClick",null)
                             }
 
                             override fun onVideoComplete() {
-                                callHandler("videoCallback","onVideoComplete",null)
+                                result.result = "onVideoComplete"
+                                result.supplierType = adWithTypeEntity.supplierType
+                                callHandler("videoCallback",gson.toJson(result),null)
+//                                callHandler("videoCallback","onVideoComplete",null)
                             }
 
                             override fun onAdClose() {
-                                callHandler("videoCallback","onAdClose",null)
+                                result.result = "onAdClose"
+                                result.supplierType = adWithTypeEntity.supplierType
+                                callHandler("videoCallback",gson.toJson(result),null)
+//                                callHandler("videoCallback","onAdClose",null)
                             }
                         })
                     }
 
                     override fun onRewardVideoCached() {
-                        callHandler("videoCallback","onRewardVideoCached",null)
+                        result.result = "onRewardVideoCached"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        callHandler("videoCallback",gson.toJson(result),null)
+//                        callHandler("videoCallback","onRewardVideoCached",null)
                     }
 
                     override fun onError(p0: Int, p1: String?) {
-                        callHandler("videoCallback","onAdFailed",null)
+                        result.result = "onAdFailed"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        callHandler("videoCallback",gson.toJson(result),null)
+//                        callHandler("videoCallback","onAdFailed",null)
                     }
                 })
 

@@ -1,9 +1,6 @@
 package com.qubuxing.qbx
 
-import com.qubuxing.qbx.http.beans.ImageJson
-import com.qubuxing.qbx.http.beans.UpdateEntity
-import com.qubuxing.qbx.http.beans.UpdateResultEntity
-import com.qubuxing.qbx.http.beans.UserMessages
+import com.qubuxing.qbx.http.beans.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -19,4 +16,7 @@ interface HttpService {
     @Streaming
     @GET
      fun getApkFile(@Url url : String) : Call<Any>
+
+    @POST("adver/list")
+     fun getAdSplashs(@Body entity: GetSplashEntity) : Call<List<SplashAdEntity>>
 }

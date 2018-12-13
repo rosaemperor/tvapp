@@ -47,6 +47,7 @@ class RetrofitUtil private constructor() {
                         .addHeader("version","1.0.1")
                         .addHeader("device_uuid",deviceID)
                         .addHeader("channel_code","android")
+                        .addHeader("platform","android")
                         .addHeader("request_uuid","$requestUUID")
                         .addHeader("Content-Type", "text/html; charset=UTF-8")
                         .build()
