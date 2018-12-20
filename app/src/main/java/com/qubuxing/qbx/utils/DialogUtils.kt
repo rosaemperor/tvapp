@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import com.qubuxing.qbx.R
+import com.qubuxing.qbx.UrlCallback
 import com.qubuxing.qbx.config
 import com.qubuxing.qbx.http.DownHelper
 import com.qubuxing.qbx.http.RetrofitUtil
@@ -179,6 +180,33 @@ class DialogUtils {
 
             (mContext as Activity).startActivity(intent)
         }
+
+
+
+        fun showSetUrlDialog(context: Context, click : UrlCallback){
+            val urlDialog = Dialog(context,R.style.update_dialog)
+            val layout = LayoutInflater.from(context).inflate(R.layout.layout_set_url_dialog, null) as ConstraintLayout
+            urlDialog.setContentView(layout)
+            urlDialog.setCancelable(true)
+            var goUrl = layout.findViewById<TextView>(R.id.update_view)
+            var urlEdit = layout.findViewById<EditText>(R.id.edit_url)
+
+            goUrl.setOnClickListener{
+                var url = urlEdit.text.toString()
+                if(url.equals("")){
+                    Toast.makeText(context, "请输入本地ip加端口号",Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                Log.d("TAG","$url")
+                click.goUrl(url)
+                urlDialog.dismiss()
+            }
+            if(!urlDialog.isShowing){
+                urlDialog.show()
+            }
+        }
+
+
 
     }
 

@@ -22,8 +22,8 @@ android {
         applicationId "com.qubuxing.qbx"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 6
-        versionName "1.1.3"
+        versionCode 7
+        versionName "1.1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         dataBinding {
             enabled = true
@@ -181,17 +181,20 @@ dependencies {
     // 如果需要支持 Java8 的组件，需要引入 lifecycle:common-java8
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
     implementation files('libs/microlog4android-1.0.0.jar')
+//    implementation files('libs/Baidu_MobAds_SDK.jar')
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
     // 此处以JPush 3.0.9
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
     // 此处以JCore 1.1.7
-        implementation 'com.github.bumptech.glide:glide:3.7.0'
-//    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    //    implementation 'com.github.bumptech.glide:glide:4.8.0'
     //    implementation 'com.squareup.picasso:picasso:2.5.1'
     //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
-    implementation(name: 'open_ad_sdk1.9.62', ext: 'aar')
-//    implementation(name: 'open_ad_sdk', ext: 'aar')
-    implementation(name: 'adpoymer-3.4.74', ext: 'aar')
+    implementation(name: 'open_ad_sdk1.9.72', ext: 'aar')
+    //    implementation(name: 'open_ad_sdk', ext: 'aar')
+    implementation(name: 'adpoymer-3.5.01', ext: 'aar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
+    implementation 'com.android.support:design:27.1.1'
+
 }

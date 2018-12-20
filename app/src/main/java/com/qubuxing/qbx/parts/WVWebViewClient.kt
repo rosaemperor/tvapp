@@ -23,6 +23,11 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.Toast
 import cn.jpush.android.api.JPushInterface
+import com.baidu.mobad.feeds.BaiduNative
+import com.baidu.mobad.feeds.NativeErrorCode
+import com.baidu.mobad.feeds.NativeResponse
+import com.baidu.mobads.AdView
+import com.baidu.mobads.AdViewListener
 import com.bumptech.glide.Glide
 import com.bytedance.sdk.openadsdk.*
 
@@ -737,10 +742,54 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     "KDXF"->{
                         showKDXF(adWithTypeEntity,callback)
                     }
+                    "BAIDU" -> {
+                        showBDAD(adWithTypeEntity,callback)
+                    }
                 }
             }
         })
 
+    }
+
+    fun showBDAD(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
+        when(adWithTypeEntity.ADType){
+            "banner"->{
+                var bdAdListener = object : AdViewListener{
+                    override fun onAdFailed(p0: String?) {
+                        callHandler("bannerCallback","onAdFailed",null)
+                    }
+
+                    override fun onAdShow(p0: JSONObject?) {
+                    }
+
+                    override fun onAdClick(p0: JSONObject?) {
+                        callHandler("bannerCallback","onAdClick",null)
+                    }
+
+                    override fun onAdReady(p0: AdView?) {
+                    }
+
+                    override fun onAdSwitch() {
+                    }
+
+                    override fun onAdClose(p0: JSONObject?) {
+                        callHandler("bannerCallback","onAdClose",null)
+                    }
+                }
+                var bdAdView = AdView(webView.context,adWithTypeEntity.spaceId)
+                bdAdView.setListener(bdAdListener)
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                binding!!.adLayout.removeAllViews()
+                binding!!.adLayout.invalidate()
+                binding!!.adLayout.addView(bdAdView)
+            }
+            "video"->{
+
+            }
+            "insert"->{
+
+            }
+        }
     }
     fun showKDXF(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
         when(adWithTypeEntity.ADType){
@@ -1120,6 +1169,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     override fun onRewardVideoAdLoad(p0: TTRewardVideoAd?) {
                         mttRewardVideoAd =p0
                         p0!!.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener{
+                            override fun onVideoError() {
+
+                            }
+
                             override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
                                 result.result = "onRewardVerify"
                                 result.supplierType = adWithTypeEntity.supplierType

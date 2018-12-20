@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="281dp"
+            android:id="@+id/title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_height="160dp"
+            android:background="@mipmap/update_title"/>
+        <LinearLayout
+            android:layout_width="281dp"
+            android:orientation="vertical"
+            android:layout_marginTop="-5dp"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            android:background="#ffffff"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content">
+
+
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:textSize="12sp"
+                    android:id="@+id/edit_url"
+                    android:hint="请在这里输入你想访问的地址"
+                    android:padding="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:layout_marginTop="20dp"
+                android:text="去访问"
+                android:gravity="center"
+                android:id="@+id/update_view"
+                android:background="@drawable/shape_update_button"
+                android:padding="10dp"
+                android:layout_marginBottom="23dp"
+                android:layout_marginRight="38dp"
+                android:layout_marginLeft="38dp"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/down_layout"
+                android:layout_height="wrap_content">
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="3dp"
+                    android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                    android:indeterminateOnly="false"
+                    android:mirrorForRtl="true"
+                    android:progressDrawable="@drawable/progress_style" />
+
+                <TextView
+                    android:id="@+id/pers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="0%" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:layout_marginTop="20dp"
+                android:text="马上安装"
+                android:visibility="gone"
+                android:gravity="center"
+                android:id="@+id/start"
+                android:background="@drawable/shape_update_button"
+                android:padding="10dp"
+                android:layout_marginBottom="23dp"
+                android:layout_marginRight="38dp"
+                android:layout_marginLeft="38dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

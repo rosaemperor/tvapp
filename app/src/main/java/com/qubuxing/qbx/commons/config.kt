@@ -7,11 +7,11 @@ object config {
 
     private var HOST_ADDRESS_PROD :String = "https://m.qubuxing.com/api/"
     private var HOST_ADDRESS_DEV : String ="https://qubuxing.lanlingdai.net/api/"
-    private var HOST_ADDRESS_GETSET : String ="https://stg.qubuxing.com/api/"
+    private var HOST_ADDRESS_GETSET : String ="https://stg.qbx.lanyougroup.com/api/"
 
     private var WEB_UI_URL_PROD : String = "https://m.qubuxing.com"
 
-    private var WEB_UI_URL_GETSET : String = "https://stg.qubuxing.com/"
+    private var WEB_UI_URL_GETSET : String = "https://stg.qbx.lanyougroup.com/"
     private var WEB_UI_URL_DEV : String = "https://qubuxing.lanlingdai.net/"
 
 

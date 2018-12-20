@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import cn.jpush.android.api.JPushInterface
+import com.baidu.mobads.AdSettings
 import com.bytedance.sdk.openadsdk.TTAdManager
 import com.bytedance.sdk.openadsdk.TTAdManagerFactory
 import com.ly.adpoymer.config.AdConfig
@@ -83,6 +84,9 @@ class QBXApplication : Application(){
         BannerManager.getInstance(this@QBXApplication).init(adconfig)
         NativeManager.getInstance(this@QBXApplication).init(adconfig)
         VideoManager.getInstance(this@QBXApplication).init(adconfig)
+
+        AdSettings.setSupportHttps(true)
+
 
         //初始化今日头条SDK
         ttAdManager = TTAdManagerFactory.getInstance(this)

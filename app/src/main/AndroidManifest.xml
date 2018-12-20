@@ -182,6 +182,10 @@
         <meta-data
             android:name="IFLYTEK_APPKEY_AD"
             android:value="5bf4c933" />
+
+        <meta-data
+            android:name="BaiduMobAd_APP_ID"
+            android:value="d9828151"/>
     </application>
 
 </manifest>

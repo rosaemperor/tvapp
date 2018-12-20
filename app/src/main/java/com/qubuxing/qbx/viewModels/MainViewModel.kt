@@ -3,12 +3,17 @@ package com.qubuxing.qbx.viewModels
 import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 import android.content.pm.PackageManager
+import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.qubuxing.qbx.BaseViewModel
+import com.qubuxing.qbx.BuildConfig
 import com.qubuxing.qbx.QBXApplication
+import com.qubuxing.qbx.UrlCallback
+import com.qubuxing.qbx.databinding.ActivityMainBinding
 import com.qubuxing.qbx.http.RetrofitUtil
 import com.qubuxing.qbx.http.beans.UpdateEntity
 import com.qubuxing.qbx.http.beans.UpdateResultEntity
@@ -21,9 +26,11 @@ import retrofit2.Response
 class MainViewModel : BaseViewModel(){
     var webViewVisiable : ObservableField<Int> = ObservableField()
     var errorViewVisiable :  ObservableField<Int> = ObservableField()
+    var floatButtonVisibale : ObservableField<Int> = ObservableField()
     override fun initViewModel() {
         webViewVisiable.set(View.VISIBLE)
         errorViewVisiable.set(View.GONE)
+        if (BuildConfig.DEBUG) floatButtonVisibale.set(View.VISIBLE)else floatButtonVisibale.set(View.GONE)
     }
 
     override fun initData() {
@@ -52,6 +59,20 @@ class MainViewModel : BaseViewModel(){
             }
         })
 
+    }
+    fun setURL(view : View){
+        Toast.makeText(view.context, "请输入本地ip加端口号",Toast.LENGTH_LONG).show()
+        DialogUtils.showSetUrlDialog(view.context, object : UrlCallback{
+            override fun goUrl(url: String) {
+                var goUrl = url
+                if(!url.startsWith("http" )){
+                    goUrl = "http://$url"
+                }
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(view)
+
+                binding!!.webView.loadUrl(goUrl)
+            }
+        })
     }
 
 

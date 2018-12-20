@@ -10,13 +10,22 @@ import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import com.androidquery.AQuery
+import com.baidu.mobads.SplashAd
+import com.baidu.mobads.SplashAdListener
+import com.bumptech.glide.Glide
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.TTAdConstant
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTSplashAd
+import com.iflytek.voiceads.AdKeys
+import com.iflytek.voiceads.IFLYNativeAd
+import com.iflytek.voiceads.IFLYNativeListener
+import com.iflytek.voiceads.NativeADDataRef
 import com.ly.adpoymer.interfaces.SpreadListener
 import com.ly.adpoymer.manager.SpreadManager
 import com.qq.e.ads.splash.SplashAD
@@ -56,6 +65,7 @@ object SplashScreen {
     lateinit var view: ConstraintLayout
     lateinit var containLayout: FrameLayout
     lateinit var mTTAdNative: TTAdNative
+    lateinit var fullImageView : ImageView
     lateinit var timer: CountDownTimer
     /**
      * 打开启动屏
@@ -90,6 +100,7 @@ object SplashScreen {
                 mSplashDialog!!.setContentView(view)
                 mSplashDialog!!.setCancelable(false)
                 skipView = view.findViewById<TextView>(R.id.skip_view)
+                fullImageView = view.findViewById(R.id.fullscreen_img)
                 mSplashDialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 mSplashDialog!!.window!!.setDimAmount(0f)
                 if (mSplashDialog != null && !mSplashDialog!!.isShowing) {
@@ -106,6 +117,7 @@ object SplashScreen {
                             var splashs = response.body()
                             timer.cancel()
                             if (Build.VERSION.SDK_INT <= 22) {
+
                                 callAdWithType(splashs!![0])
                             } else {
                                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED &&
@@ -115,6 +127,8 @@ object SplashScreen {
                                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
                                 ) {
+//                                    Log.d("TAG","${splashs[1].adSrc}")
+
                                     callAdWithType(splashs!![0])
                                 } else {
                                     adShowed = true
@@ -275,6 +289,108 @@ object SplashScreen {
                 })
             }
             "ad-kdxf" -> {
+//                adShowed = true
+//                if ((activity as MainActivity).client.pageGetFinished) {
+//                    hide(activity)
+//                }
+                var nativeAd : IFLYNativeAd? = null
+                var adItem : NativeADDataRef? = null
+                var aquery = AQuery(containLayout.context)
+                var mListener = object : IFLYNativeListener{
+                    override fun onAdFailed(p0: com.iflytek.voiceads.AdError?) {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }
+                    }
+
+                    override fun onCancel() {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }
+                    }
+
+                    override fun onADLoaded(p0: MutableList<NativeADDataRef>?) {
+                        if (p0!!.size > 0){
+                            adItem = p0[0]
+                            if (adItem!!.imgUrls != null && adItem!!.imgUrls.size > 0){
+//                                aquery.id(R.id.fullscreen_img).image(adItem!!.imgUrls[0], false ,true)
+                                Glide.with(fullImageView.context).load(adItem!!.imgUrls[0]).into(fullImageView)
+                            }else{
+//                                aquery.id(R.id.fullscreen_img).image(adItem!!.image , false, true)
+                                Glide.with(fullImageView.context).load(adItem!!.image).into(fullImageView)
+                                Log.d("Splash","${adItem!!.image}")
+                            }
+                            fullImageView.visibility = View.VISIBLE
+                            aquery.id(R.id.fullscreen_img).clicked(object : View.OnClickListener{
+                                override fun onClick(v: View?) {
+                                    adItem!!.onClicked(view)
+                                }
+                            })
+                            fullImageView.setOnTouchListener(object : View.OnTouchListener{
+                                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                                    when(event!!.action){
+                                        MotionEvent.ACTION_DOWN->{
+                                            nativeAd!!.setParameter(AdKeys.CLICK_POS_DX, "${event.x}")
+                                            nativeAd!!.setParameter(AdKeys.CLICK_POS_DY, "${event.y}")
+
+                                        }
+                                        MotionEvent.ACTION_UP ->{
+                                            nativeAd!!.setParameter(AdKeys.CLICK_POS_UX, "${event.x}")
+                                            nativeAd!!.setParameter(AdKeys.CLICK_POS_UY, "${event.y}")
+                                        }
+                                    }
+                                    return false
+                                }
+                            })
+                            timer.start()
+                            if (adItem!!.onExposured(fullImageView)){
+                                Log.d("Splash","KDXF曝光成功")
+                            }
+                        }
+                    }
+
+                    override fun onConfirm() {
+                    }
+                }
+                 nativeAd = IFLYNativeAd(activity ,splashAdEntity.adSrcId , mListener)
+                nativeAd.setParameter(AdKeys.DOWNLOAD_ALERT,"true")
+                nativeAd.setParameter(AdKeys.DEBUG_MODE , "true")
+                nativeAd.loadAd(1)
+
+            }
+
+            "ad-baidu"->{
+                Log.d("Splash","百度")
+                var bdSplashListener = object : SplashAdListener{
+                    override fun onAdFailed(p0: String?) {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }
+                    }
+
+                    override fun onAdDismissed() {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }
+                    }
+
+                    override fun onAdPresent() {
+                    }
+
+                    override fun onAdClick() {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }
+                    }
+                }
+                var splashAd = SplashAd(activity, containLayout ,bdSplashListener , splashAdEntity.adSrcId , true)
+            }
+            else ->{
                 adShowed = true
                 if ((activity as MainActivity).client.pageGetFinished) {
                     hide(activity)

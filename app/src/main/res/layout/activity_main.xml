@@ -125,4 +125,20 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
         </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="@{viewModel.floatButtonVisibale}"
+            android:layout_marginBottom="25dp"
+            android:onClick="@{view -> viewModel.setURL(view)}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <com.baidu.mobads.component.XNativeView
+            android:id="@+id/viedoView"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </android.support.constraint.ConstraintLayout></layout>

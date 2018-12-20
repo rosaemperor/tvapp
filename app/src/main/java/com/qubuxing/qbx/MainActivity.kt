@@ -25,6 +25,8 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import android.widget.Toast
 import cn.jpush.android.api.JPushInterface
+import com.baidu.mobads.AdView
+import com.baidu.mobads.AdViewListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
@@ -60,6 +62,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.json.JSONObject
 import java.util.*
 
 class MainActivity : BaseActivity() {
@@ -123,7 +126,32 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_BACK){
-//            JumpSetting.jumpStartInterface(this@MainActivity)
+//            var bdAdListener = object : AdViewListener {
+//                override fun onAdFailed(p0: String?) {
+//
+//                }
+//
+//                override fun onAdShow(p0: JSONObject?) {
+//                }
+//
+//                override fun onAdClick(p0: JSONObject?) {
+//                }
+//
+//                override fun onAdReady(p0: AdView?) {
+//                }
+//
+//                override fun onAdSwitch() {
+//                }
+//
+//                override fun onAdClose(p0: JSONObject?) {
+//                }
+//            }
+//            var bdAdView = AdView(webView.context,"6003740")
+//            bdAdView.setListener(bdAdListener)
+//            binding.adLayout.removeAllViews()
+//            binding.adLayout.invalidate()
+//            var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+//            binding!!.adLayout.addView(bdAdView)
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)
