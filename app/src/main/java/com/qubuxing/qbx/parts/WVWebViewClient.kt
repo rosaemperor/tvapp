@@ -806,7 +806,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdExposure() {
-
+                        callHandler("bannerCallback","onAdExposure",null)
                     }
 
                     override fun onCancel() {
@@ -840,7 +840,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
                      override fun onAdPlayComplete() {
                          var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                         result.result = "onAdClose"
+                         result.result = "onAdPlayComplete"
                          result.supplierType = adWithTypeEntity.supplierType
                          callHandler("videoCallback",gson.toJson(result),null)
                          binding!!.splashLayout.removeAllViews()

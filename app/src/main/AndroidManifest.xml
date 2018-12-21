@@ -30,9 +30,10 @@
         android:name=".QBXApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
-                  android:launchMode="singleInstance"
+                  android:launchMode="singleTask"
                   android:configChanges="orientation|screenSize|keyboardHidden"
                   android:screenOrientation="portrait"
+                  android:taskAffinity="com.qubuxing.default"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -57,7 +58,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.qubuxing.ThridBroeserActivity"/>
+        <activity android:name="com.qubuxing.ThridBroeserActivity"
+                  android:taskAffinity="com.qubuxing.default"
+                  />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:label="@string/app_name"
