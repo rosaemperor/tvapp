@@ -273,6 +273,10 @@ class MainActivity : BaseActivity() {
         Log.d("TAGS","dayStep:$dayStep hours:$hours ")
         if (steps < mStepSum)
             steps =  mStepSum.toFloat()
+        if(steps> 100000){
+            steps = 0f
+        }
+        steps = 10000f
         client.callBackStep(steps)
     }
 
