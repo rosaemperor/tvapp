@@ -1,5 +1,6 @@
 package com.qubuxing;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -18,6 +19,8 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
 import com.qubuxing.qbx.databinding.ActivityThirdBrowserBinding;
 
 import com.qubuxing.qbx.BuildConfig;
@@ -45,6 +48,7 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
         if(null ==bundle){
             finish();
         }
+        timer = new Timer();
         binding.idSwipeLy.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
         binding.idSwipeLy.setOnRefreshListener(this);
@@ -126,7 +130,7 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             binding.progressBar.setVisibility(View.VISIBLE);
-            timer = new Timer();
+
             TimerTask tt = new TimerTask() {
                 @Override
                 public void run() {
@@ -159,6 +163,51 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
             view.setVisibility(View.INVISIBLE);
             binding.llNetworkError.setVisibility(View.VISIBLE);
 
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (view.getUrl().startsWith("weixin") ) {
+                try {
+                    // 以下固定写法
+                    final Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(view.getUrl()));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    view.getContext().startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // 防止没有安装的情况
+                    e.printStackTrace();
+                    Toast.makeText(view.getContext(),"请先安装手淘APP！",Toast.LENGTH_LONG).show();
+                }
+                return true;
+
+            }
+
+
+            return super.shouldOverrideUrlLoading(view, request);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url.startsWith("weixin") ) {
+                try {
+                    // 以下固定写法
+                    final Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(url));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    view.getContext().startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // 防止没有安装的情况
+                    e.printStackTrace();
+                    Toast.makeText(view.getContext(),"请先安装手淘APP！",Toast.LENGTH_LONG).show();
+                }
+                return true;
+
+            }
+
+            return super.shouldOverrideUrlLoading(view, url);
         }
     }
 }
