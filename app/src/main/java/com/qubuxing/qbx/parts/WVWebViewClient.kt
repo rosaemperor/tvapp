@@ -2,11 +2,13 @@ package com.qubuxing.qbx.parts
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -127,8 +129,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var req = SendMessageToWX.Req()
                 var bitmap: Bitmap? = null
                 thread = Thread(Runnable{
-                    //                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).into(500,500).get()
-                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
+                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
+//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
 //                    msg.setThumbImage(bitmap)
                     msg.setThumbImage(bitmap)
@@ -230,6 +232,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             }
 
         })
+        registerHandler("checkUpdata",object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                binding!!.viewModel!!.getUpdateMessage(webView.context)
+            }
+        })
         registerHandler("getInitMessage",object : WVJBHandler{
             @RequiresApi(Build.VERSION_CODES.M)
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
@@ -317,8 +325,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var req = SendMessageToWX.Req()
                 var bitmap: Bitmap? = null
                 thread = Thread(Runnable{
-//                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).into(500,500).get()
-                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
+                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
+//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
                     msg.setThumbImage(bitmap)
                     req.message = msg
@@ -345,9 +353,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var req = SendMessageToWX.Req()
                 var bitmap: Bitmap? = null
                 thread = Thread(Runnable{
-//                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).into(500,500).get()
-
-                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
+                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
+//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
                     msg.setThumbImage(bitmap)
                     req.message = msg
@@ -1471,6 +1478,46 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
      */
     private  fun buildTransaction(type : String) : String{
         return type + System.currentTimeMillis()
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+        if (url.startsWith("weixin")) {
+            try {
+                // 以下固定写法
+                val intent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse(url))
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                webView.context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                // 防止没有安装的情况
+                e.printStackTrace()
+                Toast.makeText(webView.context, "请先安装微信！", Toast.LENGTH_LONG).show()
+            }
+
+            return true
+
+        }
+        return super.shouldOverrideUrlLoading(view, url)
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+        if (view!!.url.startsWith("weixin")) {
+            try {
+                // 以下固定写法
+                val intent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse(view.url))
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                webView.context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                // 防止没有安装的情况
+                e.printStackTrace()
+                Toast.makeText(webView.context, "请先安装微信！", Toast.LENGTH_LONG).show()
+            }
+
+            return true
+
+        }
+        return super.shouldOverrideUrlLoading(view, request)
     }
 
 

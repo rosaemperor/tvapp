@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.os.SystemClock;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +51,7 @@ class TodayStepCounter implements SensorEventListener {
         mCleanStep = PreferencesHelper.getCleanStep(mContext);
         mTodayDate = PreferencesHelper.getStepToday(mContext);
         sOffsetStep = (int) PreferencesHelper.getStepOffset(mContext);
+
         mShutdown = PreferencesHelper.getShutdown(mContext);
         Logger.e(TAG, "mShutdown : " + mShutdown);
         //开机启动监听到，一定是关机开机了
@@ -94,7 +96,8 @@ class TodayStepCounter implements SensorEventListener {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
 
             int counterStep = (int) event.values[0];
-
+            Log.d("counterStep","mCleanStep:"+mCleanStep +"counterStep:"+counterStep);
+            Log.d("counterStep","sOffsetStep:"+sOffsetStep);
             if (mCleanStep) {
                 //TODO:只有传感器回调才会记录当前传感器步数，然后对当天步数进行清零，所以步数会少，少的步数等于传感器启动需要的步数，假如传感器需要10步进行启动，那么就少10步
                 cleanStep(counterStep);

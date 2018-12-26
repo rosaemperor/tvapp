@@ -48,13 +48,15 @@ class PreferencesHelper {
     }
 
     public static void setStepOffset(Context context, float stepOffset){
-        Logger.e(TAG, "setStepOffset");
+        Logger.e(TAG, "setStepOffset"+stepOffset);
         getSharedPreferences(context).edit().putFloat(STEP_OFFSET,stepOffset).commit();
     }
 
     public static float getStepOffset(Context context){
         Logger.e(TAG, "getStepOffset");
-        return getSharedPreferences(context).getFloat(STEP_OFFSET,0.0f);
+        Float step = getSharedPreferences(context).getFloat(STEP_OFFSET,0.0f);
+        Logger.e(TAG, "getStepOffset"+step);
+        return step;
     }
 
     public static void setStepToday(Context context, String stepToday){
