@@ -197,5 +197,5 @@ dependencies {
     implementation(name: 'adpoymer-3.4.74', ext: 'aar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.android.support:design:27.1.1'
-
+    implementation files('libs/MimoSdk.jar')
 }

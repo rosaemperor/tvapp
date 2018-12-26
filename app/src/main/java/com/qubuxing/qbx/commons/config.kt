@@ -20,6 +20,9 @@ object config {
 
 
 
+    val miMoAPPID = "2882303761517900333"
+    val miMoAPPKEY = "fake_app_key"
+    val miMoAPPTOKEN = "fake_app_token"
 
 
 

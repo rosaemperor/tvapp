@@ -9,6 +9,7 @@ import com.bytedance.sdk.openadsdk.TTAdManager
 import com.bytedance.sdk.openadsdk.TTAdManagerFactory
 import com.ly.adpoymer.config.AdConfig
 import com.ly.adpoymer.manager.*
+import com.miui.zeus.mimo.sdk.MimoSdk
 import com.qubuxing.qbx.utils.SharePrefenceHelper
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -86,6 +87,10 @@ class QBXApplication : Application(){
         VideoManager.getInstance(this@QBXApplication).init(adconfig)
 
         AdSettings.setSupportHttps(true)
+
+
+        //小米广告
+        MimoSdk.init(this, config.miMoAPPID , config.miMoAPPKEY , config.miMoAPPTOKEN)
 
 
         //初始化今日头条SDK

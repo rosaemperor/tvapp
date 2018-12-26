@@ -38,6 +38,9 @@ import com.google.gson.JsonObject
 import com.iflytek.voiceads.*
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
+import com.miui.zeus.mimo.sdk.ad.AdWorkerFactory
+import com.miui.zeus.mimo.sdk.ad.IAdWorker
+import com.miui.zeus.mimo.sdk.listener.MimoAdListener
 import com.qq.e.ads.banner.ADSize
 import com.qq.e.ads.banner.AbstractBannerADListener
 import com.qq.e.ads.banner.BannerView
@@ -59,6 +62,7 @@ import com.qubuxing.qbx.service.StepCounterService
 import com.qubuxing.qbx.utils.*
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram
 import com.tencent.mm.opensdk.modelmsg.*
+import com.xiaomi.ad.common.pojo.AdType
 import org.json.JSONException
 import org.json.JSONObject
 import java.nio.ByteBuffer
@@ -762,11 +766,58 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     "BAIDU" -> {
                         showBDAD(adWithTypeEntity,callback)
                     }
+                    "XIAOMI"->{
+                        showXMAD(adWithTypeEntity,callback)
+                    }
+                    else ->{
+
+                    }
+
                 }
             }
         })
 
     }
+    fun showXMAD(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
+        var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+        when(adWithTypeEntity.ADType){
+            "banner"->{
+                var mBannerAd : IAdWorker
+                var listener = object : MimoAdListener {
+                    override fun onAdFailed(p0: String?) {
+                        callHandler("bannerCallback","onAdFailed",null)
+                    }
+
+                    override fun onAdDismissed() {
+                        callHandler("bannerCallback","onAdClose",null)
+                    }
+
+                    override fun onAdPresent() {
+                    }
+
+                    override fun onAdClick() {
+                        callHandler("bannerCallback","onAdClick",null)
+                    }
+
+                    override fun onStimulateSuccess() {
+                    }
+
+                    override fun onAdLoaded(p0: Int) {
+                        Log.d("TAG","MiBanner: ${p0}")
+
+                    }
+                }
+                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding!!.adLayout ,listener, AdType.AD_BANNER)
+                binding.adLayout.removeAllViews()
+                binding.adLayout.invalidate()
+                mBannerAd.loadAndShow(adWithTypeEntity.spaceId)
+            }
+            else ->{
+
+            }
+        }
+    }
+
 
     fun showBDAD(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
         when(adWithTypeEntity.ADType){
