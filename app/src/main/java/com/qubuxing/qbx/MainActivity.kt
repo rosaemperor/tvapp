@@ -40,6 +40,9 @@ import com.ly.adpoymer.manager.BannerManager
 import com.ly.adpoymer.manager.InsertManager
 import com.ly.adpoymer.manager.SpreadManager
 import com.ly.adpoymer.manager.VideoManager
+import com.miui.zeus.mimo.sdk.ad.AdWorkerFactory
+import com.miui.zeus.mimo.sdk.ad.IAdWorker
+import com.miui.zeus.mimo.sdk.listener.MimoAdListener
 import com.qubuxing.qbx.databinding.ActivityMainBinding
 import com.qubuxing.qbx.databinding.ActivityThirdBrowserBinding
 import com.qubuxing.qbx.http.beans.Step
@@ -57,6 +60,7 @@ import com.qubuxing.step.TodayStepService
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.modelmsg.WXTextObject
+import com.xiaomi.ad.common.pojo.AdType
 import kotlinx.android.synthetic.main.activity_main.*
 
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -126,32 +130,36 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_BACK){
-//            var bdAdListener = object : AdViewListener {
-//                override fun onAdFailed(p0: String?) {
+//           var mBannerAd : IAdWorker
+//                var listener = object : MimoAdListener {
+//                    override fun onAdFailed(p0: String?) {
+//                        Log.d("TAG","MiBanner: onAdFailed")
+//                    }
 //
-//                }
+//                    override fun onAdDismissed() {
 //
-//                override fun onAdShow(p0: JSONObject?) {
-//                }
+//                    }
 //
-//                override fun onAdClick(p0: JSONObject?) {
-//                }
+//                    override fun onAdPresent() {
+//                    }
 //
-//                override fun onAdReady(p0: AdView?) {
-//                }
+//                    override fun onAdClick() {
 //
-//                override fun onAdSwitch() {
-//                }
+//                    }
 //
-//                override fun onAdClose(p0: JSONObject?) {
+//                    override fun onStimulateSuccess() {
+//                        Log.d("TAG","MiBanner: onAdFailed")
+//                    }
+//
+//                    override fun onAdLoaded(p0: Int) {
+//                        Log.d("TAG","MiBanner: ${p0}")
+//
+//                    }
 //                }
-//            }
-//            var bdAdView = AdView(webView.context,"6003740")
-//            bdAdView.setListener(bdAdListener)
-//            binding.adLayout.removeAllViews()
-//            binding.adLayout.invalidate()
-//            var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-//            binding!!.adLayout.addView(bdAdView)
+//                binding.adLayout.removeAllViews()
+//                binding.adLayout.invalidate()
+//                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding!!.adLayout ,listener, AdType.AD_BANNER)
+//                mBannerAd.loadAndShow("7a357fc4b59ba1046c8c84763039d6b1")
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)

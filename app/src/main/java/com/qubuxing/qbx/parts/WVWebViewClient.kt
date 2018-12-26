@@ -807,9 +807,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
                     }
                 }
-                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding!!.adLayout ,listener, AdType.AD_BANNER)
-                binding.adLayout.removeAllViews()
+                binding!!.adLayout.removeAllViews()
                 binding.adLayout.invalidate()
+                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding.adLayout ,listener, AdType.AD_BANNER)
                 mBannerAd.loadAndShow(adWithTypeEntity.spaceId)
             }
             else ->{
