@@ -17,6 +17,14 @@ object config {
 
     val WXAPP_ID ="wx2d2573d29537aede"
 
+
+
+
+
+
+
+
+    val GDTAPP_ID ="1107985626"
     private var HOST_ADDRESS_DEBUG : String  = if(BuildConfig.TEST) HOST_ADDRESS_GETSET else HOST_ADDRESS_DEV
     private var  WEB_UI_URL_DEBUG: String = if(BuildConfig.TEST) WEB_UI_URL_GETSET else WEB_UI_URL_DEV
     //H5前端页面地址

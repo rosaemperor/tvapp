@@ -195,6 +195,7 @@ class MainActivity : BaseActivity() {
 
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 iSportStepInterface = IStepGetAidlInterface.Stub.asInterface(service) as IStepGetAidlInterface
+                if (null == iSportStepInterface) return
                 mStepSum = iSportStepInterface.currentTimeSportStep
                 Log.d("TAG","$mStepSum")
 
@@ -204,22 +205,6 @@ class MainActivity : BaseActivity() {
         startService(intent)
     }
 
-    fun getStep() : String{
-        var stepArray: String
-        var lastStep: Step = Step()
-        stepArray = iSportStepInterface.todaySportStepArray
-        var gson = Gson()
-        var steps = gson.fromJson<List<Step>>(stepArray, object : TypeToken<List<Step>>() {
-        }.type)
-        if(steps.isNotEmpty()){
-             lastStep = steps.get(steps.size-1)
-//            Toast.makeText(makeTextthis,"${lastStep.stepNum}步",Toast.LENGTH_LONG).show()
-        }
-        return lastStep.stepNum
-    }
-//    fun setTagAndAlias(){
-//        JPushInterface.setAlias(this@MainActivity,10000,"qubuxing")
-//    }
 
      override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -273,10 +258,6 @@ class MainActivity : BaseActivity() {
         Log.d("TAGS","dayStep:$dayStep hours:$hours ")
         if (steps < mStepSum)
             steps =  mStepSum.toFloat()
-        if(steps> 100000){
-            steps = 0f
-        }
-        steps = 10000f
         client.callBackStep(steps)
     }
 

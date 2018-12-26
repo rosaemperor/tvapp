@@ -181,7 +181,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
-
+        <!--广点通视频-->
+        <!--<activity-->
+            <!--android:name="com.qq.e.ads.PortraitADActivity"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
+        <!--<activity-->
+            <!--android:name="com.qq.e.ads.LandscapeADActivity"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
         <!-- 报红无影响 -->
         <service
             android:name="com.iflytek.voiceads.update.DownloadService"

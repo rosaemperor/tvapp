@@ -32,12 +32,15 @@ import com.bumptech.glide.Glide
 import com.bytedance.sdk.openadsdk.*
 
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.iflytek.voiceads.*
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
 import com.qq.e.ads.banner.ADSize
 import com.qq.e.ads.banner.AbstractBannerADListener
 import com.qq.e.ads.banner.BannerView
+//import com.qq.e.ads.rewardvideo.RewardVideoAD
+//import com.qq.e.ads.rewardvideo.RewardVideoADListener
 import com.qq.e.ads.splash.SplashAD
 import com.qq.e.ads.splash.SplashADListener
 import com.qq.e.comm.util.AdError
@@ -84,6 +87,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     lateinit var adSlot : AdSlot
      var result = VideoBack()
     lateinit var videoADDataRef :VideoADDataRef
+//     var rewardVideoAd : RewardVideoAD ?= null
 
     var mttRewardVideoAd :TTRewardVideoAd? = null
 
@@ -260,11 +264,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         registerHandler("getAppStep",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var intent = Intent()
-//                var json = data as JsonObject
-//                haveStepToday = json.get("step").asInt
+                var json = data as org.json.JSONObject
+                haveStepToday = json.getInt("step")
                 intent.setClass(webView.context, StepCounterService::class.java)
                 webView.context.startService(intent)
-                var stepNum = ((webView.context) as MainActivity).getStep()
                 backStep = true
                 stepCallback =callback
             }
@@ -699,6 +702,13 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         binding!!.splashLayout.addView(adView)
                         videoAd.showAd(0, 0)
                     }
+//                    "GDTVideo"->{
+//                        rewardVideoAd?.let {
+//                            rewardVideoAd!!.showAD()
+//                        }
+//                    }
+                    else ->{
+                    }
                 }
 
 
@@ -796,6 +806,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             "banner" ->{
                 var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
                 var bannerView = IFLYBannerAd.createBannerAd(webView.context , adWithTypeEntity.spaceId)
+                if (null == bannerView) return
                 bannerView.setAdSize(IFLYAdSize.BANNER)
                 binding!!.adLayout.removeAllViews()
                 binding.adLayout.invalidate()
@@ -890,7 +901,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         when(adWithTypeEntity.ADType){
             //"banner" "video" "splash" "insert"
             "banner" ->{
-                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var binding: ActivityMainBinding? = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                        ?: return
                 binding!!.adLayout.removeAllViewsInLayout()
                 binding.adLayout.invalidate()
                 var bannerListener = object : BannerListener{
@@ -1129,6 +1141,53 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 Log.d("TAG","广点通暂不提供开屏")
 //                var splashAD = SplashAD(webView.context as Activity, binding!!.splashLayout, skipView, appId, posId, adListener, 0)
             }
+//            "video"->{
+//                var gdtListener = object : RewardVideoADListener{
+//                    override fun onADExpose() {
+//
+//                    }
+//
+//                    override fun onADClick() {
+//                    }
+//
+//                    override fun onVideoCached() {
+//                        result.result = "onRewardVideoCached"
+//                        result.supplierType = adWithTypeEntity.supplierType
+//                        callHandler("videoCallback",gson.toJson(result),null)
+//                    }
+//
+//                    override fun onReward() {
+//                    }
+//
+//                    override fun onADClose() {
+//                        result.result = "onAdClose"
+//                        result.supplierType = adWithTypeEntity.supplierType
+//                        callHandler("videoCallback",gson.toJson(result),null)
+//                    }
+//
+//                    override fun onADLoad() {
+//                        result.result = "onRewardVideoCached"
+//                        result.supplierType = adWithTypeEntity.supplierType
+//                        callHandler("videoCallback",gson.toJson(result),null)
+//                    }
+//
+//                    override fun onVideoComplete() {
+//                    }
+//
+//                    override fun onError(p0: AdError?) {
+//                        result.result = "onAdFailed"
+//                        result.supplierType = adWithTypeEntity.supplierType
+//                        callHandler("videoCallback",gson.toJson(result),null)
+//                    }
+//
+//                    override fun onADShow() {
+//                    }
+//                }
+//                 rewardVideoAd = RewardVideoAD(webView.context , config.GDTAPP_ID, adWithTypeEntity.spaceId , gdtListener)
+//            }
+            else ->{
+
+            }
         }
 
     }
@@ -1169,10 +1228,6 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     override fun onRewardVideoAdLoad(p0: TTRewardVideoAd?) {
                         mttRewardVideoAd =p0
                         p0!!.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener{
-                            override fun onVideoError() {
-
-                            }
-
                             override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
                                 result.result = "onRewardVerify"
                                 result.supplierType = adWithTypeEntity.supplierType

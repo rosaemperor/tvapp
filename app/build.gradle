@@ -170,6 +170,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.4.0'
     implementation 'com.alibaba:fastjson:1.2.33'
+//    implementation files('libs/GDTUnionSDK.4.20.580.min.jar')
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'com.google.code.gson:gson:2.8.1'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
@@ -191,9 +192,9 @@ dependencies {
     //    implementation 'com.github.bumptech.glide:glide:4.8.0'
     //    implementation 'com.squareup.picasso:picasso:2.5.1'
     //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
-    implementation(name: 'open_ad_sdk1.9.72', ext: 'aar')
+    implementation(name: 'open_ad_sdk1.9.62', ext: 'aar')
     //    implementation(name: 'open_ad_sdk', ext: 'aar')
-    implementation(name: 'adpoymer-3.5.01', ext: 'aar')
+    implementation(name: 'adpoymer-3.4.74', ext: 'aar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.android.support:design:27.1.1'
 

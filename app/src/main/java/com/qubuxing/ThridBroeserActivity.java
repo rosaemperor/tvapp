@@ -33,6 +33,7 @@ import java.util.TimerTask;
 public class ThridBroeserActivity extends AppCompatActivity implements View.OnClickListener,SwipeRefreshLayout.OnRefreshListener{
     private ActivityThirdBrowserBinding binding;
     private boolean canScroll = false;
+    private Timer timer;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +126,7 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             binding.progressBar.setVisibility(View.VISIBLE);
-            Timer timer = new Timer();
+            timer = new Timer();
             TimerTask tt = new TimerTask() {
                 @Override
                 public void run() {
