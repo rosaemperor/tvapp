@@ -15,6 +15,15 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.qubuxing.qbx.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <!-- 协处理器计步权限 -->
     <uses-feature
         android:name="android.hardware.sensor.stepcounter"
@@ -69,15 +78,7 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:label="@string/app_name"
             android:exported="true"/>
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.qubuxing.qbx.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+
 
 
         <service android:name=".service.StepCounterService"/>
@@ -147,8 +148,10 @@
             android:exported="false" />
         <activity
         android:name="com.qq.e.ads.ADActivity"
+        android:taskAffinity="com.qubuxing.default"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
         <activity
+            android:taskAffinity="com.qubuxing.default"
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -174,6 +177,15 @@
     </provider>
 
         <!--小米广告-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.qubuxing.qbx.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <activity
             android:name="com.miui.zeus.mimo.sdk.activityProxy.ProxyActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -207,6 +219,7 @@
         <!-- 报红无影响 -->
         <activity
             android:name="com.iflytek.voiceads.request.IFLYBrowser"
+            android:taskAffinity="com.qubuxing.default"
             android:screenOrientation="portrait" />
         <meta-data
             android:name="IFLYTEK_APPKEY_AD"

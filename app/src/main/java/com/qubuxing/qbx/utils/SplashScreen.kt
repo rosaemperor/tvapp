@@ -128,7 +128,13 @@ object SplashScreen {
                                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
                                 ) {
 //                                    Log.d("TAG","${splashs[1].adSrc}")
-                                    if(null ==splashs || splashs.isEmpty()) return
+                                    if(null ==splashs || splashs.isEmpty()) {
+                                        adShowed = true
+                                        if ((SplashScreen.activity as MainActivity).client.pageGetFinished) {
+                                            hide(SplashScreen.activity)
+                                        }
+                                        return
+                                    }
                                     callAdWithType(splashs!![0])
                                 } else {
                                     adShowed = true

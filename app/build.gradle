@@ -170,9 +170,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.4.0'
     implementation 'com.alibaba:fastjson:1.2.33'
-//    implementation files('libs/GDTUnionSDK.4.20.580.min.jar')
+    //    implementation files('libs/GDTUnionSDK.4.20.580.min.jar')
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.android.support:support-v4:26.0.0-alpha1'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     implementation 'com.github.lzyzsd:jsbridge:1.0.4'
     implementation 'org.greenrobot:eventbus:3.0.0'
@@ -182,7 +183,7 @@ dependencies {
     // 如果需要支持 Java8 的组件，需要引入 lifecycle:common-java8
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
     implementation files('libs/microlog4android-1.0.0.jar')
-//    implementation files('libs/Baidu_MobAds_SDK.jar')
+    //    implementation files('libs/Baidu_MobAds_SDK.jar')
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
     // 此处以JPush 3.0.9

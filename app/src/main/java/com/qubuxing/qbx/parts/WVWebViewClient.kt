@@ -38,6 +38,7 @@ import com.google.gson.JsonObject
 import com.iflytek.voiceads.*
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
+import com.miui.zeus.mimo.sdk.MimoSdk
 import com.miui.zeus.mimo.sdk.ad.AdWorkerFactory
 import com.miui.zeus.mimo.sdk.ad.IAdWorker
 import com.miui.zeus.mimo.sdk.listener.MimoAdListener
@@ -783,8 +784,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         when(adWithTypeEntity.ADType){
             "banner"->{
                 var mBannerAd : IAdWorker
+                if(MimoSdk.isSdkReady()){
+                    Log.d("TAG","MiBanneready: ${MimoSdk.isSdkReady()}")
+                }
                 var listener = object : MimoAdListener {
                     override fun onAdFailed(p0: String?) {
+                        Log.d("TAG","MiBanner: ${p0}")
                         callHandler("bannerCallback","onAdFailed",null)
                     }
 
@@ -793,6 +798,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdPresent() {
+                        Log.d("TAG","MiBanner: onStimulateSuccess")
                     }
 
                     override fun onAdClick() {
@@ -800,6 +806,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onStimulateSuccess() {
+                        Log.d("TAG","MiBanner: onStimulateSuccess")
                     }
 
                     override fun onAdLoaded(p0: Int) {
@@ -1148,12 +1155,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onADExposure() {
-                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-                        closeView.setOnClickListener {
-                            binding!!.adLayout.removeAllViews()
-                        }
-                        binding!!.adLayout.addView(closeView)
-                        binding.adLayout.invalidate()
+//                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+//                        closeView.setOnClickListener {
+//                            binding!!.adLayout.removeAllViews()
+//                        }
+//                        binding!!.adLayout.addView(closeView)
+//                        binding.adLayout.invalidate()
                     }
                     override fun onADClicked() {
                         callHandler("bannerCallback","onAdClick",null)
