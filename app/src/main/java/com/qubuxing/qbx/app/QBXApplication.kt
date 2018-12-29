@@ -7,6 +7,9 @@ import cn.jpush.android.api.JPushInterface
 import com.baidu.mobads.AdSettings
 import com.bytedance.sdk.openadsdk.TTAdManager
 import com.bytedance.sdk.openadsdk.TTAdManagerFactory
+import com.kf5.sdk.system.init.KF5SDKInitializer
+import com.kf5.sdk.system.utils.ImageLoaderManager
+import com.kf5.sdk.system.utils.SPUtils
 import com.ly.adpoymer.config.AdConfig
 import com.ly.adpoymer.manager.*
 import com.miui.zeus.mimo.sdk.MimoSdk
@@ -50,6 +53,9 @@ class QBXApplication : Application(){
     }
 
     private fun initUtils() {
+        KF5SDKInitializer.init(this@QBXApplication)
+        ImageLoaderManager.getInstance(this@QBXApplication)
+        SPUtils.getInstance(this@QBXApplication)
         SharePrefenceHelper.initSharePreference(applicationContext)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks{
             override fun onActivityPaused(activity: Activity?) {

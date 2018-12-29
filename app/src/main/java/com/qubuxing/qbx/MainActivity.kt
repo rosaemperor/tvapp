@@ -32,6 +32,8 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.kf5.sdk.im.ui.KF5ChatActivity
+import com.kf5.sdk.system.utils.SPUtils
 import com.ly.adpoymer.interfaces.BannerListener
 import com.ly.adpoymer.interfaces.InsertListener
 import com.ly.adpoymer.interfaces.SpreadListener
@@ -51,6 +53,7 @@ import com.qubuxing.qbx.parts.WVWebViewClient
 import com.qubuxing.qbx.service.StepCounterService
 import com.qubuxing.qbx.utils.DialogUtils
 import com.qubuxing.qbx.utils.JumpSetting
+import com.qubuxing.qbx.utils.KFUtils.Preference
 import com.qubuxing.qbx.utils.SharePrefenceHelper
 import com.qubuxing.qbx.utils.SplashScreen
 import com.qubuxing.qbx.viewModels.MainViewModel
@@ -86,7 +89,6 @@ class MainActivity : BaseActivity() {
 
     @SuppressLint("ResourceAsColor")
     override fun initViewModel() {
-//        Glide.setup(GlideBuilder(this@MainActivity).setDecodeFormat(DecodeFormat.ALWAYS_ARGB_8888))
         viewModel = MainViewModel()
         viewModel.getUpdateMessage(this@MainActivity)
         binding.swipeLayout.isEnabled = false
@@ -129,39 +131,13 @@ class MainActivity : BaseActivity() {
     //按键处理
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-//        if (keyCode == KeyEvent.KEYCODE_BACK){
-//           var mBannerAd : IAdWorker
-//                var listener = object : MimoAdListener {
-//                    override fun onAdFailed(p0: String?) {
-//                        Log.d("TAG","MiBanner: onAdFailed")
-//                    }
-//
-//                    override fun onAdDismissed() {
-//
-//                    }
-//
-//                    override fun onAdPresent() {
-//                    }
-//
-//                    override fun onAdClick() {
-//
-//                    }
-//
-//                    override fun onStimulateSuccess() {
-//                        Log.d("TAG","MiBanner: onAdFailed")
-//                    }
-//
-//                    override fun onAdLoaded(p0: Int) {
-//                        Log.d("TAG","MiBanner: ${p0}")
-//
-//                    }
-//                }
-//                binding.adLayout.removeAllViews()
-//                binding.adLayout.invalidate()
-//                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding!!.adLayout ,listener, AdType.AD_BANNER)
-//                mBannerAd.loadAndShow("7a357fc4b59ba1046c8c84763039d6b1")
-//            return true
-//        }
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+//            Log.d("TAG","${Preference.getBoolLogin(this@MainActivity)}")
+//            var intent = Intent(this@MainActivity , KF5ChatActivity::class.java)
+//            startActivity(intent)
+            viewModel.checkKFLoginStatus(this@MainActivity,"username", "a15936562980@163.com")
+            return true
+        }
         return super.onKeyDown(keyCode, event)
     }
 
@@ -231,8 +207,9 @@ class MainActivity : BaseActivity() {
             diff = event.setps - SharePrefenceHelper.get("stepSum").toFloat()
             if (diff <0 ) {
                 diff =0.0f
-                SharePrefenceHelper.save("stepSum",""+event.setps)
+
             }
+            SharePrefenceHelper.save("stepSum",""+event.setps)
             client.callBackStep(client.haveStepToday + diff)
             return
         }else{

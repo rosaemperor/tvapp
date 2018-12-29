@@ -25,7 +25,9 @@ object config {
     val miMoAPPTOKEN = "fake_app_token"
 
 
-
+    //客服账号
+    val KFAPPID = "0015c173d1f6df514c549a935f49fb6a3bc6a3c3a403d888"
+    val KFHelpAdress ="luckybi.kf5.com"
 
     val GDTAPP_ID ="1107985626"
     private var HOST_ADDRESS_DEBUG : String  = if(BuildConfig.TEST) HOST_ADDRESS_GETSET else HOST_ADDRESS_DEV

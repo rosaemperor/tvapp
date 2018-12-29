@@ -134,8 +134,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var req = SendMessageToWX.Req()
                 var bitmap: Bitmap? = null
                 thread = Thread(Runnable{
-                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
-//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
+//                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
+                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
 //                    msg.setThumbImage(bitmap)
                     msg.setThumbImage(bitmap)
@@ -330,8 +330,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var req = SendMessageToWX.Req()
                 var bitmap: Bitmap? = null
                 thread = Thread(Runnable{
-                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
-//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
+//                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
+                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
                     msg.setThumbImage(bitmap)
                     req.message = msg
@@ -358,8 +358,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var req = SendMessageToWX.Req()
                 var bitmap: Bitmap? = null
                 thread = Thread(Runnable{
-                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
-//                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
+//                    bitmap = Glide.with(webView.context).asBitmap().load(entity.imageurl).submit(500,500).get()
+                    bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(200,200).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
                     msg.setThumbImage(bitmap)
                     req.message = msg
@@ -979,12 +979,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdDisplay(p0: String?) {
-                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-                        closeView.setOnClickListener {
-                            binding.adLayout.removeAllViews()
-                        }
-                        binding.adLayout.addView(closeView)
-                        binding.adLayout.invalidate()
+//                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+//                        closeView.setOnClickListener {
+//                            binding.adLayout.removeAllViews()
+//                        }
+//                        binding.adLayout.addView(closeView)
+//                        binding.adLayout.invalidate()
                     }
 
                     override fun onAdClick(p0: String?) {
