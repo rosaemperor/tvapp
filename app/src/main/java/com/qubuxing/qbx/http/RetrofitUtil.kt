@@ -54,24 +54,31 @@ class RetrofitUtil private constructor() {
 
                 var response = chain.proceed(request)
                 var responseBody: ResponseBody? = null
-//                try {
-                    val jsonObject = JSONObject(response.body()!!.string())
-                if(jsonObject.getInt("code") == 0 ){
-                    val data = jsonObject.get("data").toString() + ""
-                    val type = MediaType.parse("image/jpeg; charset=utf-8")
-                    Log.d("TAG", "data:$data")
-                    responseBody = ResponseBody.create(type, data)
-                }else if(jsonObject.getInt("code") == 9000 ){
-                    val data = jsonObject.get("data").toString() + ""
-                    val type = MediaType.parse("image/jpeg; charset=utf-8")
-                    Log.d("TAG", "data:$data")
-                    responseBody = ResponseBody.create(type, data)
-                    response = response.newBuilder().body(responseBody).build()
-                    return response
-                }
-                else{
+                var jsonObject : JSONObject = JSONObject()
+                try {
+                    jsonObject = JSONObject(response.body()!!.string())
+                    if(jsonObject.getInt("code") == 0 ){
+                        val data = jsonObject.get("data").toString() + ""
+                        val type = MediaType.parse("image/jpeg; charset=utf-8")
+                        Log.d("TAG", "data:$data")
+                        responseBody = ResponseBody.create(type, data)
+                    }else if(jsonObject.getInt("code") == 9000 ){
+                        val data = jsonObject.get("data").toString() + ""
+                        val type = MediaType.parse("image/jpeg; charset=utf-8")
+                        Log.d("TAG", "data:$data")
+                        responseBody = ResponseBody.create(type, data)
+                        response = response.newBuilder().body(responseBody).build()
+                        return response
+                    }
+                    else{
 
+                    }
+                }catch (jsone : JSONException){
+                    val type = MediaType.parse("image/jpeg; charset=utf-8")
+                    responseBody = ResponseBody.create(type, "")
                 }
+
+
 
 
 //                } catch (e: JSONException) {

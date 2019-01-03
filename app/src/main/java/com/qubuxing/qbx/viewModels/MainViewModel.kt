@@ -88,12 +88,13 @@ class MainViewModel : BaseViewModel(){
         })
     }
 
-    fun checkKFLoginStatus(activity : AppCompatActivity, userName : String , email : String){
+    fun checkKFLoginStatus(activity : AppCompatActivity, userName : String , email : String , phone : String, goPage : Boolean){
         if(!Preference.getBoolLogin(activity)){
             this.activity = activity
             var map = ArrayMap<String , String>()
             map.put(ParamsKey.EMAIL,"${email}")
             SPUtils.saveAppID(config.KFAPPID)
+            map.put(ParamsKey.PHONE , phone)
             SPUtils.saveHelpAddress(config.KFHelpAdress)
             map.put(ParamsKey.USER_FIELDS , "")
             SPUtils.saveUserAgent(Utils.getAgent(SoftReference<Context>(activity)))
@@ -110,10 +111,10 @@ class MainViewModel : BaseViewModel(){
                             var  id =  userObj.getInt(Field.ID)
                             SPUtils.saveUserToken(userToken)
                             SPUtils.saveUserId(id)
-                            saveToken(map)
+                            saveToken(map, goPage)
                         }
                     }else{
-                        loginUser(map, activity)
+                        loginUser(map, activity , goPage)
                     }
                 }
 
@@ -123,14 +124,17 @@ class MainViewModel : BaseViewModel(){
             })
 
         }else{
-            var intent = Intent(activity , KF5ChatActivity::class.java)
-            activity.startActivity(intent)
-            Log.d("TAG","客服已登陆")
+            if(goPage){
+                var intent = Intent(activity , KF5ChatActivity::class.java)
+                activity.startActivity(intent)
+                Log.d("TAG","客服已登陆")
+            }
+
         }
 
 
     }
-    fun loginUser(map : ArrayMap<String ,String>, activity : AppCompatActivity){
+    fun loginUser(map : ArrayMap<String ,String>, activity : AppCompatActivity , gopage: Boolean){
         UserInfoAPI.getInstance().loginUser(map, object : HttpRequestCallBack{
             override fun onSuccess(p0: String?) {
                 var jsonObject = SafeJson.parseObj(p0)
@@ -144,10 +148,10 @@ class MainViewModel : BaseViewModel(){
                         var  id =  userObj.getInt(Field.ID)
                         SPUtils.saveUserToken(userToken)
                         SPUtils.saveUserId(id)
-                        saveToken(map)
+                        saveToken(map , gopage)
                     }
                 }else{
-                    loginUser(map,activity)
+                    loginUser(map,activity, gopage)
                 }            }
 
             override fun onFailure(p0: String?) {
@@ -156,13 +160,16 @@ class MainViewModel : BaseViewModel(){
     }
 
 
-    fun saveToken(map: ArrayMap<String, String>) {
+    fun saveToken(map: ArrayMap<String, String> , gopage : Boolean) {
         map[ParamsKey.DEVICE_TOKEN] = "123456"
         UserInfoAPI.getInstance().saveDeviceToken(map, object : HttpRequestCallBack {
             override fun onSuccess(result: String) {
                 Log.i("kf5测试", "保存设备Token成功$result")
-                var intent = Intent(activity , KF5ChatActivity::class.java)
-                activity.startActivity(intent)
+                if(gopage){
+                    var intent = Intent(activity , KF5ChatActivity::class.java)
+                    activity.startActivity(intent)
+                }
+
             }
 
             override fun onFailure(result: String) {

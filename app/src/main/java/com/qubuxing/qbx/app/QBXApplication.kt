@@ -13,6 +13,8 @@ import com.kf5.sdk.system.utils.SPUtils
 import com.ly.adpoymer.config.AdConfig
 import com.ly.adpoymer.manager.*
 import com.miui.zeus.mimo.sdk.MimoSdk
+import com.oppo.mobad.api.InitParams
+import com.oppo.mobad.api.MobAdManager
 import com.qubuxing.qbx.utils.SharePrefenceHelper
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -53,9 +55,18 @@ class QBXApplication : Application(){
     }
 
     private fun initUtils() {
+        //客服SDK
         KF5SDKInitializer.init(this@QBXApplication)
         ImageLoaderManager.getInstance(this@QBXApplication)
         SPUtils.getInstance(this@QBXApplication)
+        //OPPO广告
+        var builder = InitParams.Builder()
+        if(BuildConfig.DEBUG){
+            builder.setDebug(true)
+        }
+        var initParams = builder.build()
+        MobAdManager.getInstance().init(this@QBXApplication,config.OPPO_APPID ,initParams)
+
         SharePrefenceHelper.initSharePreference(applicationContext)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks{
             override fun onActivityPaused(activity: Activity?) {

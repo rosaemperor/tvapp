@@ -93,6 +93,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     var mTTAdNative : TTAdNative
     lateinit var adSlot : AdSlot
      var result = VideoBack()
+    var adHelper : AdHelper
+    var device : DeviceModule
+    var deviceInfo : DeviceInfo
     lateinit var videoADDataRef :VideoADDataRef
 //     var rewardVideoAd : RewardVideoAD ?= null
 
@@ -105,7 +108,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     })
     init {
 //微信登录调起
-
+        device = DeviceModule(webView.context)
+        deviceInfo = gson.fromJson<DeviceInfo>(device.deviceInfo,DeviceInfo::class.java)
+        adHelper = AdHelper(webView)
         mTTAdNative = QBXApplication.ttAdManager.createAdNative(webView.context)
         registerHandler("submitWechatLogin", object : WVJBHandler {
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
@@ -118,6 +123,20 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         registerHandler("jumpSetting",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 JumpSetting.jumpStartInterface(webView.context)
+            }
+        })
+        registerHandler("KFInitializeWithEmail", object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var  binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var kfEntity = gson.fromJson<KFentity>(data.toString(),KFentity::class.java)
+                binding!!.viewModel!!.checkKFLoginStatus(webView.context as MainActivity , kfEntity.name,kfEntity.email, kfEntity.phone, false)
+            }
+        })
+        registerHandler("KFEnterChatRoom", object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var  binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                var kfEntity = gson.fromJson<KFentity>(data.toString(),KFentity::class.java)
+                binding!!.viewModel!!.checkKFLoginStatus(webView.context as MainActivity , kfEntity.name,kfEntity.email, kfEntity.phone, true)
             }
         })
         registerHandler("LaunchMiniProgramCard",object : WVJBWebViewClient.WVJBHandler{
@@ -161,11 +180,13 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 try {
                     val packageInfo = webView.context.packageManager.getPackageInfo(webView.context.packageName, 0)
+
                     val jsonObject = JSONObject()
                     jsonObject.put("versionName", packageInfo.versionName)
                     if (Build.VERSION.SDK_INT<= 27) jsonObject.put("versionCode", packageInfo.versionCode)
                     if (Build.VERSION.SDK_INT>= 28) jsonObject.put("versionCode", packageInfo.longVersionCode)
                     jsonObject.put("buildCode", QBXApplication.buildCode)
+                    jsonObject.put("deviceInfo", device.deviceInfo)
                     callback!!.callback(jsonObject.toString())
                 } catch (e: Exception) {
                     Log.e("error", e.message)
@@ -714,6 +735,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         binding!!.splashLayout.addView(adView)
                         videoAd.showAd(0, 0)
                     }
+                    "OPPOVideo"->{
+                        adHelper.showVideoWithType("OPPOVideo")
+                    }
 //                    "GDTVideo"->{
 //                        rewardVideoAd?.let {
 //                            rewardVideoAd!!.showAD()
@@ -751,6 +775,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     binding.adLayout.layoutParams = layoutParams
                 }
                 binding.adLayout.invalidate()
+
+                if(adHelper.checkIsSupply(adWithTypeEntity , deviceInfo)){
+                    return
+                }
                 when(adWithTypeEntity.supplierType){
                     "LY" ->{
                         showLYAd(adWithTypeEntity,callback)
@@ -770,6 +798,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     "XIAOMI"->{
                         showXMAD(adWithTypeEntity,callback)
                     }
+                    "OPPO" ->{
+                        adHelper.showADOPPO(adWithTypeEntity , callback)
+                    }
+
                     else ->{
 
                     }

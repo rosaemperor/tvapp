@@ -110,14 +110,14 @@
 
             </LinearLayout>
         </LinearLayout>
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/ad_layout"
             android:layout_width="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="50dp"
             android:layout_height="wrap_content">
 
-        </FrameLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/splash_layout"

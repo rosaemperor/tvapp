@@ -131,13 +131,13 @@ class MainActivity : BaseActivity() {
     //按键处理
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            Log.d("TAG","${Preference.getBoolLogin(this@MainActivity)}")
-//            var intent = Intent(this@MainActivity , KF5ChatActivity::class.java)
-//            startActivity(intent)
-            viewModel.checkKFLoginStatus(this@MainActivity,"username", "a15936562980@163.com")
-            return true
-        }
+//        if(keyCode == KeyEvent.KEYCODE_BACK){
+////            Log.d("TAG","${Preference.getBoolLogin(this@MainActivity)}")
+////            var intent = Intent(this@MainActivity , KF5ChatActivity::class.java)
+////            startActivity(intent)
+//            viewModel.checkKFLoginStatus(this@MainActivity,"username", "a15936562980@163.com")
+//            return true
+//        }
         return super.onKeyDown(keyCode, event)
     }
 

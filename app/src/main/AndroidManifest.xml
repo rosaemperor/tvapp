@@ -175,6 +175,16 @@
             android:name="android.support.FILE_PROVIDER_PATHS"
             android:resource="@xml/bd_file_paths"/>
     </provider>
+        <!--Oppo广告-->
+        <activity android:name="com.oppo.mobad.activity.AdActivity" />
+          <service android:name="com.oppo.mobad.service.AdService" />
+        <activity android:name="com.oppo.mobad.activity.VideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <!--<activity-->
+            <!--android:name="com.oppo.mobad.activity.VideoActivity" -->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
+            <!--     android:screenOrientation="sensor"/>-->
 
         <!--小米广告-->
         <provider
@@ -202,6 +212,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+        <!--极光推送服务互相唤起-->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter >
+                <action android:name="cn.jpush.android.intent.DaemonService" />
+                <category android:name="om.qubuxing.qbx"/>
+            </intent-filter>
+        </service>
         <!--广点通视频-->
         <!--<activity-->
             <!--android:name="com.qq.e.ads.PortraitADActivity"-->

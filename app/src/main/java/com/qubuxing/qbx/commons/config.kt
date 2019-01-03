@@ -17,9 +17,10 @@ object config {
 
     val WXAPP_ID ="wx2d2573d29537aede"
 
+    //oppo广告账户
+    val OPPO_APPID = "3717922"
 
-
-
+    //小米广告账户
     val miMoAPPID = "2882303761517900333"
     val miMoAPPKEY = "fake_app_key"
     val miMoAPPTOKEN = "fake_app_token"

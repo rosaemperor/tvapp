@@ -17,6 +17,7 @@ import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
     private ActivityThirdBrowserBinding binding;
     private boolean canScroll = false;
     private Timer timer;
+    private WebResourceResponse  responseResource;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +88,12 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back:
-                finish();
+                if(binding.mainWebview.canGoBack()){
+                    binding.mainWebview.goBack();
+                }else {
+                    finish();
+                }
+
                 break;
             case R.id.btn_reload:
                 binding.mainWebview.reload();
@@ -107,8 +114,12 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(event.getAction() == KeyEvent.KEYCODE_BACK){
-            Log.d("url",""+binding.mainWebview.getUrl());
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if(binding.mainWebview.canGoBack()){
+                binding.mainWebview.goBack();
+            }else {
+                finish();
+            }
             return  true;
         }
         return super.onKeyDown(keyCode, event);
@@ -167,6 +178,10 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//             responseResource =shouldInterceptRequest(view, request);
+//            if(responseResource.getStatusCode() == 302){
+//                return true;
+//            }
             if (view.getUrl().startsWith("weixin") ) {
                 try {
                     // 以下固定写法
@@ -184,7 +199,6 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
                 return true;
 
             }
-
 
             return super.shouldOverrideUrlLoading(view, request);
         }
@@ -211,5 +225,12 @@ public class ThridBroeserActivity extends AppCompatActivity implements View.OnCl
 
             return super.shouldOverrideUrlLoading(view, url);
         }
+
+//        @androidx.annotation.Nullable
+//        @Nullable
+//        @Override
+//        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+//            return super.shouldInterceptRequest(view, request);
+//        }
     }
 }

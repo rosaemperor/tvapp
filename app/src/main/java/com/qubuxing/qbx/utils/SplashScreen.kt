@@ -28,12 +28,15 @@ import com.iflytek.voiceads.IFLYNativeListener
 import com.iflytek.voiceads.NativeADDataRef
 import com.ly.adpoymer.interfaces.SpreadListener
 import com.ly.adpoymer.manager.SpreadManager
+import com.oppo.mobad.api.listener.ISplashAdListener
+import com.oppo.mobad.api.params.SplashAdParams
 import com.qq.e.ads.splash.SplashAD
 import com.qq.e.ads.splash.SplashADListener
 import com.qq.e.comm.util.AdError
 import com.qubuxing.qbx.MainActivity
 import com.qubuxing.qbx.QBXApplication
 import com.qubuxing.qbx.R
+import com.qubuxing.qbx.config
 import com.qubuxing.qbx.http.RetrofitUtil
 import com.qubuxing.qbx.http.beans.AdWithTypeEntity
 import com.qubuxing.qbx.http.beans.GetSplashEntity
@@ -396,6 +399,46 @@ object SplashScreen {
                 }
                 var splashAd = SplashAd(activity, containLayout ,bdSplashListener , splashAdEntity.adSrcId , true)
             }
+//            "ad-oppo" ->{
+//                var splashParams = SplashAdParams.Builder().
+//                        setFetchTimeout(3000).
+//                        setTitle(activity!!.getString(R.string.app_name))
+//                        .setDesc("趣味步行，越走越有趣")
+//                        .build()
+//                var oppoSlpashListener  = object : ISplashAdListener{
+//                    override fun onAdFailed(p0: String?) {
+//                        Log.d("TAG","onAdFailed${p0}")
+//                        adShowed = true
+//                        if ((activity as MainActivity).client.pageGetFinished) {
+//                            hide(activity)
+//                        }
+//                    }
+//
+//                    override fun onAdShow() {
+//                    }
+//
+//                    override fun onAdDismissed() {
+//                        Log.d("TAG","onAdDismissed")
+//                        adShowed = true
+//                        if ((activity as MainActivity).client.pageGetFinished) {
+//                            hide(activity)
+//                        }
+//                    }
+//
+//                    override fun onAdClick() {
+//                    }
+//
+//                }
+//                try{
+//                    var mSplashAd = com.oppo.mobad.api.ad.SplashAd(activity,splashAdEntity.adSrcId ,oppoSlpashListener , splashParams)
+//
+//                }catch (e: java.lang.Exception){
+//                    adShowed = true
+//                    if ((activity as MainActivity).client.pageGetFinished) {
+//                        hide(activity)
+//                    }
+//                }
+//            }
             else ->{
                 adShowed = true
                 if ((activity as MainActivity).client.pageGetFinished) {
