@@ -49,7 +49,9 @@ class QBXWebView : WebView {
         settings.setAppCachePath(mContext.applicationContext.cacheDir.absolutePath)
         settings.allowFileAccess = true
         settings.setAppCacheEnabled(true)
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            settings.mediaPlaybackRequiresUserGesture = false
+        }
     }
 
 
