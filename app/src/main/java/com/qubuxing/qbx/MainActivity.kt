@@ -203,8 +203,13 @@ class MainActivity : BaseActivity() {
     fun stepGetEvent(event : StepGetEvent){
         if (!client.backStep) return
         var diff = 0.0f
+        var str = ""
         if(client.haveStepToday != 0){
-            diff = event.setps - SharePrefenceHelper.get("stepSum").toFloat()
+            var lastSteps = 0.0f
+            if ( "" != SharePrefenceHelper.get("stepSum")){
+                lastSteps = SharePrefenceHelper.get("stepSum").toFloat()
+            }
+            diff = event.setps - lastSteps
             if (diff <0 ) {
                 diff =0.0f
 
