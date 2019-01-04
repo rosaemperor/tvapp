@@ -89,7 +89,7 @@ class MainViewModel : BaseViewModel(){
     }
 
     fun checkKFLoginStatus(activity : AppCompatActivity, userName : String , email : String , phone : String, goPage : Boolean){
-        if(!Preference.getBoolLogin(activity)){
+        if(!Preference.getBoolLogin(activity) || !goPage){
             this.activity = activity
             var map = ArrayMap<String , String>()
             map.put(ParamsKey.EMAIL,"${email}")

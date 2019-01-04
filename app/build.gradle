@@ -9,6 +9,11 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     signingConfigs {
         debugConfig {
             keyPassword 'aoshitiandi@2'
@@ -34,6 +39,10 @@ android {
                 JPUSH_APPKEY : "83a1b4a81c68be03438000bb", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "lanyou", //暂时填写默认值即可.
         ]
+        ndk {
+            //  abiFilters "armeabi-v7a", "x86"
+            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a','x86', 'x86_64', 'mips', 'mips64'
+        }
     }
     buildTypes {
         release {
@@ -189,9 +198,9 @@ dependencies {
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
     // 此处以JPush 3.0.9
-    implementation 'cn.jiguang.sdk:jcore:1.2.5'
+//    implementation 'cn.jiguang.sdk:jcore:1.2.5'
     // 此处以JCore 1.1.7
-    api 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     //        implementation 'com.github.bumptech.glide:glide:3.7.0'
     //    implementation 'com.squareup.picasso:picasso:2.5.1'
     //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
@@ -200,6 +209,8 @@ dependencies {
     implementation(name: 'adpoymer-3.4.74', ext: 'aar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.android.support:design:27.1.1'
+    implementation files('libs/jcore-android-1.2.6.jar')
+    implementation files('libs/jverification-android-1.1.1.jar')
     implementation files('libs/MimoSdk.jar')
     implementation files('libs/wire-runtime-2.2.0.jar')
     implementation files('libs/oppo_mobad_api_v271_2018_08_24_release.jar')

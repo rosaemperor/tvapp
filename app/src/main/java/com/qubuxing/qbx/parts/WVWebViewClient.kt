@@ -24,6 +24,9 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.Toast
+import cn.jiguang.verifysdk.api.JVerificationAction
+import cn.jiguang.verifysdk.api.JVerificationInterface
+import cn.jiguang.verifysdk.api.VerifyListener
 import cn.jpush.android.api.JPushInterface
 import com.baidu.mobad.feeds.BaiduNative
 import com.baidu.mobad.feeds.NativeErrorCode
@@ -137,6 +140,17 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var  binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
                 var kfEntity = gson.fromJson<KFentity>(data.toString(),KFentity::class.java)
                 binding!!.viewModel!!.checkKFLoginStatus(webView.context as MainActivity , kfEntity.name,kfEntity.email, kfEntity.phone, true)
+            }
+        })
+        registerHandler("getJVerificationToken",object  : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                JVerificationInterface.getToken(webView.context , object : VerifyListener{
+                    override fun onResult(code: Int, content: String?, operator: String?) {
+                        if (code == 2000){
+                            Log.d("TAG","token:${content} + operator: ${operator}")
+                        }
+                    }
+                })
             }
         })
         registerHandler("LaunchMiniProgramCard",object : WVJBWebViewClient.WVJBHandler{

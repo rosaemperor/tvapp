@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- 协处理器计步权限 -->
     <uses-feature
         android:name="android.hardware.sensor.stepcounter"
@@ -135,7 +136,7 @@
         <service
             android:name="com.qubuxing.step.JobSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
+        <meta-data android:name="JPUSH_APPKEY" android:value="83a1b4a81c68be03438000bb"/>
         <meta-data
             android:name="JPUSH_CHANNEL"
             android:value="${JPUSH_CHANNEL}" />
@@ -222,6 +223,7 @@
                 <category android:name="om.qubuxing.qbx"/>
             </intent-filter>
         </service>
+
         <!--广点通视频-->
         <!--<activity-->
             <!--android:name="com.qq.e.ads.PortraitADActivity"-->
