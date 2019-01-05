@@ -1,5 +1,5 @@
 package com.qubuxing.qbx.http.beans
 
 class JsonEvent {
-    var step: Int =0
+    var step: Float =0f
 }

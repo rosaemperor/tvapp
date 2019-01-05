@@ -53,11 +53,8 @@ import com.qubuxing.qbx.http.beans.Step
 import com.qubuxing.qbx.http.beans.StepGetEvent
 import com.qubuxing.qbx.parts.WVWebViewClient
 import com.qubuxing.qbx.service.StepCounterService
-import com.qubuxing.qbx.utils.DialogUtils
-import com.qubuxing.qbx.utils.JumpSetting
+import com.qubuxing.qbx.utils.*
 import com.qubuxing.qbx.utils.KFUtils.Preference
-import com.qubuxing.qbx.utils.SharePrefenceHelper
-import com.qubuxing.qbx.utils.SplashScreen
 import com.qubuxing.qbx.viewModels.MainViewModel
 import com.qubuxing.step.IStepGetAidlInterface
 import com.qubuxing.step.TodayStepManager
@@ -206,8 +203,27 @@ class MainActivity : BaseActivity() {
             }
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun androidStepEvent(event : StepGetEvent){
+        if(ReBootHelper.isReBoot()){
+            var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
+            client.callBackStep(updateStep)
+        }else{
+            var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+            var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
+            if(event.setps > lastSensorStep){
+                client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
+            }else{
+                client.callBackStep(lastUpdateStep)
+            }
+            SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun stepGetEvent(event : StepGetEvent){
+        Log.d("TAG","stepGetEvent")
         if (!client.backStep) return
         var diff = 0.0f
         var str = ""

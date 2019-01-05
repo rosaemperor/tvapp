@@ -63,6 +63,7 @@ import com.qubuxing.qbx.http.RetrofitUtil
 
 import com.qubuxing.qbx.http.beans.*
 import com.qubuxing.qbx.service.StepCounterService
+import com.qubuxing.qbx.service.StepDetectorService
 import com.qubuxing.qbx.utils.*
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram
 import com.tencent.mm.opensdk.modelmsg.*
@@ -151,6 +152,31 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         }
                     }
                 })
+            }
+        })
+        registerHandler("getAndroidAppStep",object : WVJBHandler{
+            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                var intent = Intent()
+                var json = data as org.json.JSONObject
+                haveStepToday = json.getInt("step")
+                if (SharePrefenceHelper.getBoolean("FirstOpen")){
+                    if(haveStepToday > 0){
+                        var jsonEvent = JsonEvent()
+                        jsonEvent.step = haveStepToday.toFloat()
+                        callback!!.callback(gson.toJson(jsonEvent))
+                    }else{
+                        //调用前端去往微信同步数据
+                    }
+                    SharePrefenceHelper.save("FirstOpen","false")
+                }else{
+
+                }
+                intent.setClass(webView.context, StepCounterService::class.java)
+                webView.context.startService(intent)
+                intent.setClass(webView.context , StepDetectorService::class.java)
+                webView.context.startService(intent)
+                backStep = false
+                stepCallback =callback
             }
         })
         registerHandler("LaunchMiniProgramCard",object : WVJBWebViewClient.WVJBHandler{
@@ -1553,7 +1579,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
     fun callBackStep(step : Float){
         var jsonEvent = JsonEvent()
-        jsonEvent.step = step.toInt()
+        jsonEvent.step = step
+        SharePrefenceHelper.saveFloat("LastUpdateStep",step)
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }
 

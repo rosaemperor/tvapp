@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.util.Log
 import com.qubuxing.qbx.http.beans.StepGetEvent
+import com.qubuxing.qbx.utils.SharePrefenceHelper
 import org.greenrobot.eventbus.EventBus
 
 
@@ -29,6 +30,7 @@ class StepCounterService : IntentService("StepCounterService"){
                 override fun onSensorChanged(event: SensorEvent) {
                     var stepEvent = StepGetEvent()
                     stepEvent.setps = event.values[0]
+
                     EventBus.getDefault().postSticky(stepEvent)
                 }
 
