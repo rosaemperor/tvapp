@@ -27,7 +27,7 @@ object ReBootHelper {
      */
     fun isReBoot() : Boolean{
         if(SharePrefenceHelper.getBoolean("isReBoot")){
-            SharePrefenceHelper.saveBolean("isReBoot", false)
+            SharePrefenceHelper.saveBoolean("isReBoot", false)
             return true
         }
         var oldDate = SharePrefenceHelper.get("DateOfNow")

@@ -30,7 +30,7 @@ class SharePrefenceHelper {
                 return ""
             }
         }
-        fun saveBolean(key : String , value : Boolean){
+        fun saveBoolean(key : String, value : Boolean){
             if (mContext == null) mContext=QBXApplication.instance.applicationContext
             if (preferences == null)preferences= mContext!!.getSharedPreferences(mContext!!.packageName, Context.MODE_PRIVATE)
 

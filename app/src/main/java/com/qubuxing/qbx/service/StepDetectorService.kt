@@ -8,10 +8,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import com.qubuxing.qbx.http.beans.StepGetEvent
 import com.qubuxing.qbx.utils.ReBootHelper
 import com.qubuxing.qbx.utils.SharePrefenceHelper
-import org.greenrobot.eventbus.EventBus
 
 class StepDetectorService : IntentService("StepDetectorService"){
     private var mSensorManager: SensorManager? = null
@@ -54,7 +52,7 @@ class StepDetectorService : IntentService("StepDetectorService"){
     }
 
     override fun onDestroy() {
-        SharePrefenceHelper.saveBolean("ServiceHasDead",true)
+        SharePrefenceHelper.saveBoolean("ServiceHasDead",true)
         super.onDestroy()
     }
 }

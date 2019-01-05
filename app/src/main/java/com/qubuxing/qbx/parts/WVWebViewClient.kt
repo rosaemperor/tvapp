@@ -24,20 +24,15 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.Toast
-import cn.jiguang.verifysdk.api.JVerificationAction
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.jiguang.verifysdk.api.VerifyListener
 import cn.jpush.android.api.JPushInterface
-import com.baidu.mobad.feeds.BaiduNative
-import com.baidu.mobad.feeds.NativeErrorCode
-import com.baidu.mobad.feeds.NativeResponse
 import com.baidu.mobads.AdView
 import com.baidu.mobads.AdViewListener
 import com.bumptech.glide.Glide
 import com.bytedance.sdk.openadsdk.*
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.iflytek.voiceads.*
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
@@ -50,7 +45,6 @@ import com.qq.e.ads.banner.AbstractBannerADListener
 import com.qq.e.ads.banner.BannerView
 //import com.qq.e.ads.rewardvideo.RewardVideoAD
 //import com.qq.e.ads.rewardvideo.RewardVideoADListener
-import com.qq.e.ads.splash.SplashAD
 import com.qq.e.ads.splash.SplashADListener
 import com.qq.e.comm.util.AdError
 import com.qubuxing.ThridBroeserActivity
@@ -70,10 +64,8 @@ import com.tencent.mm.opensdk.modelmsg.*
 import com.xiaomi.ad.common.pojo.AdType
 import org.json.JSONException
 import org.json.JSONObject
-import java.nio.ByteBuffer
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? = null) : WVJBWebViewClient(webView,messageHandler) {
     var thread : Thread ?= null
@@ -92,7 +84,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     var httpHelper : HttpService = RetrofitUtil.instance.help
     var backStep = false
     lateinit var videoAd : IFLYVideoAd
-    var haveStepToday : Int = 0
+    var haveStepToday : Float = 0f
     lateinit var adView : ViewGroup
     var mTTAdNative : TTAdNative
     lateinit var adSlot : AdSlot
@@ -158,7 +150,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var intent = Intent()
                 var json = data as org.json.JSONObject
-                haveStepToday = json.getInt("step")
+                haveStepToday = json.getInt("step").toFloat()
                 if (SharePrefenceHelper.getBoolean("FirstOpen")){
                     if(haveStepToday > 0){
                         var jsonEvent = JsonEvent()
@@ -339,7 +331,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var intent = Intent()
                 var json = data as org.json.JSONObject
-                haveStepToday = json.getInt("step")
+                haveStepToday = json.getInt("step").toFloat()
                 intent.setClass(webView.context, StepCounterService::class.java)
                 webView.context.startService(intent)
                 backStep = true
@@ -1579,9 +1571,14 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
     fun callBackStep(step : Float){
         var jsonEvent = JsonEvent()
-        jsonEvent.step = step
+        var finalStep = step
         SharePrefenceHelper.saveFloat("LastUpdateStep",step)
+        SharePrefenceHelper.saveBoolean("ServiceHasDead",false)
         ReBootHelper.saveBootOpenTime()
+        if (haveStepToday > step){
+            finalStep = haveStepToday
+        }
+        jsonEvent.step = finalStep
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }
 
