@@ -1,0 +1,62 @@
+package com.qubuxing.qbx.utils
+
+import android.os.SystemClock
+import java.text.SimpleDateFormat
+import java.util.*
+
+object ReBootHelper {
+
+    /**
+     * 记录当前开机的日期和开机的时间
+     * timeString:当前开机时间（精确到秒）
+     * dataString:当前日期（精确到天）
+     *
+     */
+    var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    fun saveBootOpenTime(){
+        var oldDate = Calendar.getInstance().time
+        var oldDateString = simpleDateFormat.format(oldDate)
+        var oldRebootTime = SystemClock.elapsedRealtimeNanos() / 1000000000
+        SharePrefenceHelper.save("DateOfNow",oldDateString)
+        SharePrefenceHelper.saveLong("CurrentTime",System.currentTimeMillis()/1000)
+        SharePrefenceHelper.saveLong("BootOpenTime" ,oldRebootTime)
+    }
+
+    /**
+     * 判断当天是否出现过重启事件
+     */
+    fun isReBoot() : Boolean{
+        if(SharePrefenceHelper.getBoolean("isReBoot")){
+            SharePrefenceHelper.saveBolean("isReBoot", false)
+            return true
+        }
+        var oldDate = SharePrefenceHelper.get("DateOfNow")
+        var oldCurrentTime = SharePrefenceHelper.getLong("CurrentTime")
+        var currentTime = System.currentTimeMillis()/1000
+        var oldBootOpenSecond = SharePrefenceHelper.getLong("BootOpenTime" )
+        var bootOpenSecond =  SystemClock.elapsedRealtimeNanos() / 1000000000
+        var date = Calendar.getInstance().time
+        var dateString = simpleDateFormat.format(date)
+        if (dateString == oldDate){
+             if((currentTime - oldCurrentTime) == (bootOpenSecond - oldBootOpenSecond)) return false
+             if((currentTime - oldCurrentTime) > (bootOpenSecond - oldBootOpenSecond)) return true
+        }
+        return false
+    }
+
+    /**
+     * 判断上次记录步数的日期与当前日期是否未同一天
+     */
+    fun isTheSameDay() : Boolean{
+        var oldDateString = SharePrefenceHelper.get("TodayDate")
+        var todayDate = Calendar.getInstance().time
+        var todayString = simpleDateFormat.format(todayDate)
+        if(todayString == oldDateString){
+            return true
+        }else{
+            SharePrefenceHelper.save("TodayDate", todayString)
+        }
+        return false
+    }
+
+}

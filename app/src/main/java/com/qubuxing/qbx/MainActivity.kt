@@ -210,14 +210,20 @@ class MainActivity : BaseActivity() {
             var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
             client.callBackStep(updateStep)
         }else{
-            var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
-            var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
-            if(event.setps > lastSensorStep){
-                client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
+            if(SharePrefenceHelper.getBoolean("ServiceHasDead")){
+                var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+                var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
+                if(event.setps > lastSensorStep){
+                    client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
+                }else{
+                    client.callBackStep(lastUpdateStep)
+                }
+                SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
             }else{
-                client.callBackStep(lastUpdateStep)
+                var  lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+                client.callBackStep(lastUpdateStep+ SharePrefenceHelper.getFloat("TodayServiceSteps"))
             }
-            SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
+
         }
     }
 

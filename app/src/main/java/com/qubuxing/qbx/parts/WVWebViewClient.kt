@@ -1051,12 +1051,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdDisplay(p0: String?) {
-//                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-//                        closeView.setOnClickListener {
-//                            binding.adLayout.removeAllViews()
-//                        }
-//                        binding.adLayout.addView(closeView)
-//                        binding.adLayout.invalidate()
+                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+                        closeView.setOnClickListener {
+                            binding.adLayout.removeAllViews()
+                        }
+                        binding.adLayout.addView(closeView)
+                        binding.adLayout.invalidate()
                     }
 
                     override fun onAdClick(p0: String?) {
@@ -1227,12 +1227,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onADExposure() {
-//                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-//                        closeView.setOnClickListener {
-//                            binding!!.adLayout.removeAllViews()
-//                        }
-//                        binding!!.adLayout.addView(closeView)
-//                        binding.adLayout.invalidate()
+                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+                        closeView.setOnClickListener {
+                            binding!!.adLayout.removeAllViews()
+                        }
+                        binding!!.adLayout.addView(closeView)
+                        binding.adLayout.invalidate()
                     }
                     override fun onADClicked() {
                         callHandler("bannerCallback","onAdClick",null)
@@ -1581,6 +1581,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         var jsonEvent = JsonEvent()
         jsonEvent.step = step
         SharePrefenceHelper.saveFloat("LastUpdateStep",step)
+        ReBootHelper.saveBootOpenTime()
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }
 
