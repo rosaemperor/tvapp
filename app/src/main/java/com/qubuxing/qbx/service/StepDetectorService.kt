@@ -28,6 +28,8 @@ class StepDetectorService : IntentService("StepDetectorService"){
             mSensorCounter = mSensorManager!!.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
             mListener = object : SensorEventListener {
                 override fun onSensorChanged(event: SensorEvent) {
+                    toDaySteps = SharePrefenceHelper.getFloat("TodayServiceSteps")
+
                     Log.i("TAG","记步：${event.values[0]}")
                     if(event.values[0] == 1.0f && ReBootHelper.isTheSameDay()){
                         if(toDaySteps < SharePrefenceHelper.getFloat("TodayServiceSteps")){

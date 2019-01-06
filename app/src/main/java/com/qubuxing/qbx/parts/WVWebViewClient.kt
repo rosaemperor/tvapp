@@ -1590,6 +1590,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         jsonEvent.step = finalStep
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }
+    fun oldCallBackStep(step : Float){
+
+    }
+
 
     private fun initSlot(adWithTypeEntity: AdWithTypeEntity) : AdSlot{
         adSlot = AdSlot.Builder().

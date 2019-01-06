@@ -210,32 +210,42 @@ class MainActivity : BaseActivity() {
             var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
             Log.i("TAG","检测到系统重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
                     "当前sensor步数为：${event.setps}")
+            Toast.makeText(webView.context , "检测到系统存在重启行为", Toast.LENGTH_LONG).show()
             Log.i("TAG","正常状态4")
             client.callBackStep(updateStep)
         }else{
-            if(SharePrefenceHelper.getBoolean("ServiceHasDead")){
-                Log.i("TAG","检测到系统没有重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
-                        "当前sensor步数为：${event.setps}")
-                Log.i("TAG","检测到记步服务被杀死")
-                Toast.makeText(this@MainActivity , "检测到记步服务被杀死" , Toast.LENGTH_LONG).show()
-                var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
-                var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
-                Log.i("TAG","lastUpdateStep:${lastUpdateStep} lastSensorStep:${lastSensorStep}")
-                if(event.setps > lastSensorStep && lastSensorStep!= 0f){
-                    Log.i("TAG","正常状态1")
-                    client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
-                }else{
-                    Log.i("TAG","正常状态2")
-                    client.callBackStep(lastUpdateStep)
-                }
-                SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
+            if(!ReBootHelper.isTheSameDay()){
+                Log.i("TAG","两次取步数之间跨天，置初始状态")
+                SharePrefenceHelper.saveFloat("LastSensorStep",0f)
+                SharePrefenceHelper.saveFloat("LastUpdateStep",0f)
+                client.callBackStep(0f)
             }else{
-                Log.i("TAG","没有检测到记步服务被杀死")
-                var  lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
-                Log.i("TAG","正常状态3")
-                client.callBackStep(lastUpdateStep+ SharePrefenceHelper.getFloat("TodayServiceSteps"))
-                Log.i("TAG","lastUpdateStep:${lastUpdateStep} TodayServiceSteps : ${SharePrefenceHelper.getFloat("TodayServiceSteps")}")
+                if(SharePrefenceHelper.getBoolean("ServiceHasDead")){
+                    Log.i("TAG","检测到系统没有重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
+                            "当前sensor步数为：${event.setps}")
+                    Log.i("TAG","检测到记步服务被杀死")
+                    Toast.makeText(this@MainActivity , "检测到记步服务被杀死" , Toast.LENGTH_LONG).show()
+                    var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+                    var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
+                    Log.i("TAG","lastUpdateStep:${lastUpdateStep} lastSensorStep:${lastSensorStep}")
+                    if(event.setps > lastSensorStep && lastSensorStep!= 0f){
+                        Log.i("TAG","正常状态1")
+                        client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
+                    }else{
+                        Log.i("TAG","正常状态2")
+                        client.callBackStep(lastUpdateStep)
+                    }
+                    SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
+                }else{
+                    Log.i("TAG","没有检测到记步服务被杀死")
+                    var  lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+                    Log.i("TAG","正常状态3")
+                    client.callBackStep(lastUpdateStep+ SharePrefenceHelper.getFloat("TodayServiceSteps"))
+                    SharePrefenceHelper.saveFloat("TodayServiceSteps",0f)
+                    Log.i("TAG","lastUpdateStep:${lastUpdateStep} TodayServiceSteps : ${SharePrefenceHelper.getFloat("TodayServiceSteps")}")
+                }
             }
+
 
         }
     }
