@@ -34,6 +34,10 @@ object ReBootHelper {
         }
         var oldDate = SharePrefenceHelper.get("DateOfNow")
         var oldCurrentTime = SharePrefenceHelper.getLong("CurrentTime")
+        if(oldCurrentTime ==0L){
+            Log.i("TAG","首次安装默认不是重启状态")
+            return false
+        }
         var currentTime = System.currentTimeMillis()/1000
         var oldBootOpenSecond = SharePrefenceHelper.getLong("BootOpenTime" )
         var bootOpenSecond =  SystemClock.elapsedRealtimeNanos() / 1000000000

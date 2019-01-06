@@ -21,6 +21,7 @@ class StepCounterService : IntentService("StepCounterService"){
     private var mSensorCounter: Sensor? = null
     private var mHasSensor: Boolean = false
     override fun onHandleIntent(intent: Intent?) {
+//        startForeground(9000,null)
         mHasSensor = packageManager.hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_COUNTER)
         if (mHasSensor) {
             mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -47,5 +48,10 @@ class StepCounterService : IntentService("StepCounterService"){
         if (mHasSensor) {
             mSensorManager!!.registerListener(mListener, mSensorCounter, SensorManager.SENSOR_DELAY_FASTEST)
         }
+    }
+
+    override fun onDestroy() {
+        Log.i("TAG","查询步数服务被杀死")
+        super.onDestroy()
     }
 }

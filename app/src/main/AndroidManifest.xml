@@ -83,6 +83,7 @@
 
 
         <service android:name=".service.StepCounterService"/>
+        <service android:name=".service.StepDetectorService"/>
         <receiver
             android:name=".revicer.StepReciver"
             android:enabled="true"

@@ -21,21 +21,26 @@ class StepDetectorService : IntentService("StepDetectorService"){
     private var mHasSensor: Boolean = false
     private var toDaySteps = 0.0f
     override fun onHandleIntent(intent: Intent?) {
+//        startForeground(9001,null)
         mHasSensor = packageManager.hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_DETECTOR)
         if (mHasSensor) {
             mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
             mSensorCounter = mSensorManager!!.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
             mListener = object : SensorEventListener {
                 override fun onSensorChanged(event: SensorEvent) {
+                    Log.i("TAG","记步：${event.values[0]}")
                     if(event.values[0] == 1.0f && ReBootHelper.isTheSameDay()){
                         if(toDaySteps < SharePrefenceHelper.getFloat("TodayServiceSteps")){
                             toDaySteps = SharePrefenceHelper.getFloat("TodayServiceSteps")
                         }
                         toDaySteps= toDaySteps++
+                        Log.i("TAG","记步service状态1：toDaySteps：${toDaySteps}")
                     }else if(event.values[0] == 1.0f && !ReBootHelper.isTheSameDay()){
                         toDaySteps = 0.0f
                         toDaySteps = toDaySteps++
+                        Log.i("TAG","记步service状态2：toDaySteps：${toDaySteps}")
                     }
+//                    Log.i("TAG","toDaySteps:${toDaySteps}")
                     SharePrefenceHelper.saveFloat("TodayServiceSteps",toDaySteps)
                 }
 
@@ -60,6 +65,7 @@ class StepDetectorService : IntentService("StepDetectorService"){
             Toast.makeText(this@StepDetectorService , "记步服务被杀死",Toast.LENGTH_LONG).show()
         }
         SharePrefenceHelper.saveBoolean("ServiceHasDead",true)
+        SharePrefenceHelper.saveFloat("TodayServiceSteps",0.0f)
         super.onDestroy()
     }
 }

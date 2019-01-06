@@ -90,8 +90,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     lateinit var adSlot : AdSlot
      var result = VideoBack()
     var adHelper : AdHelper
-    var device : DeviceModule
-    var deviceInfo : DeviceInfo
+    var device : DeviceModule?
+    var deviceInfo : DeviceInfo?
     lateinit var videoADDataRef :VideoADDataRef
 //     var rewardVideoAd : RewardVideoAD ?= null
 
@@ -104,8 +104,14 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     })
     init {
 //微信登录调起
-        device = DeviceModule(webView.context)
-        deviceInfo = gson.fromJson<DeviceInfo>(device.deviceInfo,DeviceInfo::class.java)
+
+        if(ActivityCompat.checkSelfPermission(webView.context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+            device = DeviceModule(webView.context)
+            deviceInfo = gson.fromJson<DeviceInfo>(device!!.deviceInfo,DeviceInfo::class.java)
+        }else{
+            device = null
+            deviceInfo = null
+        }
         adHelper = AdHelper(webView)
         mTTAdNative = QBXApplication.ttAdManager.createAdNative(webView.context)
         registerHandler("submitWechatLogin", object : WVJBHandler {
@@ -146,11 +152,13 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 })
             }
         })
-        registerHandler("getAndroidAppStep",object : WVJBHandler{
+        registerHandler("getAppStep",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var intent = Intent()
                 var json = data as org.json.JSONObject
                 haveStepToday = json.getInt("step").toFloat()
+                Log.i("TAG","haveStepToday:${haveStepToday}")
+
                 if (SharePrefenceHelper.getBoolean("FirstOpen")){
                     if(haveStepToday > 0){
                         var jsonEvent = JsonEvent()
@@ -218,7 +226,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     if (Build.VERSION.SDK_INT<= 27) jsonObject.put("versionCode", packageInfo.versionCode)
                     if (Build.VERSION.SDK_INT>= 28) jsonObject.put("versionCode", packageInfo.longVersionCode)
                     jsonObject.put("buildCode", QBXApplication.buildCode)
-                    jsonObject.put("deviceInfo", device.deviceInfo)
+//                    jsonObject.put("deviceInfo", device.deviceInfo)
                     callback!!.callback(jsonObject.toString())
                 } catch (e: Exception) {
                     Log.e("error", e.message)
@@ -327,7 +335,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
             }
         })
-        registerHandler("getAppStep",object : WVJBHandler{
+        registerHandler("getAppStep222",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var intent = Intent()
                 var json = data as org.json.JSONObject
@@ -807,10 +815,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     binding.adLayout.layoutParams = layoutParams
                 }
                 binding.adLayout.invalidate()
-
-                if(adHelper.checkIsSupply(adWithTypeEntity , deviceInfo)){
-                    return
-                }
+//                if(adHelper.checkIsSupply(adWithTypeEntity , deviceInfo)){
+//                    return
+//                }
                 when(adWithTypeEntity.supplierType){
                     "LY" ->{
                         showLYAd(adWithTypeEntity,callback)
