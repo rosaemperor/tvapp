@@ -1594,9 +1594,6 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         lockStep = false
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }
-    fun oldCallBackStep(step : Float){
-
-    }
 
 
     private fun initSlot(adWithTypeEntity: AdWithTypeEntity) : AdSlot{
@@ -1666,6 +1663,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         return super.shouldOverrideUrlLoading(view, request)
     }
 
+    fun oldCallBackStep(step : Float){
+        var jsonEvent = JsonEvent()
+        jsonEvent.step = step
+        stepCallback!!.callback(gson.toJson(jsonEvent))
+    }
 
 
 }

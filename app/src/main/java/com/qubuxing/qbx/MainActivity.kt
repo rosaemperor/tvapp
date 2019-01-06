@@ -268,7 +268,7 @@ class MainActivity : BaseActivity() {
 
             }
             SharePrefenceHelper.save("stepSum",""+event.setps)
-            client.callBackStep(client.haveStepToday + diff)
+            client.oldCallBackStep(client.haveStepToday + diff)
             return
         }else{
             SharePrefenceHelper.save("stepSum",""+event.setps)
@@ -301,7 +301,7 @@ class MainActivity : BaseActivity() {
         Log.d("TAGS","dayStep:$dayStep hours:$hours ")
         if (steps < mStepSum)
             steps =  mStepSum.toFloat()
-        client.callBackStep(steps)
+        client.oldCallBackStep(steps)
     }
 
     override fun onRestart() {
