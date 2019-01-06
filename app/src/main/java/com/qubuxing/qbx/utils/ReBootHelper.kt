@@ -45,9 +45,12 @@ object ReBootHelper {
         var date = Calendar.getInstance().time
         var dateString = simpleDateFormat.format(date)
         if (dateString == oldDate){
+             if((bootOpenSecond - oldBootOpenSecond) <0){
+                return true
+             }
              if((currentTime - oldCurrentTime) == (bootOpenSecond - oldBootOpenSecond)) return false
-             if((currentTime - oldCurrentTime) > (bootOpenSecond - oldBootOpenSecond)){
-                 Log.i("TAG","有判断到系统重启")
+             if(((currentTime - oldCurrentTime) - (bootOpenSecond - oldBootOpenSecond)) > 5){
+                 Log.i("TAG","有系统重启")
                  return true
              }
         }
