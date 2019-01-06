@@ -157,7 +157,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         jsonEvent.step = haveStepToday.toFloat()
                         callback!!.callback(gson.toJson(jsonEvent))
                     }else{
-                        //调用前端去往微信同步数据
+                       callHandler("updateWXStep","",null)
                     }
                     SharePrefenceHelper.save("FirstOpen","false")
                 }else{
@@ -1574,10 +1574,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         var finalStep = step
         SharePrefenceHelper.saveFloat("LastUpdateStep",step)
         SharePrefenceHelper.saveBoolean("ServiceHasDead",false)
+        Log.i("TAG","最终本地保存：LastUpdateStep：${step}置换serviceHasDEAD状态为：${SharePrefenceHelper.getBoolean("ServiceHasDead")}")
         ReBootHelper.saveBootOpenTime()
         if (haveStepToday > step){
             finalStep = haveStepToday
         }
+        Log.i("TAG","最终上传给前端：${finalStep}")
         jsonEvent.step = finalStep
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }

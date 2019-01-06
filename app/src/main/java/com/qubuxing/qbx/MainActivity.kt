@@ -208,11 +208,16 @@ class MainActivity : BaseActivity() {
     fun androidStepEvent(event : StepGetEvent){
         if(ReBootHelper.isReBoot()){
             var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
+            Log.i("TAG","检测到系统重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
+                    "当前sensor步数为：${event.setps}")
             client.callBackStep(updateStep)
         }else{
             if(SharePrefenceHelper.getBoolean("ServiceHasDead")){
+                Log.i("TAG","检测到记步服务被杀死")
+                Toast.makeText(this@MainActivity , "检测到记步服务被杀死" , Toast.LENGTH_LONG).show()
                 var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
                 var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
+                Log.i("TAG","lastUpdateStep:${lastUpdateStep} lastSensorStep:${lastSensorStep}")
                 if(event.setps > lastSensorStep){
                     client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
                 }else{
@@ -220,8 +225,11 @@ class MainActivity : BaseActivity() {
                 }
                 SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
             }else{
+                Log.i("TAG","没有检测到记步服务被杀死")
                 var  lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+
                 client.callBackStep(lastUpdateStep+ SharePrefenceHelper.getFloat("TodayServiceSteps"))
+                Log.i("TAG","lastUpdateStep:${lastUpdateStep} TodayServiceSteps : ${SharePrefenceHelper.getFloat("TodayServiceSteps")}")
             }
 
         }
@@ -233,7 +241,7 @@ class MainActivity : BaseActivity() {
         if (!client.backStep) return
         var diff = 0.0f
         var str = ""
-        if(client.haveStepToday != 0){
+        if(client.haveStepToday != 0f){
             var lastSteps = 0.0f
             if ( "" != SharePrefenceHelper.get("stepSum")){
                 lastSteps = SharePrefenceHelper.get("stepSum").toFloat()

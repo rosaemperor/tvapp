@@ -1,6 +1,7 @@
 package com.qubuxing.qbx.utils
 
 import android.os.SystemClock
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,6 +29,7 @@ object ReBootHelper {
     fun isReBoot() : Boolean{
         if(SharePrefenceHelper.getBoolean("isReBoot")){
             SharePrefenceHelper.saveBoolean("isReBoot", false)
+            Log.i("TAG","有接受到系统重启")
             return true
         }
         var oldDate = SharePrefenceHelper.get("DateOfNow")
@@ -39,7 +41,10 @@ object ReBootHelper {
         var dateString = simpleDateFormat.format(date)
         if (dateString == oldDate){
              if((currentTime - oldCurrentTime) == (bootOpenSecond - oldBootOpenSecond)) return false
-             if((currentTime - oldCurrentTime) > (bootOpenSecond - oldBootOpenSecond)) return true
+             if((currentTime - oldCurrentTime) > (bootOpenSecond - oldBootOpenSecond)){
+                 Log.i("TAG","有判断到系统重启")
+                 return true
+             }
         }
         return false
     }
@@ -52,6 +57,7 @@ object ReBootHelper {
         var todayDate = Calendar.getInstance().time
         var todayString = simpleDateFormat.format(todayDate)
         if(todayString == oldDateString){
+            Log.i("TAG","有判断到两次记步之间不是同一天")
             return true
         }else{
             SharePrefenceHelper.save("TodayDate", todayString)

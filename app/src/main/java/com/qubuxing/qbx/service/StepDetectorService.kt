@@ -8,6 +8,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
+import android.widget.Toast
+import com.qubuxing.qbx.BuildConfig
 import com.qubuxing.qbx.utils.ReBootHelper
 import com.qubuxing.qbx.utils.SharePrefenceHelper
 
@@ -52,6 +55,10 @@ class StepDetectorService : IntentService("StepDetectorService"){
     }
 
     override fun onDestroy() {
+        Log.i("TAG","记步服务被杀死")
+        if(BuildConfig.DEBUG){
+            Toast.makeText(this@StepDetectorService , "记步服务被杀死",Toast.LENGTH_LONG).show()
+        }
         SharePrefenceHelper.saveBoolean("ServiceHasDead",true)
         super.onDestroy()
     }
