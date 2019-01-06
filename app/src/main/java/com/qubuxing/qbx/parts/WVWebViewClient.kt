@@ -76,6 +76,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     var codeCallback: WVJBResponseCallback? = null
     var CAMERA_REQUEST_CODE=1110
     var READ_PHONE=10086
+     var lockStep : Boolean = false
     var pageGetFinished = false
     var UUIDCallback : WVJBResponseCallback? = null
     var cameraList = ArrayList<String>()
@@ -154,6 +155,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         })
         registerHandler("getAppStep",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                if(lockStep) return
+                lockStep = true
                 var intent = Intent()
                 var json = data as org.json.JSONObject
                 haveStepToday = json.getInt("step").toFloat()
@@ -838,7 +841,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         showXMAD(adWithTypeEntity,callback)
                     }
                     "OPPO" ->{
-                        adHelper.showADOPPO(adWithTypeEntity , callback)
+//                        adHelper.showADOPPO(adWithTypeEntity , callback)
                     }
 
                     else ->{
@@ -1588,6 +1591,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         }
         Log.i("TAG","最终上传给前端：${finalStep}")
         jsonEvent.step = finalStep
+        lockStep = false
         stepCallback!!.callback(gson.toJson(jsonEvent))
     }
     fun oldCallBackStep(step : Float){

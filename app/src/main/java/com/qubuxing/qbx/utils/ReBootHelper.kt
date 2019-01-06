@@ -27,16 +27,17 @@ object ReBootHelper {
      * 判断当天是否出现过重启事件
      */
     fun isReBoot() : Boolean{
-        if(SharePrefenceHelper.getBoolean("isReBoot")){
-            SharePrefenceHelper.saveBoolean("isReBoot", false)
-            Log.i("TAG","有接受到系统重启")
-            return true
-        }
         var oldDate = SharePrefenceHelper.get("DateOfNow")
         var oldCurrentTime = SharePrefenceHelper.getLong("CurrentTime")
         if(oldCurrentTime ==0L){
             Log.i("TAG","首次安装默认不是重启状态")
+            SharePrefenceHelper.saveBoolean("isReBoot", false)
             return false
+        }
+        if(SharePrefenceHelper.getBoolean("isReBoot")){
+            SharePrefenceHelper.saveBoolean("isReBoot", false)
+            Log.i("TAG","有接受到系统重启")
+            return true
         }
         var currentTime = System.currentTimeMillis()/1000
         var oldBootOpenSecond = SharePrefenceHelper.getLong("BootOpenTime" )

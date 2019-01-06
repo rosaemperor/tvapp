@@ -28,8 +28,8 @@ import com.iflytek.voiceads.IFLYNativeListener
 import com.iflytek.voiceads.NativeADDataRef
 import com.ly.adpoymer.interfaces.SpreadListener
 import com.ly.adpoymer.manager.SpreadManager
-import com.oppo.mobad.api.listener.ISplashAdListener
-import com.oppo.mobad.api.params.SplashAdParams
+//import com.oppo.mobad.api.listener.ISplashAdListener
+//import com.oppo.mobad.api.params.SplashAdParams
 import com.qq.e.ads.splash.SplashAD
 import com.qq.e.ads.splash.SplashADListener
 import com.qq.e.comm.util.AdError

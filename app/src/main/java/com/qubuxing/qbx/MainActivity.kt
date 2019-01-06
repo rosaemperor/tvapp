@@ -77,6 +77,7 @@ class MainActivity : BaseActivity() {
     lateinit var activityThirdBrowserBinding : ActivityThirdBrowserBinding
     lateinit var viewModel : MainViewModel
     lateinit var iSportStepInterface: IStepGetAidlInterface
+
     var mStepSum = 0
     var cameraList = ArrayList<String>()
 
