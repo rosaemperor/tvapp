@@ -131,19 +131,19 @@ class MainActivity : BaseActivity() {
     //按键处理
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            client.callHandler("updateWXStep","",null)
-//           JVerificationInterface.getToken(webView.context , object : VerifyListener {
-//                    override fun onResult(code: Int, content: String?, operator: String?) {
-//                        if (code == 2000){
-//                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
-//                        }else{
-//                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
-//                        }
-//                    }
-//                })
-            return true
-        }
+//        if(keyCode == KeyEvent.KEYCODE_BACK){
+//            client.callHandler("updateWXStep","",null)
+////           JVerificationInterface.getToken(webView.context , object : VerifyListener {
+////                    override fun onResult(code: Int, content: String?, operator: String?) {
+////                        if (code == 2000){
+////                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
+////                        }else{
+////                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
+////                        }
+////                    }
+////                })
+////            return true
+//        }
         return super.onKeyDown(keyCode, event)
     }
 
@@ -212,7 +212,7 @@ class MainActivity : BaseActivity() {
             var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
             Log.i("TAG","检测到系统重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
                     "当前sensor步数为：${event.setps}")
-            Toast.makeText(webView.context , "检测到系统存在重启行为", Toast.LENGTH_LONG).show()
+//            Toast.makeText(webView.context , "检测到系统存在重启行为", Toast.LENGTH_LONG).show()
             Log.i("TAG","正常状态4")
             client.callBackStep(updateStep)
         }else{
@@ -226,7 +226,7 @@ class MainActivity : BaseActivity() {
                     Log.i("TAG","检测到系统没有重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
                             "当前sensor步数为：${event.setps}")
                     Log.i("TAG","检测到记步服务被杀死")
-                    Toast.makeText(this@MainActivity , "检测到记步服务被杀死" , Toast.LENGTH_LONG).show()
+//                    Toast.makeText(this@MainActivity , "检测到记步服务被杀死" , Toast.LENGTH_LONG).show()
                     var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
                     var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
                     Log.i("TAG","lastUpdateStep:${lastUpdateStep} lastSensorStep:${lastSensorStep}")

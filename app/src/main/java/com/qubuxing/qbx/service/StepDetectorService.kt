@@ -31,9 +31,6 @@ class StepDetectorService : IntentService("StepDetectorService"){
                     toDaySteps = SharePrefenceHelper.getFloat("TodayServiceSteps")
                     Log.i("TAG","记步：${event.values[0]}")
                     if(event.values[0] == 1.0f && ReBootHelper.isTheSameDay()){
-                        if(toDaySteps < SharePrefenceHelper.getFloat("TodayServiceSteps")){
-                            toDaySteps = SharePrefenceHelper.getFloat("TodayServiceSteps")
-                        }
                         toDaySteps= toDaySteps++
                         Log.i("TAG","记步service状态1：toDaySteps：${toDaySteps}")
                     }else if(event.values[0] == 1.0f && !ReBootHelper.isTheSameDay()){
@@ -63,7 +60,7 @@ class StepDetectorService : IntentService("StepDetectorService"){
     override fun onDestroy() {
         Log.i("TAG","记步服务被杀死")
         if(BuildConfig.DEBUG){
-            Toast.makeText(this@StepDetectorService , "记步服务被杀死",Toast.LENGTH_LONG).show()
+//            Toast.makeText(this@StepDetectorService , "记步服务被杀死",Toast.LENGTH_LONG).show()
         }
         SharePrefenceHelper.saveBoolean("ServiceHasDead",true)
 //        SharePrefenceHelper.saveFloat("TodayServiceSteps",0.0f)
