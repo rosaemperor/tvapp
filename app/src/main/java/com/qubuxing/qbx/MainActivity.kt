@@ -229,6 +229,7 @@ class MainActivity : BaseActivity() {
                     var lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
                     var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
                     Log.i("TAG","lastUpdateStep:${lastUpdateStep} lastSensorStep:${lastSensorStep}")
+                    SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
                     if(event.setps > lastSensorStep && lastSensorStep!= 0f){
                         Log.i("TAG","正常状态1")
                         client.callBackStep(event.setps-lastSensorStep + lastUpdateStep)
@@ -236,13 +237,15 @@ class MainActivity : BaseActivity() {
                         Log.i("TAG","正常状态2")
                         client.callBackStep(lastUpdateStep)
                     }
-                    SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
+
                 }else{
                     Log.i("TAG","没有检测到记步服务被杀死")
                     var  lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
                     Log.i("TAG","正常状态3")
-                    client.callBackStep(lastUpdateStep+ SharePrefenceHelper.getFloat("TodayServiceSteps"))
+                    var dayServiceStep =  SharePrefenceHelper.getFloat("TodayServiceSteps")
                     SharePrefenceHelper.saveFloat("TodayServiceSteps",0f)
+                    SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
+                    client.callBackStep(lastUpdateStep+ dayServiceStep)
                     Log.i("TAG","lastUpdateStep:${lastUpdateStep} TodayServiceSteps : ${SharePrefenceHelper.getFloat("TodayServiceSteps")}")
                 }
             }
