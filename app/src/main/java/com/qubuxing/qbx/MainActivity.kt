@@ -217,7 +217,7 @@ class MainActivity : BaseActivity() {
         }else{
             if(!ReBootHelper.isTheSameDay()){
                 Log.i("TAG","两次取步数之间跨天，置初始状态")
-                SharePrefenceHelper.saveFloat("LastSensorStep",0f)
+                SharePrefenceHelper.saveFloat("LastSensorStep",event.setps)
                 SharePrefenceHelper.saveFloat("LastUpdateStep",0f)
                 client.callBackStep(0f)
             }else{
