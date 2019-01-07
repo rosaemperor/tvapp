@@ -241,11 +241,12 @@ class MainActivity : BaseActivity() {
                 }else{
                     Log.i("TAG","没有检测到记步服务被杀死")
                     var  lastUpdateStep = SharePrefenceHelper.getFloat("LastUpdateStep")
+                    var lastSensorStep = SharePrefenceHelper.getFloat("LastSensorStep")
                     Log.i("TAG","正常状态3")
                     var dayServiceStep =  SharePrefenceHelper.getFloat("TodayServiceSteps")
                     SharePrefenceHelper.saveFloat("TodayServiceSteps",0f)
                     SharePrefenceHelper.saveFloat("LastSensorStep" , event.setps)
-                    client.callBackStep(lastUpdateStep+ dayServiceStep)
+                    client.callBackStep(lastUpdateStep+(event.setps -lastSensorStep -  dayServiceStep))
                     Log.i("TAG","lastUpdateStep:${lastUpdateStep} TodayServiceSteps : ${SharePrefenceHelper.getFloat("TodayServiceSteps")}")
                 }
             }
