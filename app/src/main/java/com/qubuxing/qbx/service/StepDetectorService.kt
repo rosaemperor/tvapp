@@ -66,7 +66,7 @@ class StepDetectorService : IntentService("StepDetectorService"){
             Toast.makeText(this@StepDetectorService , "记步服务被杀死",Toast.LENGTH_LONG).show()
         }
         SharePrefenceHelper.saveBoolean("ServiceHasDead",true)
-        SharePrefenceHelper.saveFloat("TodayServiceSteps",0.0f)
+//        SharePrefenceHelper.saveFloat("TodayServiceSteps",0.0f)
         super.onDestroy()
     }
 }
