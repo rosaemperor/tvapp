@@ -132,15 +132,16 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-           JVerificationInterface.getToken(webView.context , object : VerifyListener {
-                    override fun onResult(code: Int, content: String?, operator: String?) {
-                        if (code == 2000){
-                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
-                        }else{
-                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
-                        }
-                    }
-                })
+            client.callHandler("updateWXStep","",null)
+//           JVerificationInterface.getToken(webView.context , object : VerifyListener {
+//                    override fun onResult(code: Int, content: String?, operator: String?) {
+//                        if (code == 2000){
+//                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
+//                        }else{
+//                            Log.d("TAG","code: ${code}token:${content} + operator: ${operator}")
+//                        }
+//                    }
+//                })
             return true
         }
         return super.onKeyDown(keyCode, event)
