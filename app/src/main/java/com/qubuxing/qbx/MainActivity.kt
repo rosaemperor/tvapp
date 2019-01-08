@@ -211,6 +211,7 @@ class MainActivity : BaseActivity() {
         if(ReBootHelper.isReBoot()){
             if(ReBootHelper.isTheSameDay()){
                 SharePrefenceHelper.saveFloat("LastUpdateStep" , 0f)
+                SharePrefenceHelper.saveFloat("LastSensorStep",event.setps)
             }
             var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
             Log.i("TAG","检测到系统重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
