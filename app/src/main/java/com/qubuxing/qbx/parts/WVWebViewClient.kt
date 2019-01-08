@@ -216,6 +216,21 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var entity = gson.fromJson<WXSeneEntity>(data.toString(),WXSeneEntity::class.java)
                 req.userName = entity.userName
                 req.path = entity.path
+                when(entity.WXMiniProgramType){
+                    "release"->{
+                        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE
+                    }
+                    "test"->{
+                        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPROGRAM_TYPE_TEST
+                    }
+                    "preview" ->{
+                        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPROGRAM_TYPE_PREVIEW
+                    }
+                    else ->{
+                    req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE
+                }
+
+                }
                 QBXApplication.api.sendReq(req)
             }
         })

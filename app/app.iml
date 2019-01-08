@@ -200,13 +200,13 @@
     <orderEntry type="library" name="Gradle: com.android.support:recyclerview-v7-27.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup:javawriter:2.1.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:multidex-1.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-media-compat-27.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-ui-27.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-1.1.3" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/administrator/Desktop/yixi assets/qbxapp/app/libs/MimoSdk.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-gson:2.3.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okhttp3:logging-interceptor:3.8.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.4.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata-1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/administrator/Desktop/yixi assets/qbxapp/app/libs/jverification-android-1.1.1.jar:unspecified@jar" level="project" />
@@ -236,7 +236,6 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:27.1.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/administrator/Desktop/yixi assets/qbxapp/app/libs/apache-commons-id.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable-27.1.1" level="project" />
-    <orderEntry type="library" name="Gradle: __local_aars__:/Users/administrator/Desktop/yixi assets/qbxapp/app/libs/oppo_mobad_api_v271_2018_08_24_release.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-compat-27.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.13.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:viewmodel-1.1.1" level="project" />

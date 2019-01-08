@@ -8,4 +8,5 @@ class WXSeneEntity {
     var description = ""
     var path =""
     var userName = ""
+    var WXMiniProgramType =""
 }
