@@ -168,7 +168,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         jsonEvent.step = haveStepToday.toFloat()
                         callback!!.callback(gson.toJson(jsonEvent))
                     }else{
-                       callHandler("updateWXStep","",null)
+//                       callHandler("updateWXStep","",null)
                     }
                     SharePrefenceHelper.saveBoolean("FirstOpen",true)
                 }else{
