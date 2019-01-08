@@ -229,7 +229,6 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     else ->{
                     req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE
                 }
-
                 }
                 QBXApplication.api.sendReq(req)
             }

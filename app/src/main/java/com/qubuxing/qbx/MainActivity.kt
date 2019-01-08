@@ -209,6 +209,9 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun androidStepEvent(event : StepGetEvent){
         if(ReBootHelper.isReBoot()){
+            if(ReBootHelper.isTheSameDay()){
+                SharePrefenceHelper.saveFloat("LastUpdateStep" , 0f)
+            }
             var updateStep  = SharePrefenceHelper.getFloat("LastUpdateStep") + event.setps
             Log.i("TAG","检测到系统重启，当前数据：LastUpdateStep：${SharePrefenceHelper.getFloat("LastUpdateStep")}" +
                     "当前sensor步数为：${event.setps}")
