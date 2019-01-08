@@ -906,7 +906,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 }
                 binding!!.adLayout.removeAllViews()
                 binding.adLayout.invalidate()
-                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding.adLayout ,listener, AdType.AD_BANNER)
+                mBannerAd = AdWorkerFactory.getAdWorker(webView.context, binding.xiaomiAdlayout ,listener, AdType.AD_BANNER)
                 mBannerAd.loadAndShow(adWithTypeEntity.spaceId)
             }
             else ->{
