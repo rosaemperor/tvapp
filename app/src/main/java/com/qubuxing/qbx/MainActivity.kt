@@ -224,6 +224,7 @@ class MainActivity : BaseActivity() {
                 Log.i("TAG","两次取步数之间跨天，置初始状态")
                 SharePrefenceHelper.saveFloat("LastSensorStep",event.setps)
                 SharePrefenceHelper.saveFloat("LastUpdateStep",0f)
+                client.callHandler("updateWXStep","",null)
                 client.callBackStep(0f)
             }else{
                 if(SharePrefenceHelper.getBoolean("ServiceHasDead")){

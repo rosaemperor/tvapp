@@ -1606,7 +1606,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         Log.i("TAG","最终上传给前端：${finalStep}")
         jsonEvent.step = finalStep
         lockStep = false
-        stepCallback!!.callback(gson.toJson(jsonEvent))
+        stepCallback?.let {
+            stepCallback!!.callback(gson.toJson(jsonEvent))
+        }
+
     }
 
 
