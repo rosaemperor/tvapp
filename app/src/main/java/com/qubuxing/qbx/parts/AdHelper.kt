@@ -149,7 +149,7 @@ class AdHelper {
             }
 
         }
-        if(adWithTypeEntity.supplierType == "XIAOMI"  && !device.deviceBrand.contains("Xiaomi")){
+        if(adWithTypeEntity.supplierType == "XIAOMI"  && !(device.deviceBrand.contains("Xiaomi") || device.deviceBrand.contains("Redmi"))){
             when(adWithTypeEntity.ADType){
                 "banner" ->{
                     result.result = "onAdFailed"
