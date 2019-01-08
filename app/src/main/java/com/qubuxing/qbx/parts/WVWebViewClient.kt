@@ -243,7 +243,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     if (Build.VERSION.SDK_INT<= 27) jsonObject.put("versionCode", packageInfo.versionCode)
                     if (Build.VERSION.SDK_INT>= 28) jsonObject.put("versionCode", packageInfo.longVersionCode)
                     jsonObject.put("buildCode", QBXApplication.buildCode)
-//                    jsonObject.put("deviceInfo", device.deviceInfo)
+                    device?.let {
+                        jsonObject.put("deviceInfo", device!!.deviceInfo)
+                    }
                     callback!!.callback(jsonObject.toString())
                 } catch (e: Exception) {
                     Log.e("error", e.message)
@@ -832,9 +834,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     binding.adLayout.layoutParams = layoutParams
                 }
                 binding.adLayout.invalidate()
-//                if(adHelper.checkIsSupply(adWithTypeEntity , deviceInfo)){
-//                    return
-//                }
+                if( null != deviceInfo && adHelper.checkIsSupply(adWithTypeEntity , deviceInfo)){
+                    return
+                }
                 when(adWithTypeEntity.supplierType){
                     "LY" ->{
                         showLYAd(adWithTypeEntity,callback)
