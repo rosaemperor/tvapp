@@ -162,7 +162,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 haveStepToday = json.getInt("step").toFloat()
                 Log.i("TAG","haveStepToday:${haveStepToday}")
 
-                if (SharePrefenceHelper.getBoolean("FirstOpen")){
+                if (!SharePrefenceHelper.getBoolean("FirstOpen")){
                     if(haveStepToday > 0){
                         var jsonEvent = JsonEvent()
                         jsonEvent.step = haveStepToday.toFloat()
@@ -170,7 +170,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }else{
                        callHandler("updateWXStep","",null)
                     }
-                    SharePrefenceHelper.save("FirstOpen","false")
+                    SharePrefenceHelper.saveBoolean("FirstOpen",true)
                 }else{
 
                 }
@@ -819,6 +819,14 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         })
         registerHandler("showAdWithType",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
+                if(null ==device && null == deviceInfo){
+                    if(ActivityCompat.checkSelfPermission(webView.context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+                        device = DeviceModule(webView.context)
+                        deviceInfo = gson.fromJson<DeviceInfo>(device!!.deviceInfo,DeviceInfo::class.java)
+                    }else{
+                        return
+                    }
+                }
                 var jsonObject = data as org.json.JSONObject
                 var adWithTypeEntity = gson.fromJson<AdWithTypeEntity>(jsonObject.toString(),AdWithTypeEntity::class.java)
                 var binding =DataBindingUtil.findBinding<ActivityMainBinding>(webView)
@@ -834,7 +842,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     binding.adLayout.layoutParams = layoutParams
                 }
                 binding.adLayout.invalidate()
-                if( null != deviceInfo && adHelper.checkIsSupply(adWithTypeEntity , deviceInfo!!)){
+                if(adHelper.checkIsSupply(adWithTypeEntity , deviceInfo!!)){
                     return
                 }
                 when(adWithTypeEntity.supplierType){

@@ -46,6 +46,7 @@ class AdHelper {
                     }
 
                     override fun onAdReady() {
+                        Log.d("TAG","")
                     }
 
                     override fun onAdClose() {
@@ -53,8 +54,11 @@ class AdHelper {
                     }
                 }
                 oppoBanner.setAdListener(oppoListener)
+                binding.adLayout.removeAllViews()
                 if (null !=oppoBanner.adView){
                     binding.adLayout.addView(oppoBanner.adView)
+                    binding.adLayout.invalidate()
+
                 }
                 oppoBanner.loadAd()
             }
@@ -132,30 +136,35 @@ class AdHelper {
                 "banner" ->{
                     result.result = "onAdFailed"
                     result.supplierType = adWithTypeEntity.supplierType
-                    ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
+                    ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",result.result,null)
+                    return true
                 }
                 "video" ->{
                     result.result = "onAdFailed"
                     result.supplierType = adWithTypeEntity.supplierType
-                    ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",gson.toJson(result),null)
+
+                    ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
+                    return true
                 }
             }
-            return true
+
         }
         if(adWithTypeEntity.supplierType == "XIAOMI"  && !device.deviceBrand.contains("Xiaomi")){
             when(adWithTypeEntity.ADType){
                 "banner" ->{
                     result.result = "onAdFailed"
                     result.supplierType = adWithTypeEntity.supplierType
-                    ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
+                    ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",result.result,null)
+                    return true
                 }
                 "video" ->{
                     result.result = "onAdFailed"
                     result.supplierType = adWithTypeEntity.supplierType
-                    ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",gson.toJson(result),null)
+                    ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
+                    return true
                 }
             }
-            return true
+
         }
         return false
     }

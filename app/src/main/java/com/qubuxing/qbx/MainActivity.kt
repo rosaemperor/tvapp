@@ -47,6 +47,8 @@ import com.ly.adpoymer.manager.VideoManager
 import com.miui.zeus.mimo.sdk.ad.AdWorkerFactory
 import com.miui.zeus.mimo.sdk.ad.IAdWorker
 import com.miui.zeus.mimo.sdk.listener.MimoAdListener
+import com.oppo.mobad.api.InitParams
+import com.oppo.mobad.api.MobAdManager
 import com.qubuxing.qbx.databinding.ActivityMainBinding
 import com.qubuxing.qbx.databinding.ActivityThirdBrowserBinding
 import com.qubuxing.qbx.http.beans.Step
@@ -142,7 +144,7 @@ class MainActivity : BaseActivity() {
 ////                        }
 ////                    }
 ////                })
-////            return true
+//            return true
 //        }
         return super.onKeyDown(keyCode, event)
     }
@@ -166,6 +168,16 @@ class MainActivity : BaseActivity() {
         when(requestCode){
             client.CAMERA_REQUEST_CODE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
             client.READ_PHONE -> client.onRequestPermissionsResult(requestCode,permissions,grantResults)
+            10010 ->{
+                //OPPO广告
+                var builder = InitParams.Builder()
+                if(BuildConfig.DEBUG){
+                    builder.setDebug(true)
+                }
+                var initParams = builder.build()
+                MobAdManager.getInstance().init(this@MainActivity,config.OPPO_APPID ,initParams)
+            }
+
         }
 
 
@@ -224,7 +236,6 @@ class MainActivity : BaseActivity() {
                 Log.i("TAG","两次取步数之间跨天，置初始状态")
                 SharePrefenceHelper.saveFloat("LastSensorStep",event.setps)
                 SharePrefenceHelper.saveFloat("LastUpdateStep",0f)
-                client.callHandler("updateWXStep","",null)
                 client.callBackStep(0f)
             }else{
                 if(SharePrefenceHelper.getBoolean("ServiceHasDead")){
@@ -318,5 +329,6 @@ class MainActivity : BaseActivity() {
         client.callHandler("duibaCallback","active",null)
         super.onRestart()
     }
+
 
 }
