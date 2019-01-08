@@ -834,7 +834,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     binding.adLayout.layoutParams = layoutParams
                 }
                 binding.adLayout.invalidate()
-                if( null != deviceInfo && adHelper.checkIsSupply(adWithTypeEntity , deviceInfo)){
+                if( null != deviceInfo && adHelper.checkIsSupply(adWithTypeEntity , deviceInfo!!)){
                     return
                 }
                 when(adWithTypeEntity.supplierType){
@@ -857,7 +857,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         showXMAD(adWithTypeEntity,callback)
                     }
                     "OPPO" ->{
-//                        adHelper.showADOPPO(adWithTypeEntity , callback)
+                        adHelper.showADOPPO(adWithTypeEntity , callback)
                     }
 
                     else ->{
