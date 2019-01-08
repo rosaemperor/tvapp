@@ -209,7 +209,7 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun androidStepEvent(event : StepGetEvent){
         if(ReBootHelper.isReBoot()){
-            if(ReBootHelper.isTheSameDay()){
+            if(!ReBootHelper.isTheSameDay()){
                 SharePrefenceHelper.saveFloat("LastUpdateStep" , 0f)
                 SharePrefenceHelper.saveFloat("LastSensorStep",event.setps)
             }
