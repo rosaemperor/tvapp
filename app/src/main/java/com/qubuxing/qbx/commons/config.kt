@@ -37,4 +37,10 @@ object config {
     var BASE_SERVER_WEBUI_URL :String = if (BuildConfig.DEBUG) WEB_UI_URL_DEBUG else WEB_UI_URL_PROD
     //后台接口地址
     var HOST_ADDRESS :String = if (BuildConfig.DEBUG) HOST_ADDRESS_DEBUG else HOST_ADDRESS_PROD
+
+
+
+
+    var WXthumbData = "WXthumbData"
+    var WXthumbString = "WXthumbString"
 }

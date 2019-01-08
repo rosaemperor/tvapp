@@ -210,12 +210,23 @@ class MainActivity : BaseActivity() {
 
      override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+         if(null != intent && intent.hasExtra(config.WXthumbString)){
+             when(intent.extras.getString(config.WXthumbString)){
+                 "update"->{
+                     binding.webView.reload()
+                 }
+                 else->{
+
+                 }
+             }
+         }
         if (null != intent && intent.hasExtra("code")) {
             when (intent.action) {
                 "qwerty" -> client.resopnseCode(intent.extras!!.get("code")!!.toString() + "")
 //                "payResult" -> WVWebViewClient.responsePayResult(intent.extras!!.get("payResult")!!.toString() + "")
             }
         }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
