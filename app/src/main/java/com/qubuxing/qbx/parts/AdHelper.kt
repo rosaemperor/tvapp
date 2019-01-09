@@ -103,9 +103,9 @@ class AdHelper {
                     }
 
                     override fun onVideoPlayClose(p0: Long) {
-//                        result.result = "onAdClose"
-//                        result.supplierType = adWithTypeEntity.supplierType
-//                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
+                        result.result = "onAdClose"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
                     override fun onLandingPageOpen() {

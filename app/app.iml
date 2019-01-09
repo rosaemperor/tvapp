@@ -169,6 +169,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugTestClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedRealReleaseClasspath" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkHuaweiDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkHuaweiDebugTestClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkHuaweiRealReleaseClasspath" />
