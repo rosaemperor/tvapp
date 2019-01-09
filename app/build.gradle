@@ -179,7 +179,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
     implementation 'com.alibaba:fastjson:1.2.33'
     //    implementation files('libs/GDTUnionSDK.4.20.580.min.jar')
     implementation 'com.squareup.okio:okio:1.13.0'

@@ -89,6 +89,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     lateinit var adView : ViewGroup
     var mTTAdNative : TTAdNative
     lateinit var adSlot : AdSlot
+    var bannerCallback = VideoBack()
      var result = VideoBack()
     var adHelper : AdHelper
     var device : DeviceModule?
@@ -887,8 +888,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 }
                 var listener = object : MimoAdListener {
                     override fun onAdFailed(p0: String?) {
-                        Log.d("TAG","MiBanner: ${p0}")
-                        callHandler("bannerCallback","onAdFailed",null)
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p0!!
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdDismissed() {
@@ -896,7 +899,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     }
 
                     override fun onAdPresent() {
-                        Log.d("TAG","MiBanner: onStimulateSuccess")
+                        bannerCallback.result = "onAdShow"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdClick() {
@@ -929,10 +934,16 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             "banner"->{
                 var bdAdListener = object : AdViewListener{
                     override fun onAdFailed(p0: String?) {
-                        callHandler("bannerCallback","onAdFailed",null)
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p0!!
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdShow(p0: JSONObject?) {
+                        bannerCallback.result = "onAdShow"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdClick(p0: JSONObject?) {
@@ -976,12 +987,16 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 binding.adLayout.addView(bannerView)
                 var mAdListener = object : IFLYAdListener{
                     override fun onAdFailed(p0: com.iflytek.voiceads.AdError?) {
-                        callHandler("bannerCallback","onAdFailed",null)
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p0!!.errorDescription
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdExposure() {
-                        callHandler("bannerCallback","onAdExposure",null)
-                    }
+                        bannerCallback.result = "onAdShow"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)                    }
 
                     override fun onCancel() {
                     }
@@ -1070,10 +1085,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 binding.adLayout.invalidate()
                 var bannerListener = object : BannerListener{
                     override fun onAdFailed(p0: String?) {
-                        callHandler("bannerCallback","onAdFailed",null)
-                        callback?.let {
-                            callback.callback("onAdFailed")
-                        }
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p0!!
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdDisplay(p0: String?) {
@@ -1081,6 +1096,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         closeView.setOnClickListener {
                             binding.adLayout.removeAllViews()
                         }
+                        bannerCallback.result = "onAdShow"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                         binding.adLayout.addView(closeView)
                         binding.adLayout.invalidate()
                     }
@@ -1246,7 +1264,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 bannerview.setRefresh(30)
                 bannerview.setADListener(object : AbstractBannerADListener(){
                     override fun onNoAD(p0: AdError?) {
-                        callHandler("bannerCallback","onAdFailed",null)
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p0!!.errorMsg
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onADReceiv() {
@@ -1257,6 +1278,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         closeView.setOnClickListener {
                             binding!!.adLayout.removeAllViews()
                         }
+                        bannerCallback.result = "onAdShow"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                         binding!!.adLayout.addView(closeView)
                         binding.adLayout.invalidate()
                     }
@@ -1377,12 +1401,18 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                             }
 
                             override fun onAdShow(p0: View?, p1: Int) {
+                                bannerCallback.result = "onAdShow"
+                                bannerCallback.supplierType = adWithTypeEntity.supplierType
+                                callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                             }
                         })
                     }
 
                     override fun onError(p0: Int, p1: String?) {
-                        callHandler("bannerCallback","onAdFailed",null)
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p1!!
+                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
                 })
             }
