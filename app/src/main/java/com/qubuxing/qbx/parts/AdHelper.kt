@@ -48,7 +48,9 @@ class AdHelper {
                     }
 
                     override fun onAdClick() {
-                        callback!!.callback("onAdClick")
+                        bannerCallback.result = "onAdClick"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdReady() {
@@ -95,7 +97,9 @@ class AdHelper {
                         ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)                    }
 
                     override fun onAdClick(p0: Long) {
-                        Log.d("TAG","onLandingPageClose")
+                        result.result = "onAdClick"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
                     override fun onVideoPlayClose(p0: Long) {
@@ -108,7 +112,7 @@ class AdHelper {
                     }
 
                     override fun onVideoPlayComplete() {
-                        result.result = "onVideoPlayComplete"
+                        result.result = "onAdClose"
                         result.supplierType = adWithTypeEntity.supplierType
                         ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)                    }
                 }

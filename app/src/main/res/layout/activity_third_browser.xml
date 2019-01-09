@@ -26,13 +26,13 @@
                 android:paddingRight="20dp"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:text=""
 
                     android:layout_marginLeft="5dp"
 
-                    android:background="@mipmap/nav_icon_back"
+                    android:background="@mipmap/back_arrow"
                     />
             </RelativeLayout>
 
