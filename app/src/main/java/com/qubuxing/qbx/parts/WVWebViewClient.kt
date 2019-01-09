@@ -161,7 +161,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var json = data as org.json.JSONObject
                 haveStepToday = json.getInt("step").toFloat()
                 Log.i("TAG","haveStepToday:${haveStepToday}")
-                SharePrefenceHelper.saveFloat("LastUpdateStep",haveStepToday)
+//                SharePrefenceHelper.saveFloat("LastUpdateStep",haveStepToday)
                 if (!SharePrefenceHelper.getBoolean("FirstOpen")){
                     if(haveStepToday > 0){
                         var jsonEvent = JsonEvent()
@@ -1606,8 +1606,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     fun callBackStep(step : Float){
         var jsonEvent = JsonEvent()
         var finalStep = step
-        SharePrefenceHelper.saveFloat("LastUpdateStep",step)
-        SharePrefenceHelper.saveBoolean("ServiceHasDead",false)
+
         Log.i("TAG","最终本地保存：LastUpdateStep：${step}置换serviceHasDEAD状态为：${SharePrefenceHelper.getBoolean("ServiceHasDead")}")
         ReBootHelper.saveBootOpenTime()
         if (haveStepToday > step){
@@ -1615,6 +1614,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         }
         Log.i("TAG","最终上传给前端：${finalStep}")
         jsonEvent.step = finalStep
+        SharePrefenceHelper.saveFloat("LastUpdateStep",jsonEvent.step)
+        SharePrefenceHelper.saveBoolean("ServiceHasDead",false)
         lockStep = false
         stepCallback?.let {
             stepCallback!!.callback(gson.toJson(jsonEvent))
