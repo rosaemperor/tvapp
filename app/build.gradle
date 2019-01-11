@@ -23,6 +23,7 @@ android {
         }
     }
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.qubuxing.qbx"
         minSdkVersion 19

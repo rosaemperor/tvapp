@@ -992,6 +992,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 bannerView.setAdSize(IFLYAdSize.BANNER)
                 binding!!.adLayout.removeAllViews()
                 binding.adLayout.invalidate()
+                var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+                closeView.setOnClickListener {
+                    binding.adLayout.removeAllViews()
+                }
+                binding.adLayout.addView(closeView)
                 binding.adLayout.addView(bannerView)
                 var mAdListener = object : IFLYAdListener{
                     override fun onAdFailed(p0: com.iflytek.voiceads.AdError?) {
