@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.annotation.RequiresApi
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
@@ -34,6 +35,7 @@ import com.bytedance.sdk.openadsdk.*
 
 import com.google.gson.Gson
 import com.iflytek.voiceads.*
+import com.kf5.sdk.system.utils.SPUtils
 import com.ly.adpoymer.interfaces.*
 import com.ly.adpoymer.manager.*
 import com.miui.zeus.mimo.sdk.MimoSdk
@@ -96,9 +98,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     var deviceInfo : DeviceInfo?
     lateinit var videoADDataRef :VideoADDataRef
 //     var rewardVideoAd : RewardVideoAD ?= null
-
     var mttRewardVideoAd :TTRewardVideoAd? = null
-
+    var timer : CountDownTimer? = null
     constructor(webView: WebView) : this(webView ,object :WVJBHandler{
         override fun request(data: Any?, callback: WVJBResponseCallback?) {
             callback!!.callback("Response for message from ObjC!")
@@ -113,6 +114,21 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         }else{
             device = null
             deviceInfo = null
+        }
+        timer = object : CountDownTimer(500, 100) {
+            override fun onFinish() {
+                var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+                closeView.setOnClickListener {
+                    binding!!.adLayout.removeAllViews()
+                }
+                binding!!.adLayout.addView(closeView)
+                binding.adLayout.invalidate()
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+
+            }
         }
         adHelper = AdHelper(webView)
         mTTAdNative = QBXApplication.ttAdManager.createAdNative(webView.context)
@@ -143,15 +159,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 binding!!.viewModel!!.checkKFLoginStatus(webView.context as MainActivity , kfEntity.name,kfEntity.email, kfEntity.phone, true)
             }
         })
-        registerHandler("getJVerificationToken",object  : WVJBHandler{
+        registerHandler("clearSp",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                JVerificationInterface.getToken(webView.context , object : VerifyListener{
-                    override fun onResult(code: Int, content: String?, operator: String?) {
-                        if (code == 2000){
-                            Log.d("TAG","token:${content} + operator: ${operator}")
-                        }
-                    }
-                })
+                SPUtils.clearSP()
             }
         })
         registerHandler("getAppStep",object : WVJBHandler{
@@ -974,6 +984,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 binding!!.adLayout.removeAllViews()
                 binding!!.adLayout.invalidate()
                 binding!!.adLayout.addView(bdAdView)
+                var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+                closeView.setOnClickListener {
+                    binding.adLayout.removeAllViews()
+                }
+                binding.adLayout.addView(closeView)
             }
             "video"->{
 
@@ -992,12 +1007,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 bannerView.setAdSize(IFLYAdSize.BANNER)
                 binding!!.adLayout.removeAllViews()
                 binding.adLayout.invalidate()
+                binding.adLayout.addView(bannerView)
                 var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
                 closeView.setOnClickListener {
                     binding.adLayout.removeAllViews()
                 }
                 binding.adLayout.addView(closeView)
-                binding.adLayout.addView(bannerView)
                 var mAdListener = object : IFLYAdListener{
                     override fun onAdFailed(p0: com.iflytek.voiceads.AdError?) {
                         bannerCallback.result = "onAdFailed"
@@ -1127,9 +1142,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
                     override fun onAdReady(p0: String?) {
                         callHandler("bannerCallback","onAdReady",null)
-                        callback?.let {
-                            callback.callback("onAdReady")
-                        }
+                        timer!!.start()
                     }
 
                     override fun onAdClose(p0: String?) {
@@ -1409,6 +1422,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         bannerView?.let {
                             binding!!.adLayout.removeAllViews()
                             binding!!.adLayout.addView(bannerView)
+                            var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
+                            closeView.setOnClickListener {
+                                binding.adLayout.removeAllViews()
+                            }
+                            binding.adLayout.addView(closeView)
                             binding.adLayout.invalidate()
                         }
                         p0.setBannerInteractionListener(object : TTBannerAd.AdInteractionListener{
