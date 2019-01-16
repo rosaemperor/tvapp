@@ -25,8 +25,6 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.Toast
-import cn.jiguang.verifysdk.api.JVerificationInterface
-import cn.jiguang.verifysdk.api.VerifyListener
 import cn.jpush.android.api.JPushInterface
 import com.baidu.mobads.AdView
 import com.baidu.mobads.AdViewListener
@@ -145,13 +143,13 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 JumpSetting.jumpStartInterface(webView.context)
             }
         })
-        registerHandler("KFInitializeWithEmail", object : WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var  binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                var kfEntity = gson.fromJson<KFentity>(data.toString(),KFentity::class.java)
-                binding!!.viewModel!!.checkKFLoginStatus(webView.context as MainActivity , kfEntity.name,kfEntity.email, kfEntity.phone, false)
-            }
-        })
+//        registerHandler("KFInitializeWithEmail", object : WVJBHandler{
+//            override fun request(data: Any?, callback: WVJBResponseCallback?) {
+//                var  binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
+//                var kfEntity = gson.fromJson<KFentity>(data.toString(),KFentity::class.java)
+//                binding!!.viewModel!!.checkKFLoginStatus(webView.context as MainActivity , kfEntity.name,kfEntity.email, kfEntity.phone, false)
+//            }
+//        })
         registerHandler("KFEnterChatRoom", object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var  binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
@@ -1749,6 +1747,23 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 // 防止没有安装的情况
                 e.printStackTrace()
                 Toast.makeText(webView.context, "请先安装微信！", Toast.LENGTH_LONG).show()
+            }
+
+            return true
+
+        }
+        //抖音支持
+        if (view!!.url.startsWith("snssdk143")) {
+            try {
+                // 以下固定写法
+                val intent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse(view.url))
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                webView.context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                // 防止没有安装的情况
+                e.printStackTrace()
+                Toast.makeText(webView.context, "请先安装抖音！", Toast.LENGTH_LONG).show()
             }
 
             return true

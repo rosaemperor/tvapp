@@ -3,7 +3,6 @@ package com.qubuxing.qbx
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.jpush.android.api.JPushInterface
 import com.baidu.mobads.AdSettings
 import com.bytedance.sdk.openadsdk.TTAdManager
@@ -48,8 +47,6 @@ class QBXApplication : Application(){
     private fun registJPush() {
         JPushInterface.setDebugMode(true)
         JPushInterface.init(this)
-        JVerificationInterface.setDebugMode(true)
-        JVerificationInterface.init(this)
     }
 
     private fun registToWX() {
