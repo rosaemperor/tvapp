@@ -28,8 +28,8 @@ android {
         applicationId "com.qubuxing.qbx"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 9
-        versionName "1.1.6"
+        versionCode 10
+        versionName "1.1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         dataBinding {
             enabled = true
@@ -39,6 +39,8 @@ android {
                 JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "83a1b4a81c68be03438000bb", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "lanyou", //暂时填写默认值即可.
+                MTA_APPKEY:"Aqc1107996516",//腾讯开放平台key
+                MTA_CHANNEL:"lanyou"
         ]
         ndk {
             //  abiFilters "armeabi-v7a", "x86"
@@ -215,4 +217,12 @@ dependencies {
     implementation files('libs/MimoSdk.jar')
     implementation files('libs/wire-runtime-2.2.0.jar')
     implementation files('libs/oppo_mobad_api_v271_2018_08_24_release.jar')
+
+    //腾讯开放平台
+    //mta 3.4.7 稳定版
+    implementation 'com.qq.mta:mta:3.4.7-Release'
+
+//mid jar包 必须添加
+    implementation 'com.tencent.mid:mid:4.06-Release'
+
 }

@@ -2,7 +2,9 @@ package com.qubuxing.qbx
 
 import android.app.Activity
 import android.app.Application
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import cn.jpush.android.api.JPushInterface
 import com.baidu.mobads.AdSettings
 import com.bytedance.sdk.openadsdk.TTAdManager
@@ -18,6 +20,11 @@ import com.oppo.mobad.api.MobAdManager
 import com.qubuxing.qbx.utils.SharePrefenceHelper
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import com.tencent.stat.StatConfig
+import com.tencent.stat.StatCrashCallback
+import com.tencent.stat.StatCrashReporter
+import com.tencent.stat.StatService
+import com.tencent.stat.hybrid.StatHybridHandler
 
 class QBXApplication : Application(){
     var appCount = 0
@@ -42,11 +49,32 @@ class QBXApplication : Application(){
     private fun initSdk() {
          registToWX()
          registJPush()
+         initTenXun()
     }
 
     private fun registJPush() {
         JPushInterface.setDebugMode(true)
         JPushInterface.init(this)
+    }
+    fun initTenXun(){
+        StatHybridHandler.init(this)
+        var applicationInfo = packageManager.getApplicationInfo(this.packageName, PackageManager.GET_META_DATA)
+        var channelName = applicationInfo.metaData.getString("JPUSH_CHANNEL")
+        StatConfig.setInstallChannel(this ,channelName)
+        StatService.setContext(this)
+        StatService.registerActivityLifecycleCallbacks(this)
+        var crashReporter = StatCrashReporter.getStatCrashReporter(this)
+        crashReporter.isEnableInstantReporting = true
+        crashReporter.javaCrashHandlerStatus = true
+        crashReporter.setJniNativeCrashLogcatOutputStatus(true)
+        crashReporter.addCrashCallback(object : StatCrashCallback{
+            override fun onJniNativeCrash(p0: String?) {
+                Log.d("TAG","MTA StatCrashCallback onJniNativeCrash:\n $p0")
+            }
+
+            override fun onJavaCrash(p0: Thread?, ex: Throwable?) {
+                Log.d("TAG","MTA StatCrashCallback onJavaCrash:\n $p0")            }
+        })
     }
 
     private fun registToWX() {

@@ -329,7 +329,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         registerHandler("clearLocalStep",object : WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 Log.d("TAG","clearLocalStep")
+                //清除各种缓存操作
                 StepHelper.clearStepHistory()
+                SPUtils.clearSP()
             }
         })
         registerHandler("checkUpdata",object : WVJBHandler{
