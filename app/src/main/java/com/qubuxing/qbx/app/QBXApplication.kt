@@ -137,9 +137,9 @@ class QBXApplication : Application(){
         ttAdManager.setAllowShowNotifiFromSDK(false)
 
         //芝山嵌SDK初始化
-        if(!config.ZSQSDKToken.equals("")){
-            ADSDK.getInstance(this,config.ZSQSDKToken).init()
-        }
+//        if(!config.ZSQSDKToken.equals("")){
+//            ADSDK.getInstance(this,config.ZSQSDKToken).init()
+//        }
 
 
     }

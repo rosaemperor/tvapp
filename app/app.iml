@@ -162,7 +162,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkAnzhiDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugTestClasspath" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/compatible_screen_manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data_binding_base_class_log_artifact" />

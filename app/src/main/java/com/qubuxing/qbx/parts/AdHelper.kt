@@ -79,6 +79,9 @@ class AdHelper {
                     override fun onAdFailed(p0: String?) {
                         result.result = "onAdFailed"
                         result.supplierType = adWithTypeEntity.supplierType
+                        p0?.let {
+                            result.reason = p0
+                        }
                         ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
@@ -94,6 +97,7 @@ class AdHelper {
                     override fun onVideoPlayError(p0: String?) {
                         result.result = "onAdFailed"
                         result.supplierType = adWithTypeEntity.supplierType
+                        result.reason = "播放错误"
                         ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)                    }
 
                     override fun onAdClick(p0: Long) {

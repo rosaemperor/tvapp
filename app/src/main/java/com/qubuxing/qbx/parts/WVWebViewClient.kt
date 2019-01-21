@@ -1076,6 +1076,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                      override fun onAdPlayError() {
                          result.result = "onAdFailed"
                          result.supplierType = adWithTypeEntity.supplierType
+                         result.reason= "播放错误"
                          callHandler("videoCallback",gson.toJson(result),null)
                      }
 
@@ -1118,7 +1119,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     override fun onAdFailed(p0: String?) {
                         bannerCallback.result = "onAdFailed"
                         bannerCallback.supplierType = adWithTypeEntity.supplierType
-                        bannerCallback.reason = p0!!
+                        p0?.let {
+                            bannerCallback.reason = p0
+                        }
                         callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
@@ -1168,6 +1171,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         callback?.let {
                             result.result = "onAdFailed"
                             result.supplierType = adWithTypeEntity.supplierType
+                            p0?.let {
+                                result.reason = p0
+                            }
+
                             callHandler("videoCallback",gson.toJson(result),null)
                         }
                     }
@@ -1459,6 +1466,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         p0!!.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener{
                             override fun onVideoError() {
                                 result.result = "onAdFailed"
+                                result.reason = "今日头条，未知错误"
                                 result.supplierType = adWithTypeEntity.supplierType
                                 callHandler("videoCallback",gson.toJson(result),null)
                             }
@@ -1504,6 +1512,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
                     override fun onError(p0: Int, p1: String?) {
                         result.result = "onAdFailed"
+                        result.reason = "code : ${p0} 描述：${p1}"
                         result.supplierType = adWithTypeEntity.supplierType
                         callHandler("videoCallback",gson.toJson(result),null)
 //                        callHandler("videoCallback","onAdFailed",null)

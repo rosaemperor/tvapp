@@ -159,6 +159,11 @@ android {
         }
 
     }
+    task hello{
+        doLast{
+            println "打包前请检查config文件的修改"
+        }
+    }
 
 }
 repositories {

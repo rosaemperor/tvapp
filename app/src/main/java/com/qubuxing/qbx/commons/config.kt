@@ -37,9 +37,9 @@ object config {
     private var HOST_ADDRESS_DEBUG : String  = if(BuildConfig.TEST) HOST_ADDRESS_GETSET else HOST_ADDRESS_DEV
     private var  WEB_UI_URL_DEBUG: String = if(BuildConfig.TEST) WEB_UI_URL_GETSET else WEB_UI_URL_DEV
     //H5前端页面地址
-    var BASE_SERVER_WEBUI_URL :String = if (!BuildConfig.DEBUG) WEB_UI_URL_DEBUG else WEB_UI_URL_PROD
+    var BASE_SERVER_WEBUI_URL :String = if (BuildConfig.DEBUG) WEB_UI_URL_DEBUG else WEB_UI_URL_PROD
     //后台接口地址
-    var HOST_ADDRESS :String = if (!BuildConfig.DEBUG) HOST_ADDRESS_DEBUG else HOST_ADDRESS_PROD
+    var HOST_ADDRESS :String = if (BuildConfig.DEBUG) HOST_ADDRESS_DEBUG else HOST_ADDRESS_PROD
 
 
 
