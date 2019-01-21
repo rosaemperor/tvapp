@@ -207,9 +207,10 @@ dependencies {
     //        implementation 'com.github.bumptech.glide:glide:3.7.0'
     //    implementation 'com.squareup.picasso:picasso:2.5.1'
     //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
-    implementation(name: 'open_ad_sdk1.9.62', ext: 'aar')
+    implementation(name: 'open_ad_sdk1.9.82', ext: 'aar')
+    implementation(name: 'QZS_SDK', ext: 'aar')
     //    implementation(name: 'open_ad_sdk', ext: 'aar')
-    implementation(name: 'adpoymer-3.4.74', ext: 'aar')
+    implementation(name: 'adpoymer-3.5.10', ext: 'aar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.android.support:design:27.1.1'
 //    implementation files('libs/jcore-android-1.2.6.jar')

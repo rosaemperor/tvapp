@@ -1457,6 +1457,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     override fun onRewardVideoAdLoad(p0: TTRewardVideoAd?) {
                         mttRewardVideoAd =p0
                         p0!!.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener{
+                            override fun onVideoError() {
+                                result.result = "onAdFailed"
+                                result.supplierType = adWithTypeEntity.supplierType
+                                callHandler("videoCallback",gson.toJson(result),null)
+                            }
+
                             override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
                                 result.result = "onRewardVerify"
                                 result.supplierType = adWithTypeEntity.supplierType

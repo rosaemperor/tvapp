@@ -18,6 +18,7 @@ import com.miui.zeus.mimo.sdk.MimoSdk
 import com.oppo.mobad.api.InitParams
 import com.oppo.mobad.api.MobAdManager
 import com.qubuxing.qbx.utils.SharePrefenceHelper
+import com.qzs.sdk.ADSDK
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tencent.stat.StatConfig
@@ -122,17 +123,8 @@ class QBXApplication : Application(){
             }
         })
 
-        //广告SDK初始化
-        FalconAdEntrance.getInstance().init(this@QBXApplication,"1665")
-        var adconfig = AdConfig(this@QBXApplication).setConfigMode(AdConfig.CONFIG_EVERYTIME)
-        SpreadManager.getInstance(this@QBXApplication).init(adconfig)
-        InsertManager.getInstance(this@QBXApplication).init(adconfig)
-        BannerManager.getInstance(this@QBXApplication).init(adconfig)
-        NativeManager.getInstance(this@QBXApplication).init(adconfig)
-        VideoManager.getInstance(this@QBXApplication).init(adconfig)
 
-        AdSettings.setSupportHttps(true)
-
+        initLYSdk()
 
         //小米广告
         MimoSdk.init(this, config.miMoAPPID , config.miMoAPPKEY , config.miMoAPPTOKEN)
@@ -144,11 +136,30 @@ class QBXApplication : Application(){
         ttAdManager.setName("趣步行")
         ttAdManager.setAllowShowNotifiFromSDK(false)
 
+        //芝山嵌SDK初始化
+        if(!config.ZSQSDKToken.equals("")){
+            ADSDK.getInstance(this,config.ZSQSDKToken).init()
+        }
+
+
     }
     fun getWXAPI(): IWXAPI {
         return api
     }
     fun  isForeground() : Boolean{
         return appCount > 0
+    }
+
+    fun initLYSdk(){
+        //猎鹰广告SDK初始化
+        FalconAdEntrance.getInstance().init(this@QBXApplication,"1665")
+        var adconfig = AdConfig(this@QBXApplication).setConfigMode(AdConfig.CONFIG_EVERYTIME)
+        SpreadManager.getInstance(this@QBXApplication).init(adconfig)
+        InsertManager.getInstance(this@QBXApplication).init(adconfig)
+        BannerManager.getInstance(this@QBXApplication).init(adconfig)
+        NativeManager.getInstance(this@QBXApplication).init(adconfig)
+        VideoManager.getInstance(this@QBXApplication).init(adconfig)
+
+        AdSettings.setSupportHttps(true)
     }
 }

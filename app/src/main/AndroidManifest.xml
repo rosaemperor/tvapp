@@ -25,6 +25,11 @@
     <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!--开机启动-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!--自定义通知处理权限-->
+    <permission android:name = "com.sdk.notify.permission.send"/>
+    <permission android:name = "com.sdk.notify.permission.receive"/>
     <!-- 协处理器计步权限 -->
     <uses-feature
         android:name="android.hardware.sensor.stepcounter"
@@ -164,6 +169,14 @@
         android:name="com.qq.e.ads.ADActivity"
         android:taskAffinity="com.qubuxing.default"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
         <activity
             android:taskAffinity="com.qubuxing.default"
             android:name="com.baidu.mobads.AppActivity"
@@ -263,6 +276,35 @@
         <meta-data
             android:name="BaiduMobAd_APP_ID"
             android:value="d9828151"/>
+
+        <!--芝山嵌SDK-->
+        <service
+            android:name="com.qzs.sdk.internal.core.CoreService"
+            android:exported="false"/>
+        <service
+            android:name="com.qzs.sdk.internal.core.CoreService$InnerService"
+            android:exported="false"/>
+        <service
+            android:name="com.qzs.sdk.internal.core.BgJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <receiver android:name="com.qzs.sdk.internal.core.MainTaskReceiver">
+            <intent-filter>
+
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+
+            </intent-filter>
+
+        </receiver>
+
+        <receiver android:name="com.qzs.sdk.internal.active.NotificationActionReceiver"
+                  android:permission="com.sdk.notify.permission.receive">
+            <intent-filter>
+                <action android:name="com.sdk.notify.push"/>
+                <action android:name="com.sdk.notify.click"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
