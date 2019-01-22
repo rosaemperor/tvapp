@@ -59,6 +59,7 @@ import com.qubuxing.qbx.http.beans.*
 import com.qubuxing.qbx.service.StepCounterService
 import com.qubuxing.qbx.service.StepDetectorService
 import com.qubuxing.qbx.utils.*
+import com.qubuxing.qbx.utils.KFUtils.Preference
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram
 import com.tencent.mm.opensdk.modelmsg.*
 import com.xiaomi.ad.common.pojo.AdType
@@ -332,6 +333,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 //清除各种缓存操作
                 StepHelper.clearStepHistory()
                 SPUtils.clearSP()
+                Preference.saveBoolLogin(webView.context , false)
             }
         })
         registerHandler("checkUpdata",object : WVJBHandler{
