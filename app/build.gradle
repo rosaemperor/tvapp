@@ -139,6 +139,10 @@ android {
             dimension "default"
             manifestPlaceholders = [JPUSH_CHANNEL: "TIANYI"]
         }
+        samsung {
+            dimension "default"
+            manifestPlaceholders = [JPUSH_CHANNEL: "SAMSUNG"]
+        }
 
 
     }

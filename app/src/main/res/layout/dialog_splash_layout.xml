@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
@@ -44,11 +45,15 @@
         android:text="@string/click_to_skip"
         android:textColor="@android:color/white"
         android:textSize="14sp"/>
+
     <ImageView
         android:id="@+id/fullscreen_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="332dp"
+        tools:layout_editor_absoluteY="247dp"
+        tools:ignore="MissingConstraints"/>
     
 </android.support.constraint.ConstraintLayout>
