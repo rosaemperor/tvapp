@@ -1695,6 +1695,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         if (haveStepToday > step){
             finalStep = haveStepToday
         }
+        Toast.makeText(webView.context , "最终上传给前端：${finalStep} 最终本地保存：LastUpdateStep：${step} 上次本地保存步数：${SharePrefenceHelper.getFloat("LastUpdateStep")}," , Toast.LENGTH_LONG).show()
         Log.i("TAG","最终上传给前端：${finalStep}")
         jsonEvent.step = finalStep
         SharePrefenceHelper.saveFloat("LastUpdateStep",jsonEvent.step)

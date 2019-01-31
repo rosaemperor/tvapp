@@ -175,6 +175,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkSamsungRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkSanliulingzhushouRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkTianyiRealReleaseClasspath" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkVivoDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkVivoRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkWandoujiaRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkWoshangdianRealReleaseClasspath" />
