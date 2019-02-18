@@ -69,6 +69,10 @@ class TestViewModel : BaseViewModel(){
 
     fun showStoreVideo(view : View){
         var listener = object : VideoListener {
+            override fun onAdClick() {
+
+            }
+
             override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
             }
 

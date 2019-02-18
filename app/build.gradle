@@ -28,8 +28,8 @@ android {
         applicationId "com.qubuxing.qbx"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 10
-        versionName "1.1.7"
+        versionCode 11
+        versionName "1.1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         dataBinding {
             enabled = true
@@ -186,7 +186,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //retrofit2.0 导入
-    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
@@ -194,7 +194,7 @@ dependencies {
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
     implementation 'com.alibaba:fastjson:1.2.33'
     //    implementation files('libs/GDTUnionSDK.4.20.580.min.jar')
-    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.okio:okio:1.12.0'
     //    implementation 'com.google.code.gson:gson:2.8.1'
     //    implementation 'com.android.support:support-v4:26.0.0-alpha1'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
@@ -217,9 +217,22 @@ dependencies {
     //    implementation 'com.squareup.picasso:picasso:2.5.1'
     //    implementation (name: 'adpoymer-3.4.69', ext: 'aar')
     implementation(name: 'open_ad_sdk1.9.82', ext: 'aar')
+    //猎鹰SDK
+    implementation(name: 'Baidu_MobAds_SDK-release', ext: 'aar')
+    implementation(name: 'mintegral_alphab', ext: 'aar')
+    implementation(name: 'mintegral_chinacommon', ext: 'aar')
+    implementation(name: 'mintegral_mtgdownloads', ext: 'aar')
+    implementation(name: 'mintegral_mtgjscommon', ext: 'aar')
+    implementation(name: 'mintegral_playercommon', ext: 'aar')
+    implementation(name: 'mintegral_reward', ext: 'aar')
+    implementation(name: 'mintegral_videocommon', ext: 'aar')
+    implementation(name: 'mintegral_videojs', ext: 'aar')
     implementation(name: 'QZS_SDK', ext: 'aar')
     //    implementation(name: 'open_ad_sdk', ext: 'aar')
-    implementation(name: 'adpoymer-3.5.10', ext: 'aar')
+    implementation(name: 'adpoymer-4.0.04', ext: 'aar')
+
+
+
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.android.support:design:27.1.1'
 //    implementation files('libs/jcore-android-1.2.6.jar')

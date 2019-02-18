@@ -566,11 +566,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         registerHandler("showAdOnNative",object : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var nativeListener = object : NativeListener{
-                    override fun onAdFailed(p0: String?) {
+                    override fun onAdReceived(p0: MutableList<Any?>?) {
+
                     }
 
-                    override fun onAdReceived(p0: java.util.ArrayList<*>?) {
-
+                    override fun onAdFailed(p0: String?) {
                     }
 
                     override fun onAdDisplay() {
@@ -646,6 +646,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var id  =""+ ( data as JSONObject).get("id")
                 var listener = object : VideoListener {
+                    override fun onAdClick() {
+
+                    }
+
                     override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
                         callback?.let {
                             callback.callback("onRewardVerify")
@@ -700,6 +704,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 var videoEntity = gson.fromJson<VideoEntity>(jsonObject.toString(),VideoEntity::class.java)
 
                 var listener = object : VideoListener {
+                    override fun onAdClick() {
+
+                    }
+
                     override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
                         callback?.let {
                             callback.callback("onRewardVerify")
@@ -1163,6 +1171,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             }
             "video" ->{
                 var listener = object : VideoListener {
+                    override fun onAdClick() {
+
+                    }
+
                     override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
                         callback?.let {
                             callback.callback("onRewardVerify")
@@ -1695,7 +1707,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
         if (haveStepToday > step){
             finalStep = haveStepToday
         }
-        Toast.makeText(webView.context , "最终上传给前端：${finalStep} 最终本地保存：LastUpdateStep：${step} 上次本地保存步数：${SharePrefenceHelper.getFloat("LastUpdateStep")}," , Toast.LENGTH_LONG).show()
+//        Toast.makeText(webView.context , "最终上传给前端：${finalStep} 最终本地保存：LastUpdateStep：${step} 上次本地保存步数：${SharePrefenceHelper.getFloat("LastUpdateStep")}," , Toast.LENGTH_LONG).show()
         Log.i("TAG","最终上传给前端：${finalStep}")
         jsonEvent.step = finalStep
         SharePrefenceHelper.saveFloat("LastUpdateStep",jsonEvent.step)
