@@ -5,4 +5,6 @@ class DeviceInfo {
     var deviceBrand = ""
     var deviceImei = ""
     var osVer =""
+    var geoLon =""
+    var geoLat = ""
 }

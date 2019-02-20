@@ -228,9 +228,14 @@ dependencies {
     implementation(name: 'mintegral_videocommon', ext: 'aar')
     implementation(name: 'mintegral_videojs', ext: 'aar')
     implementation(name: 'QZS_SDK', ext: 'aar')
-    //    implementation(name: 'open_ad_sdk', ext: 'aar')
     implementation(name: 'adpoymer-4.0.04', ext: 'aar')
 
+
+
+    //用友SDK
+//    implementation(name: 'open_ad_sdk', ext: 'aar')
+    implementation files('libs/adview-android-bid-3.8.6.jar')
+//    implementation files('libs/android-query-full.0.26.7.jar')
 
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'

@@ -309,8 +309,15 @@
         </receiver>
 
 
-
-
+        <!--用友SDK-->
+        <activity
+            android:name="com.kyview.AdViewVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:hardwareAccelerated="true" >
+        </activity>
+        <service android:name="com.kyview.DownloadService" />
+        <activity android:name="com.kyview.AdViewLandingPage" />
+        <activity android:name="com.kyview.AdActivity" />
         <!--猎鹰SDK添加部分-->
         <activity
             android:name="com.mintegral.msdk.reward.player.MTGRewardVideoActivity"

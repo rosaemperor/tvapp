@@ -36,7 +36,12 @@ class GetGeoUtil(private val mActivity: Activity) {
                     ActivityCompat.requestPermissions(mActivity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1)
                     return null
                 }
-                return locationManager!!.getLastKnownLocation(locationProvider)
+                var location = locationManager!!.getLastKnownLocation(locationProvider)
+                if(null == location && locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                    locationProvider = LocationManager.NETWORK_PROVIDER
+                }
+                location = locationManager!!.getLastKnownLocation(locationProvider)
+                return location
             } catch (e: Exception) {
                 return null
             }

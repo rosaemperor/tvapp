@@ -3,8 +3,13 @@ package com.qubuxing.qbx.parts
 import android.app.Activity
 import android.databinding.DataBindingUtil
 import android.util.Log
+import android.view.View
 import android.webkit.WebView
 import com.google.gson.Gson
+import com.kuaiyou.loader.AdViewBannerManager
+import com.kuaiyou.loader.AdViewVideoManager
+import com.kuaiyou.loader.loaderInterface.AdViewBannerListener
+import com.kuaiyou.loader.loaderInterface.AdViewVideoListener
 import com.oppo.mobad.api.ad.BannerAd
 import com.oppo.mobad.api.ad.RewardVideoAd
 import com.oppo.mobad.api.listener.IBannerAdListener
@@ -183,5 +188,68 @@ class AdHelper {
         }
         return false
     }
+
+
+    fun showAdYY(adWithTypeEntity: AdWithTypeEntity , callback: WVJBWebViewClient.WVJBResponseCallback?){
+        when (adWithTypeEntity.ADType) {
+            "banner" -> {
+                var adViewBIDView = AdViewBannerManager(webview.context , "",200 , true)
+                adViewBIDView.setShowCloseBtn(true)
+                adViewBIDView.setRefreshTime(15)
+                adViewBIDView.setOpenAnim(true)
+                adViewBIDView.setOnAdViewListener(object : AdViewBannerListener {
+                    override fun onAdFailedReceived(p0: String?) {
+
+                    }
+
+                    override fun onAdReceived() {
+                    }
+
+                    override fun onAdClicked() {
+                    }
+
+                    override fun onAdDisplayed() {
+
+                    }
+
+                    override fun onAdClosed() {
+                    }
+                })
+            }
+            "video"  ->{
+                var adViewVideoInterface = object : AdViewVideoListener{
+                    override fun onVideoReady() {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onVideoStartPlayed() {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onFailedReceivedVideo(p0: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onPlayedError(p0: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onVideoClosed() {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onVideoFinished() {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onReceivedVideo(p0: String?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                }
+                var videoManager = AdViewVideoManager(webview.context  , "" ,adWithTypeEntity.spaceId , adViewVideoInterface , false)
+            }
+        }
+    }
+
 
 }

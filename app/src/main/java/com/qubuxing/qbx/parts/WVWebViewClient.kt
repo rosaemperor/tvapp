@@ -349,6 +349,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                                 webView.context, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(webView.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(webView.context, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(webView.context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(webView.context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
                 ) {
                     var initMessage = InitMessage()
@@ -360,6 +362,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
                     initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
+                    initMessage.longitude = deviceInfo!!.geoLon
+                    initMessage.latitude = deviceInfo!!.geoLat
                     callback!!.callback(gson.toJson(initMessage))
                 }else{
                     UUIDCallback = callback
@@ -367,6 +371,8 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     cameraList.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                     cameraList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     cameraList.add(Manifest.permission.READ_PHONE_STATE)
+                    cameraList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    cameraList.add(Manifest.permission.ACCESS_FINE_LOCATION)
                     (webView.context as Activity).requestPermissions(cameraList.toTypedArray(),READ_PHONE)
                 }
 
@@ -755,45 +761,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 VideoManager.getInstance(webView.context).request(webView.context,videoEntity.spaceId,videoEntity.RewardName,videoEntity.UserId,videoEntity.type.toInt(),videoEntity.amount.toInt(),listener)
             }
         })
-        registerHandler("showGDTBanner",object : WVJBWebViewClient.WVJBHandler{
+        registerHandler("getLocation",object : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var id  =""+ ( data as JSONObject).get("id")
-                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                binding!!.adLayout.removeAllViews()
-                binding!!.adLayout.invalidate()
-                var bannerview : BannerView?=null
-                if(bannerview != null){
-                    bannerview.destroy()
-                }
-                bannerview = BannerView(webView.context as Activity , ADSize.BANNER ,"1107985626","$id")
-                bannerview.setRefresh(30)
-                bannerview.setADListener(object : AbstractBannerADListener(){
-                    override fun onNoAD(p0: AdError?) {
-                        callHandler("bannerCallback","onAdFailed",null)
-                    }
+               //获取当前位置信息
 
-                    override fun onADReceiv() {
-                    }
-
-                    override fun onADExposure() {
-                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-                        closeView.setOnClickListener {
-                            binding.adLayout.removeAllViews()
-                        }
-                        binding.adLayout.addView(closeView)
-                        binding.adLayout.invalidate()
-                    }
-                    override fun onADClicked() {
-                        callHandler("bannerCallback","onAdClick",null)
-                    }
-
-                     override fun onADClosed() {
-                         binding.adLayout.removeAllViews()
-                         binding.adLayout.invalidate()
-                        callHandler("bannerCallback","onADClosed",null)                    }
-                })
-                binding!!.adLayout.addView(bannerview)
-                bannerview.loadAD()
             }
         })
         registerHandler("showAdVideoNow",object : WVJBWebViewClient.WVJBHandler{
@@ -1636,6 +1607,10 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
                     initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
+                    device =DeviceModule(webView.context)
+                    deviceInfo = gson.fromJson<DeviceInfo>(device!!.deviceInfo,DeviceInfo::class.java)
+                    initMessage.longitude = deviceInfo!!.geoLon
+                    initMessage.latitude = deviceInfo!!.geoLat
                     UUIDCallback!!.callback(gson.toJson(initMessage))
                 }else{
                     var initMessage = InitMessage()
