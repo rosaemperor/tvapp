@@ -33,6 +33,9 @@ object config {
     val KFAPPID = "0015c173d1f6df514c549a935f49fb6a3bc6a3c3a403d888"
     val KFHelpAdress ="luckybi.kf5.com"
 
+    //快友key
+    val KYKey = "SDK20191818060228rs84im4g0x8upuu"
+
     val GDTAPP_ID ="1107985626"
     private var HOST_ADDRESS_DEBUG : String  = if(BuildConfig.TEST) HOST_ADDRESS_GETSET else HOST_ADDRESS_DEV
     private var  WEB_UI_URL_DEBUG: String = if(BuildConfig.TEST) WEB_UI_URL_GETSET else WEB_UI_URL_DEV

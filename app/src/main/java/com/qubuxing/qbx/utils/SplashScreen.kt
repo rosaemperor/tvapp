@@ -26,6 +26,8 @@ import com.iflytek.voiceads.AdKeys
 import com.iflytek.voiceads.IFLYNativeAd
 import com.iflytek.voiceads.IFLYNativeListener
 import com.iflytek.voiceads.NativeADDataRef
+import com.kuaiyou.loader.AdViewSpreadManager
+import com.kuaiyou.loader.loaderInterface.AdViewSpreadListener
 import com.ly.adpoymer.interfaces.SpreadListener
 import com.ly.adpoymer.manager.SpreadManager
 //import com.oppo.mobad.api.listener.ISplashAdListener
@@ -47,6 +49,7 @@ import retrofit2.Response
 
 
 import java.lang.ref.WeakReference
+import kotlin.coroutines.experimental.coroutineContext
 
 /**
  * SplashScreen
@@ -439,6 +442,49 @@ object SplashScreen {
 //                    }
 //                }
 //            }
+            "ad-kuaiyou"->{
+                var adviewBIDSpread = AdViewSpreadManager(activity,config.KYKey , containLayout)
+                adviewBIDSpread.setSpreadNotifyType(AdViewSpreadManager.NOTIFY_COUNTER_NUM)
+                adviewBIDSpread.setLogo(R.mipmap.logo)
+                adviewBIDSpread.setOnAdViewListener(object : AdViewSpreadListener{
+                    override fun onAdFailedReceived(p0: String?) {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }                    }
+
+                    override fun onAdReceived() {
+                    }
+
+                    override fun onAdClicked() {
+                    }
+
+                    override fun onAdDisplayed() {
+                    }
+
+                    override fun onAdSpreadPrepareClosed() {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }
+                    }
+
+                    override fun onAdClosed() {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }                    }
+
+                    override fun onAdClosedByUser() {
+                        adShowed = true
+                        if ((activity as MainActivity).client.pageGetFinished) {
+                            hide(activity)
+                        }                    }
+
+                    override fun onAdNotifyCustomCallback(p0: Int, p1: Int) {
+                    }
+                })
+            }
             else ->{
                 adShowed = true
                 if ((activity as MainActivity).client.pageGetFinished) {

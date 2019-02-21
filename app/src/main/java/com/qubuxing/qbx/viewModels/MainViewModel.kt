@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.text.PrecomputedText
 import android.util.ArrayMap
@@ -56,7 +57,9 @@ class MainViewModel : BaseViewModel(){
                 PackageManager.GET_META_DATA)
         var packageInfo = QBXApplication.instance.packageManager.getPackageInfo(QBXApplication.instance.packageName,0)
         updateEntity.verName = packageInfo.versionName
-        updateEntity.verCode = ""+packageInfo.versionCode
+
+        if (Build.VERSION.SDK_INT<= 27) updateEntity.verCode = ""+packageInfo.versionCode
+        if (Build.VERSION.SDK_INT>= 28) updateEntity.verCode = ""+packageInfo.longVersionCode
         updateEntity.channelCode = applicationInfo.metaData.getString("JPUSH_CHANNEL")
         var call = RetrofitUtil.instance.help.checkUpdate(updateEntity)
         call.enqueue(object : Callback<UpdateResultEntity>{

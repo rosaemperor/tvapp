@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.net.Uri
@@ -21,7 +22,14 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.webkit.WebChromeClient
+import android.widget.RelativeLayout
+import com.kuaiyou.loader.AdViewBannerManager
+import com.kuaiyou.loader.AdViewVideoManager
+import com.kuaiyou.loader.loaderInterface.AdViewBannerListener
+import com.kuaiyou.loader.loaderInterface.AdViewVideoListener
 
 import com.oppo.mobad.api.InitParams
 import com.oppo.mobad.api.MobAdManager
@@ -68,7 +76,7 @@ class MainActivity : BaseActivity() {
     @SuppressLint("ResourceAsColor")
     override fun initViewModel() {
         viewModel = MainViewModel()
-        viewModel.getUpdateMessage(this@MainActivity)
+//        viewModel.getUpdateMessage(this@MainActivity)//改为等待前端吊起更新事件
         binding.swipeLayout.isEnabled = false
         binding.swipeLayout.setColorSchemeColors(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light)
@@ -110,7 +118,36 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            Log.d("TAG","${JPushInterface.getAlias(this@MainActivity,1)}")
+//            var videoManager : AdViewVideoManager? =null
+//            var adViewVideoInterface = object : AdViewVideoListener {
+//                override fun onVideoReady() {
+//                    videoManager?.let {
+//                        videoManager!!.playVideo(this@MainActivity)
+//                    }
+//
+//                }
+//
+//                override fun onVideoStartPlayed() {
+//                }
+//
+//                override fun onFailedReceivedVideo(p0: String?) {
+//                    Log.d("TAG","${p0}")
+//                }
+//
+//                override fun onPlayedError(p0: String?) {
+//                }
+//
+//                override fun onVideoClosed() {
+//                }
+//
+//                override fun onVideoFinished() {
+//                }
+//
+//                override fun onReceivedVideo(p0: String?) {
+//                }
+//            }
+//            videoManager = AdViewVideoManager(this@MainActivity , config.KYKey ,"POSID6em3hj6lajyt" , adViewVideoInterface , false)
+//            videoManager.setVideoOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)

@@ -1,6 +1,7 @@
 package com.qubuxing.qbx.parts
 
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.databinding.DataBindingUtil
 import android.util.Log
 import android.view.View
@@ -16,6 +17,7 @@ import com.oppo.mobad.api.listener.IBannerAdListener
 import com.oppo.mobad.api.listener.IRewardVideoAdListener
 import com.oppo.mobad.api.params.RewardVideoAdParams
 import com.qubuxing.qbx.MainActivity
+import com.qubuxing.qbx.config
 import com.qubuxing.qbx.databinding.ActivityMainBinding
 import com.qubuxing.qbx.http.beans.AdWithTypeEntity
 import com.qubuxing.qbx.http.beans.DeviceInfo
@@ -122,7 +124,7 @@ class AdHelper {
                     }
 
                     override fun onVideoPlayComplete() {
-                        result.result = "onAdClose"
+                        result.result = "onRewardVideoCached"
                         result.supplierType = adWithTypeEntity.supplierType
                         ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)                    }
                 }
@@ -190,22 +192,34 @@ class AdHelper {
     }
 
 
-    fun showAdYY(adWithTypeEntity: AdWithTypeEntity , callback: WVJBWebViewClient.WVJBResponseCallback?){
+    fun showAdKY(adWithTypeEntity: AdWithTypeEntity , callback: WVJBWebViewClient.WVJBResponseCallback?){
         when (adWithTypeEntity.ADType) {
             "banner" -> {
-                var adViewBIDView = AdViewBannerManager(webview.context , "",200 , true)
+                var adViewBIDView = AdViewBannerManager(webview.context , config.KYKey,AdViewBannerManager.BANNER_AUTO_FILL , true)
                 adViewBIDView.setShowCloseBtn(true)
                 adViewBIDView.setRefreshTime(15)
                 adViewBIDView.setOpenAnim(true)
                 adViewBIDView.setOnAdViewListener(object : AdViewBannerListener {
                     override fun onAdFailedReceived(p0: String?) {
-
+                        bannerCallback.result = "onAdFailed"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        bannerCallback.reason = p0!!
+                        ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdReceived() {
+                        binding.adLayout.removeAllViews()
+                        binding.adLayout.addView(adViewBIDView.adViewLayout)
+                        binding.adLayout.invalidate()
+                        bannerCallback.result = "onAdShow"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdClicked() {
+                        bannerCallback.result = "onAdClick"
+                        bannerCallback.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("bannerCallback",gson.toJson(bannerCallback),null)
                     }
 
                     override fun onAdDisplayed() {
@@ -217,36 +231,54 @@ class AdHelper {
                 })
             }
             "video"  ->{
+                var videoManager: AdViewVideoManager? =null
                 var adViewVideoInterface = object : AdViewVideoListener{
                     override fun onVideoReady() {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        result.result = "onRewardVideoCached"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
+                        videoManager?.let {
+                            videoManager!!.playVideo(webview.context)
+                        }
                     }
 
                     override fun onVideoStartPlayed() {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onFailedReceivedVideo(p0: String?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        result.result = "onAdFailed"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        p0?.let {
+                            result.reason = p0
+                        }
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
                     override fun onPlayedError(p0: String?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        result.result = "onAdFailed"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        result.reason = "播放错误"
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
                     override fun onVideoClosed() {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        result.result = "onAdClose"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
                     override fun onVideoFinished() {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        result.result = "onAdFailed"
+                        result.supplierType = adWithTypeEntity.supplierType
+                        result.reason = "播放错误"
+                        ((binding.webView.context) as MainActivity).client.callHandler("videoCallback",gson.toJson(result),null)
                     }
 
                     override fun onReceivedVideo(p0: String?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
                 }
-                var videoManager = AdViewVideoManager(webview.context  , "" ,adWithTypeEntity.spaceId , adViewVideoInterface , false)
+                videoManager= AdViewVideoManager(webview.context  , config.KYKey ,adWithTypeEntity.spaceId , adViewVideoInterface , false)
+                videoManager.setVideoOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
             }
         }
     }

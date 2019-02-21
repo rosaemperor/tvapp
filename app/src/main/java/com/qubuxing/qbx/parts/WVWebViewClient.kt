@@ -1,6 +1,7 @@
 package com.qubuxing.qbx.parts
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -196,6 +197,20 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var miniProgrameObj = WXMiniProgramObject()
                 var entity = gson.fromJson<WXSeneEntity>(data.toString(),WXSeneEntity::class.java)
+                when(entity.WXMiniProgramType){
+                    "release"->{
+                        miniProgrameObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE
+                    }
+                    "test"->{
+                        miniProgrameObj.miniprogramType = WXMiniProgramObject.MINIPROGRAM_TYPE_TEST
+                    }
+                    "preview" ->{
+                        miniProgrameObj.miniprogramType = WXMiniProgramObject.MINIPROGRAM_TYPE_PREVIEW
+                    }
+                    else ->{
+                        miniProgrameObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE
+                    }
+                }
                 miniProgrameObj.webpageUrl = entity.webpageUrl
                 miniProgrameObj.userName = entity.userName
                 miniProgrameObj.path = entity.path
@@ -210,10 +225,12 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     bitmap = Glide.with(webView.context).load(entity.imageurl).asBitmap().into(600,480).get()
                     bitmap = BitmapUtils.drawableBitmapOnWhiteBg(webView.context,bitmap!!)
 //                    msg.setThumbImage(bitmap)
+                    Log.d("TAG","${bitmap!!.byteCount}")
                     msg.setThumbImage(bitmap)
                     req.message = msg
                     req.scene = SendMessageToWX.Req.WXSceneSession
                     req.transaction = entity.webpageUrl
+
                     var api = QBXApplication.api
                     api.sendReq(req)
                 })
@@ -358,13 +375,24 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     var packageManager = webView.context.packageManager
                     var applicationInfo = packageManager.getApplicationInfo(webView.context.packageName,PackageManager.GET_META_DATA)
                     var tm = webView.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                    initMessage.deviceUUID = tm.imei
+                    initMessage.deviceUUID = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+                        tm.deviceId
+                    } else {
+                        tm.imei
+                    }
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
                     initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
-                    initMessage.longitude = deviceInfo!!.geoLon
-                    initMessage.latitude = deviceInfo!!.geoLat
-                    callback!!.callback(gson.toJson(initMessage))
+                    device = DeviceModule(webView.context)
+                    deviceInfo = gson.fromJson<DeviceInfo>(device!!.deviceInfo,DeviceInfo::class.java)
+                    deviceInfo?.let {
+                        initMessage.longitude = deviceInfo!!.geoLon
+                        initMessage.latitude = deviceInfo!!.geoLat
+                    }
+                    callback?.let {
+                        callback!!.callback(gson.toJson(initMessage))
+                    }
+
                 }else{
                     UUIDCallback = callback
                     cameraList.clear()
@@ -1589,6 +1617,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
 
 
+    @SuppressLint("MissingPermission")
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (grantResults.isEmpty()) return
         when(requestCode){
@@ -1603,7 +1632,11 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     var packageManager = webView.context.packageManager
                     var applicationInfo = packageManager.getApplicationInfo(webView.context.packageName,PackageManager.GET_META_DATA)
                     var tm = webView.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                    initMessage.deviceUUID = tm.imei
+                    initMessage.deviceUUID   = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+                        tm.deviceId
+                    } else {
+                        tm.imei
+                    }
                     var packageInfo = packageManager.getPackageInfo(webView.getContext(). getPackageName(),PackageManager.GET_META_DATA)
                     initMessage.traffic_channel= applicationInfo.metaData.getString("JPUSH_CHANNEL")
                     initMessage.versionString = packageInfo.versionName
