@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.support.v4.app.ActivityCompat
+import android.util.Log
 
 class GetGeoUtil(private val mActivity: Activity) {
     private var locationManager: LocationManager? = null
@@ -21,6 +22,7 @@ class GetGeoUtil(private val mActivity: Activity) {
         get() {
 
             try {
+                if (!checkGPSisOpen()) DialogUtils.showLocationRequestDialog(mActivity)
                 locationManager = mActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 val providers = locationManager!!.getProviders(true)
                 if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -48,5 +50,19 @@ class GetGeoUtil(private val mActivity: Activity) {
 
         }
 
+
+    fun checkGPSisOpen() : Boolean{
+        var locationManager = mActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        var GPSIsOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)
+        var networkOpen = locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)
+//        var passiveOpen = locationManager.isProviderEnabled(android.location.LocationManager.PASSIVE_PROVIDER)
+        if(!GPSIsOpen  && !networkOpen){
+            return false
+        }else{
+            return true
+        }
+
+    }
 
 }

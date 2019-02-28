@@ -165,7 +165,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedDebugTestClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedRealReleaseClasspath" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDefaultedReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkHuaweiRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkJifengRealReleaseClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkLenovoRealReleaseClasspath" />
@@ -193,7 +192,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/legacy_multidex_aapt_derived_proguard_rules" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/legacy_multidex_main_dex_list" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint_jar" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/merged_assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/merged_manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />

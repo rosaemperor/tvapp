@@ -35,6 +35,8 @@ import com.oppo.mobad.api.InitParams
 import com.oppo.mobad.api.MobAdManager
 import com.qubuxing.qbx.databinding.ActivityMainBinding
 import com.qubuxing.qbx.databinding.ActivityThirdBrowserBinding
+import com.qubuxing.qbx.http.beans.DeviceInfo
+import com.qubuxing.qbx.http.beans.DeviceModule
 import com.qubuxing.qbx.http.beans.Step
 import com.qubuxing.qbx.http.beans.StepGetEvent
 import com.qubuxing.qbx.parts.WVWebViewClient
@@ -118,36 +120,8 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 //        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            var videoManager : AdViewVideoManager? =null
-//            var adViewVideoInterface = object : AdViewVideoListener {
-//                override fun onVideoReady() {
-//                    videoManager?.let {
-//                        videoManager!!.playVideo(this@MainActivity)
-//                    }
-//
-//                }
-//
-//                override fun onVideoStartPlayed() {
-//                }
-//
-//                override fun onFailedReceivedVideo(p0: String?) {
-//                    Log.d("TAG","${p0}")
-//                }
-//
-//                override fun onPlayedError(p0: String?) {
-//                }
-//
-//                override fun onVideoClosed() {
-//                }
-//
-//                override fun onVideoFinished() {
-//                }
-//
-//                override fun onReceivedVideo(p0: String?) {
-//                }
-//            }
-//            videoManager = AdViewVideoManager(this@MainActivity , config.KYKey ,"POSID6em3hj6lajyt" , adViewVideoInterface , false)
-//            videoManager.setVideoOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+//            var geopp = GetGeoUtil(this@MainActivity).geo
+//            Log.d("TAG","${geopp!!.longitude}")
 //            return true
 //        }
         return super.onKeyDown(keyCode, event)
@@ -217,6 +191,8 @@ class MainActivity : BaseActivity() {
          if(null != intent && intent.hasExtra(config.WXthumbString)){
              when(intent.extras.getString(config.WXthumbString)){
                  "update"->{
+//                     client = WVWebViewClient(binding.webView)
+//                     binding.webView.webViewClient = client
                      binding.webView.reload()
                  }
                  else->{
@@ -344,6 +320,7 @@ class MainActivity : BaseActivity() {
         client.callHandler("duibaCallback","active",null)
         super.onRestart()
     }
+
 
 
 }

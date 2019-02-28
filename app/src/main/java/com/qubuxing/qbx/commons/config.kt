@@ -49,4 +49,11 @@ object config {
 
     var WXthumbData = "WXthumbData"
     var WXthumbString = "WXthumbString"
+
+
+
+
+
+
+    val GPS_REQUEST_CODE = 11199
 }

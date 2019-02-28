@@ -5,9 +5,11 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.Settings
 import android.provider.SyncStateContract.Helpers.update
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.FileProvider
@@ -19,6 +21,7 @@ import android.widget.*
 import com.qubuxing.qbx.R
 import com.qubuxing.qbx.UrlCallback
 import com.qubuxing.qbx.config
+import com.qubuxing.qbx.databinding.DialogLocationRequestBinding
 import com.qubuxing.qbx.http.DownHelper
 import com.qubuxing.qbx.http.RetrofitUtil
 import com.qubuxing.qbx.http.beans.UpdateResultEntity
@@ -38,13 +41,16 @@ import java.util.*
 class DialogUtils {
 
     companion object {
+        var hasDialogShowing = false
+//          var locationDialog : Dialog? = null
+        var updateDialog : Dialog? = null
         lateinit var mContext : Context
         var file : File? =null
         var m_appNameStr = "temp_qubuxing.apk"
         fun showUpdateDia( context: Context , updateResult : UpdateResultEntity) {
             mContext = context
             var rate : Long = 0
-            val updateDialog = Dialog(context,R.style.update_dialog)
+            updateDialog = Dialog(context,R.style.update_dialog)
             val layout = LayoutInflater.from(context).inflate(R.layout.dia_update_layout, null) as ConstraintLayout
             var description = layout.findViewById<TextView>(R.id.description)
             var updateView = layout.findViewById<TextView>(R.id.update_view)
@@ -142,10 +148,14 @@ class DialogUtils {
 
             }
 //
-            updateDialog.setContentView(layout)
-            updateDialog.setCancelable(false)
-            if ( !updateDialog.isShowing) {
-                updateDialog.show()
+            updateDialog!!.setContentView(layout)
+            updateDialog!!.setCancelable(false)
+            if ( !updateDialog!!.isShowing) {
+//                locationDialog?.let {
+//                    if (locationDialog!!.isShowing) locationDialog!!.dismiss()
+//                }
+                updateDialog!!.show()
+                hasDialogShowing = false
             }
 
 
@@ -200,15 +210,41 @@ class DialogUtils {
                 Log.d("TAG","$url")
                 click.goUrl(url)
                 urlDialog.dismiss()
+                hasDialogShowing = false
             }
-            if(!urlDialog.isShowing){
+            if(!urlDialog.isShowing &&!hasDialogShowing){
                 urlDialog.show()
+                hasDialogShowing = true
             }
         }
 
 
+        fun showLocationRequestDialog(context: Context){
+           var  locationDialog= Dialog(context,R.style.update_dialog)
+            val layout = LayoutInflater.from(context).inflate(R.layout.dialog_location_request, null) as ConstraintLayout
+            locationDialog!!.setContentView(layout)
+            locationDialog!!.setCancelable(false)
+            val cancelView = layout.findViewById<TextView>(R.id.cancel_view)
+            val clickView  = layout.findViewById<TextView>(R.id.click_view)
+            cancelView.setOnClickListener {
+                locationDialog!!.dismiss()
+                hasDialogShowing = false
+            }
+            clickView.setOnClickListener {
+                var locationIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                (context as Activity).startActivityForResult(locationIntent , config.GPS_REQUEST_CODE)
+            }
+
+            if(!locationDialog!!.isShowing && !hasDialogShowing){
+                locationDialog!!.show()
+                hasDialogShowing = true
+            }
+        }
 
     }
+
+
+
 
 
 }

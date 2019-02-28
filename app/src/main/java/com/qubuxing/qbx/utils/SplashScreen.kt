@@ -442,10 +442,10 @@ object SplashScreen {
 //                    }
 //                }
 //            }
-            "ad-kuaiyou"->{
+            "ad-adview"->{
                 var adviewBIDSpread = AdViewSpreadManager(activity,config.KYKey , containLayout)
                 adviewBIDSpread.setSpreadNotifyType(AdViewSpreadManager.NOTIFY_COUNTER_NUM)
-                adviewBIDSpread.setLogo(R.mipmap.logo)
+
                 adviewBIDSpread.setOnAdViewListener(object : AdViewSpreadListener{
                     override fun onAdFailedReceived(p0: String?) {
                         adShowed = true
@@ -460,6 +460,7 @@ object SplashScreen {
                     }
 
                     override fun onAdDisplayed() {
+                        adviewBIDSpread.setLogo(R.mipmap.bottom_logo)
                     }
 
                     override fun onAdSpreadPrepareClosed() {

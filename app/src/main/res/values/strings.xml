@@ -2,4 +2,6 @@
     <!--<string name="app_name">趣步行</string>-->
     <string name="double_click_to_quit">再按一次退出趣步行</string>
     <string name="click_to_skip">点击跳过</string>
+
+    <string name="error_location">GPS信号弱或未开启GPS服务，开启GPS服务</string>
 </resources>

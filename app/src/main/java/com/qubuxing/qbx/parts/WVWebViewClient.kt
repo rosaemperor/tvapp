@@ -525,283 +525,6 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                 JPushInterface.setAlias(webView.context,1,jsonObject.getString("alias"))
             }
         })
-        registerHandler("showAdOnSplash",object  : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var id  =""+ ( data as JSONObject).get("id")
-                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                var spreadListener = object : SpreadListener{
-                    override fun onAdFailed(p0: String?) {
-                        callback?.let {
-                            callback.callback("onAdFailed")
-                        }
-                    }
-
-                    override fun onAdDisplay(p0: String?) {
-                    }
-
-                    override fun onAdReceived(p0: String?) {
-                    }
-
-                    override fun onAdClick() {
-                        callback?.let {
-                            callback.callback("onAdClick")
-                        }
-                    }
-
-                    override fun onAdClose(p0: String?) {
-                        callback?.let {
-                            callback.callback("onAdClose")
-                            binding!!.splashLayout.removeAllViews()
-                            binding!!.splashLayout.invalidate()
-                        }
-                    }
-                }
-
-                SpreadManager.getInstance(webView.context as Activity).request(webView.context as Activity,"$id",binding!!.splashLayout,spreadListener)
-            }
-        })
-        registerHandler("showAdOnInsert",object  : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var id  =""+ ( data as JSONObject).get("id")
-                var insertListener = object : InsertListener {
-                    override fun onAdDismiss(p0: String?) {
-                        callback?.let {
-                            callback.callback("onAdClose")
-                        }
-                    }
-
-                    override fun onAdFailed(p0: String?) {
-                        callback?.let {
-                            callback.callback("onAdFailed")
-                        }
-                    }
-
-                    override fun onAdDisplay(p0: String?) {
-                    }
-
-                    override fun onAdReceived(p0: String?) {
-                        if (InsertManager.getInstance(webView.context).isReady) {
-                            InsertManager.getInstance(webView.context).showAd()
-                        }
-                    }
-
-                    override fun onAdClick(p0: String?) {
-                        callback?.let {
-                            callback.callback("onAdClick")
-                        }
-                    }
-
-                }
-                var count = 3
-//                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                InsertManager.getInstance(webView.context).requestAd(webView.context,"$id",insertListener,count)
-            }
-        })
-        registerHandler("showAdOnNative",object : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var nativeListener = object : NativeListener{
-                    override fun onAdReceived(p0: MutableList<Any?>?) {
-
-                    }
-
-                    override fun onAdFailed(p0: String?) {
-                    }
-
-                    override fun onAdDisplay() {
-                    }
-
-                    override fun onADClosed(p0: View?) {
-                    }
-
-                    override fun onAdClick() {
-                    }
-
-                    override fun OnAdViewReceived(p0: MutableList<out View>?) {
-                    }
-
-                }
-                var count = 2
-                NativeManager.getInstance(webView.context).requestAd(webView.context,"7539",count, nativeListener)
-            }
-        })
-        registerHandler("showAdOnBanner",object : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                binding!!.adLayout.removeAllViewsInLayout()
-                binding.adLayout.invalidate()
-                var id  =""+ ( data as JSONObject).get("id")
-                var bannerListener = object : BannerListener{
-                    override fun onAdFailed(p0: String?) {
-                        callHandler("bannerCallback","onAdFailed",null)
-                        callback?.let {
-                            callback.callback("onAdFailed")
-                        }
-                    }
-
-                    override fun onAdDisplay(p0: String?) {
-                        var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-                        closeView.setOnClickListener {
-                            binding.adLayout.removeAllViews()
-                        }
-                        binding.adLayout.addView(closeView)
-                        binding.adLayout.invalidate()
-                    }
-
-                    override fun onAdClick(p0: String?) {
-                        Log.d("banner","onAdClick")
-                        callHandler("bannerCallback","onAdClick",null)
-                        callback?.let {
-                            callback.callback("onAdClick")
-                        }
-                    }
-
-                    override fun onAdReady(p0: String?) {
-                        callHandler("bannerCallback","onAdReady",null)
-                        callback?.let {
-                            callback.callback("onAdReady")
-                        }
-                    }
-
-                    override fun onAdClose(p0: String?) {
-                        callHandler("bannerCallback","onAdClose",null)
-                        binding.adLayout.removeAllViews()
-                        binding.adLayout.invalidate()
-                        callback?.let {
-                            callback.callback("onAdClose")
-                        }
-                    }
-                }
-                BannerManager.getInstance(webView.context).requestAd(webView.context,"$id",bannerListener,binding!!.adLayout,3)
-
-            }
-        })
-
-        registerHandler("showAdVideo",object : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                var id  =""+ ( data as JSONObject).get("id")
-                var listener = object : VideoListener {
-                    override fun onAdClick() {
-
-                    }
-
-                    override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
-                        callback?.let {
-                            callback.callback("onRewardVerify")
-                        }
-                    }
-
-                    override fun onAdFailed(p0: String?) {
-                        callback?.let {
-                            callHandler("videoCallback","onVideoComplete",null)
-                            callback.callback("onAdFailed")
-                        }
-                    }
-
-                    override fun onAdShow() {
-                    }
-
-                    override fun onAdVideoBarClick() {
-
-                        callback?.let {
-                            callback.callback("onClick")
-                        }
-                    }
-
-                    override fun onVideoComplete() {
-                        callback?.let {
-                            callHandler("videoCallback","onVideoComplete",null)
-//                            callback.callback("onVideoComplete")
-                        }
-                    }
-
-                    override fun onAdClose() {
-                        callback?.let {
-                            callHandler("videoCallback","onAdClose",null)
-//                            callback.callback("onAdClose")
-                        }
-                    }
-
-                    override fun onRewardVideoCached() {
-                        callback?.let {
-                            callHandler("videoCallback","onRewardVideoCached",null)
-//                            callback.callback("onRewardVideoCached")
-                        }
-                                }
-                }
-                VideoManager.getInstance(webView.context).request(webView.context,"$id","RewardName","123456",1,1,listener)
-            }
-        })
-        registerHandler("showAdVideoWithParam",object : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-
-                var jsonObject = data as org.json.JSONObject
-                var videoEntity = gson.fromJson<VideoEntity>(jsonObject.toString(),VideoEntity::class.java)
-
-                var listener = object : VideoListener {
-                    override fun onAdClick() {
-
-                    }
-
-                    override fun onRewardVerify(p0: Boolean, p1: Int, p2: String?) {
-                        callback?.let {
-                            callback.callback("onRewardVerify")
-                        }
-                    }
-
-                    override fun onAdFailed(p0: String?) {
-                        callback?.let {
-                            callHandler("videoCallback","onAdFailed",null)
-                            callback.callback("onAdFailed")
-                        }
-                    }
-
-                    override fun onAdShow() {
-                    }
-
-                    override fun onAdVideoBarClick() {
-
-                        callback?.let {
-                            callback.callback("onClick")
-                        }
-                    }
-
-                    override fun onVideoComplete() {
-                        callback?.let {
-                            callHandler("videoCallback","onVideoComplete",null)
-//                            callback.callback("onVideoComplete")
-                        }
-                    }
-
-                    override fun onAdClose() {
-                        callback?.let {
-                            callHandler("videoCallback","onAdClose",null)
-//                            callback.callback("onAdClose")
-                        }
-                    }
-
-                    override fun onRewardVideoCached() {
-                        callback?.let {
-                            callHandler("videoCallback","onRewardVideoCached",null)
-//                            callback.callback("onRewardVideoCached")
-                        }
-                    }
-                }
-                VideoManager.getInstance(webView.context).request(webView.context,videoEntity.spaceId,videoEntity.RewardName,videoEntity.UserId,videoEntity.type.toInt(),videoEntity.amount.toInt(),listener)
-            }
-        })
-        registerHandler("getLocation",object : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-               //获取当前位置信息
-
-            }
-        })
-        registerHandler("showAdVideoNow",object : WVJBWebViewClient.WVJBHandler{
-            override fun request(data: Any?, callback: WVJBResponseCallback?) {
-                if(VideoManager.getInstance(webView.context).isReady){
-                    VideoManager.getInstance(webView.context).showAd()
-                }
-            }
-        })
         registerHandler("showAdVideoWithType",object : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
                 var jsonObject = data as org.json.JSONObject
@@ -821,13 +544,19 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         videoAd.showAd(0, 0)
                     }
                     "OPPOVideo"->{
-                        adHelper.showVideoWithType("OPPOVideo")
+                        adHelper.showVideoWithType(videoType)
                     }
 //                    "GDTVideo"->{
 //                        rewardVideoAd?.let {
 //                            rewardVideoAd!!.showAD()
 //                        }
 //                    }
+                    "KYVideo"->{
+                        adHelper.showVideoWithType(videoType)
+                    }
+                    "BAIDUVideo" ->{
+                        adHelper.showVideoWithType(videoType)
+                    }
                     else ->{
                     }
                 }
@@ -835,7 +564,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
 
             }
         })
-        registerHandler("removeBanner  ",object  : WVJBWebViewClient.WVJBHandler{
+        registerHandler("removeBanner",object  : WVJBWebViewClient.WVJBHandler{
             override fun request(data: Any?, callback: WVJBResponseCallback?) {
 //                Toast.makeText(webView.context, "removeBanner", Toast.LENGTH_LONG).show()
                 var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
@@ -885,7 +614,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                         showKDXF(adWithTypeEntity,callback)
                     }
                     "BAIDU" -> {
-                        showBDAD(adWithTypeEntity,callback)
+                        adHelper.showBDAD(adWithTypeEntity,callback)
                     }
                     "XIAOMI"->{
                         showXMAD(adWithTypeEntity,callback)
@@ -893,7 +622,9 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
                     "OPPO" ->{
                         adHelper.showADOPPO(adWithTypeEntity , callback)
                     }
-
+                    "KY"->{
+                        adHelper.showAdKY(adWithTypeEntity ,callback)
+                    }
                     else ->{
 
                     }
@@ -955,58 +686,7 @@ class WVWebViewClient constructor(webView: WebView,messageHandler: WVJBHandler? 
     }
 
 
-    fun showBDAD(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
-        when(adWithTypeEntity.ADType){
-            "banner"->{
-                var bdAdListener = object : AdViewListener{
-                    override fun onAdFailed(p0: String?) {
-                        bannerCallback.result = "onAdFailed"
-                        bannerCallback.supplierType = adWithTypeEntity.supplierType
-                        bannerCallback.reason = p0!!
-                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
-                    }
 
-                    override fun onAdShow(p0: JSONObject?) {
-                        bannerCallback.result = "onAdShow"
-                        bannerCallback.supplierType = adWithTypeEntity.supplierType
-                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)
-                    }
-
-                    override fun onAdClick(p0: JSONObject?) {
-                        bannerCallback.result = "onAdClick"
-                        bannerCallback.supplierType = adWithTypeEntity.supplierType
-                        callHandler("bannerCallback",gson.toJson(bannerCallback),null)                    }
-
-                    override fun onAdReady(p0: AdView?) {
-                    }
-
-                    override fun onAdSwitch() {
-                    }
-
-                    override fun onAdClose(p0: JSONObject?) {
-                        callHandler("bannerCallback","onAdClose",null)
-                    }
-                }
-                var bdAdView = AdView(webView.context,adWithTypeEntity.spaceId)
-                bdAdView.setListener(bdAdListener)
-                var binding = DataBindingUtil.findBinding<ActivityMainBinding>(webView)
-                binding!!.adLayout.removeAllViews()
-                binding!!.adLayout.invalidate()
-                binding!!.adLayout.addView(bdAdView)
-                var closeView = LayoutInflater.from(webView.context).inflate(R.layout.banner_close_view,null)
-                closeView.setOnClickListener {
-                    binding.adLayout.removeAllViews()
-                }
-                binding.adLayout.addView(closeView)
-            }
-            "video"->{
-
-            }
-            "insert"->{
-
-            }
-        }
-    }
     fun showKDXF(adWithTypeEntity: AdWithTypeEntity, callback: WVJBResponseCallback?){
         when(adWithTypeEntity.ADType){
             "banner" ->{
