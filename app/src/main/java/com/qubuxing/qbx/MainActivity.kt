@@ -119,11 +119,36 @@ class MainActivity : BaseActivity() {
     //按键处理
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-//        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            var geopp = GetGeoUtil(this@MainActivity).geo
-//            Log.d("TAG","${geopp!!.longitude}")
-//            return true
-//        }
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            var mRewardVideoAd : com.baidu.mobads.rewardvideo.RewardVideoAd?= null
+            var videoListener =object :com.baidu.mobads.rewardvideo.RewardVideoAd.RewardVideoAdListener{
+                override fun onAdFailed(p0: String?) {
+                    Log.d("TAG","onAdFailed")
+                }
+
+                override fun playCompletion() {
+                    Log.d("TAG","playCompletion")                }
+
+                override fun onAdShow() {
+                    Log.d("TAG","onAdShow")                }
+
+                override fun onAdClick() {
+                    Log.d("TAG","onAdClick")                }
+
+                override fun onAdClose(p0: Float) {
+                    Log.d("TAG","onAdClose")                }
+
+                override fun onVideoDownloadSuccess() {
+                    mRewardVideoAd!!.show()
+                }
+
+                override fun onVideoDownloadFailed() {
+                    Log.d("TAG","onVideoDownloadFailed")                 }
+
+            }
+             mRewardVideoAd = com.baidu.mobads.rewardvideo.RewardVideoAd(this@MainActivity,"6003754" ,videoListener)
+            return true
+        }
         return super.onKeyDown(keyCode, event)
     }
 
