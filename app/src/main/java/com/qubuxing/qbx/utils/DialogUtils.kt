@@ -197,7 +197,7 @@ class DialogUtils {
             val urlDialog = Dialog(context,R.style.update_dialog)
             val layout = LayoutInflater.from(context).inflate(R.layout.layout_set_url_dialog, null) as ConstraintLayout
             urlDialog.setContentView(layout)
-            urlDialog.setCancelable(true)
+            urlDialog.setCancelable(false)
             var goUrl = layout.findViewById<TextView>(R.id.update_view)
             var urlEdit = layout.findViewById<EditText>(R.id.edit_url)
 
