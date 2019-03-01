@@ -231,8 +231,10 @@ class DialogUtils {
                 hasDialogShowing = false
             }
             clickView.setOnClickListener {
+                locationDialog!!.dismiss()
                 var locationIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 (context as Activity).startActivityForResult(locationIntent , config.GPS_REQUEST_CODE)
+
             }
 
             if(!locationDialog!!.isShowing && !hasDialogShowing){
