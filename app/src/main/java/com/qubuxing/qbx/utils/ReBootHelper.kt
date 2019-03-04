@@ -50,6 +50,8 @@ object ReBootHelper {
              }
              if((currentTime - oldCurrentTime) == (bootOpenSecond - oldBootOpenSecond)) return false
              if(((currentTime - oldCurrentTime) - (bootOpenSecond - oldBootOpenSecond)) > 5){
+                 Log.d("TAG","currentTime:${currentTime} oldCurrentTime:${oldCurrentTime}")
+                 Log.d("TAG","bootOpenSecond:${bootOpenSecond} oldBootOpenSecond:${oldBootOpenSecond}")
                  Log.i("TAG","有系统重启")
                  return true
              }
@@ -65,11 +67,12 @@ object ReBootHelper {
         var todayDate = Calendar.getInstance().time
         var todayString = simpleDateFormat.format(todayDate)
         if(todayString == oldDateString){
-            Log.i("TAG","有判断到两次记步之间不是同一天")
+            Log.i("TAG","有是同一天")
             return true
         }else{
             SharePrefenceHelper.save("TodayDate", todayString)
         }
+        Log.d("TAG","不是同一天")
         return false
     }
 

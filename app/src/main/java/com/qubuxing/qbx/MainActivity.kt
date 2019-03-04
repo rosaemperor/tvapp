@@ -40,6 +40,7 @@ import com.qubuxing.qbx.http.beans.DeviceModule
 import com.qubuxing.qbx.http.beans.Step
 import com.qubuxing.qbx.http.beans.StepGetEvent
 import com.qubuxing.qbx.parts.WVWebViewClient
+import com.qubuxing.qbx.revicer.TimeChangerReceiver
 import com.qubuxing.qbx.service.StepCounterService
 import com.qubuxing.qbx.utils.*
 import com.qubuxing.qbx.utils.KFUtils.Preference

@@ -243,6 +243,7 @@ dependencies {
 //    implementation files('libs/jcore-android-1.2.6.jar')
     implementation files('libs/jverification-android-1.1.1.jar')
     implementation files('libs/MimoSdk.jar')
+    implementation files('libs/ydhxlib_3.1.4.jar')
     implementation files('libs/wire-runtime-2.2.0.jar')
     implementation files('libs/oppo_mobad_api_v271_2018_08_24_release.jar')
 

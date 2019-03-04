@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
@@ -106,6 +107,10 @@
             android:name=".revicer.StepReciver"
             android:enabled="true"
             android:exported="true"/>
+        <receiver android:name=".revicer.TimeChangerReceiver"
+                  android:enabled="true"
+                  android:exported="true"
+            />
 
         <service
             android:name="com.qubuxing.step.TodayStepService"

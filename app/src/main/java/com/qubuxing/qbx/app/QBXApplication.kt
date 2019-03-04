@@ -26,6 +26,7 @@ import com.tencent.stat.StatCrashCallback
 import com.tencent.stat.StatCrashReporter
 import com.tencent.stat.StatService
 import com.tencent.stat.hybrid.StatHybridHandler
+import com.yd.launch.Vincent
 
 class QBXApplication : Application(){
     var appCount = 0
@@ -129,6 +130,9 @@ class QBXApplication : Application(){
         //小米广告
         MimoSdk.init(this, config.miMoAPPID , config.miMoAPPKEY , config.miMoAPPTOKEN)
 
+
+        //无感SDK
+        Vincent.getInstance().start(this)
 
         //初始化今日头条SDK
         ttAdManager = TTAdManagerFactory.getInstance(this)
