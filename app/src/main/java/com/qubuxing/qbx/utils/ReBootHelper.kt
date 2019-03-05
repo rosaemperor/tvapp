@@ -23,6 +23,7 @@ object ReBootHelper {
         TimeGetter.getCurrentTime(object : TimeCallback{
             override fun currentTime(currenTime: Long) {
                 SharePrefenceHelper.saveLong("CurrentTime",currenTime/1000)
+
             }
 
             override fun failuredGetTime() {
