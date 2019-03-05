@@ -13,13 +13,22 @@ object ReBootHelper {
      * dataString:当前日期（精确到天）
      *
      */
+    var openCurrentTime :Long = 0
     var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
     fun saveBootOpenTime(){
         var oldDate = Calendar.getInstance().time
         var oldDateString = simpleDateFormat.format(oldDate)
         var oldRebootTime = SystemClock.elapsedRealtimeNanos() / 1000000000
         SharePrefenceHelper.save("DateOfNow",oldDateString)
-        SharePrefenceHelper.saveLong("CurrentTime",System.currentTimeMillis()/1000)
+        TimeGetter.getCurrentTime(object : TimeCallback{
+            override fun currentTime(currenTime: Long) {
+                SharePrefenceHelper.saveLong("CurrentTime",currenTime/1000)
+            }
+
+            override fun failuredGetTime() {
+                SharePrefenceHelper.saveLong("CurrentTime",System.currentTimeMillis()/1000)
+            }
+        })
         SharePrefenceHelper.saveLong("BootOpenTime" ,oldRebootTime)
     }
 
@@ -39,7 +48,8 @@ object ReBootHelper {
             Log.i("TAG","有接受到系统重启")
             return true
         }
-        var currentTime = System.currentTimeMillis()/1000
+        var currentTime = openCurrentTime
+
         var oldBootOpenSecond = SharePrefenceHelper.getLong("BootOpenTime" )
         var bootOpenSecond =  SystemClock.elapsedRealtimeNanos() / 1000000000
         var date = Calendar.getInstance().time

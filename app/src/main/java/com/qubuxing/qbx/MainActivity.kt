@@ -74,6 +74,7 @@ class MainActivity : BaseActivity() {
     override fun initBinding() {
         binding = DataBindingUtil.setContentView(this@MainActivity,R.layout.activity_main)
         SplashScreen.show(this@MainActivity)
+        (this.application as QBXApplication).isMyPid()
     }
 
     @SuppressLint("ResourceAsColor")

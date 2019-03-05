@@ -30,6 +30,9 @@ import com.qubuxing.qbx.http.beans.UpdateResultEntity
 import com.qubuxing.qbx.utils.DialogUtils
 import com.qubuxing.qbx.utils.KFUtils.Preference
 import com.qubuxing.qbx.utils.KFUtils.Utils
+import com.qubuxing.qbx.utils.ReBootHelper
+import com.qubuxing.qbx.utils.TimeCallback
+import com.qubuxing.qbx.utils.TimeGetter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,7 +51,15 @@ class MainViewModel : BaseViewModel(){
     }
 
     override fun initData() {
+        TimeGetter.getCurrentTime(object : TimeCallback{
+            override fun currentTime(currenTime: Long) {
+                ReBootHelper.openCurrentTime = currenTime/1000
+            }
 
+            override fun failuredGetTime() {
+                ReBootHelper.openCurrentTime =  System.currentTimeMillis()/1000
+            }
+        })
     }
 
     fun getUpdateMessage(context: Context){

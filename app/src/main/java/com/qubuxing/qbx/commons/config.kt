@@ -51,7 +51,7 @@ object config {
     var WXthumbString = "WXthumbString"
 
 
-
+    var openOnceInit = true
 
 
 

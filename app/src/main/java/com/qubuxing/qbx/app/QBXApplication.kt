@@ -1,7 +1,9 @@
 package com.qubuxing.qbx
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -30,11 +32,13 @@ import com.yd.launch.Vincent
 
 class QBXApplication : Application(){
     var appCount = 0
+    var pid = android.os.Process.myPid()
     companion object {
         lateinit var  instance : QBXApplication
         var buildCode = "20181015"
         lateinit var api : IWXAPI
         lateinit  var ttAdManager : TTAdManager
+        lateinit var manager : ActivityManager
     }
 
     val tag : String = "Application"
@@ -43,9 +47,10 @@ class QBXApplication : Application(){
      */
     override fun onCreate() {
         super.onCreate()
-        instance = this
+
         initUtils()
         initSdk()
+
     }
 
     private fun initSdk() {
@@ -131,8 +136,6 @@ class QBXApplication : Application(){
         MimoSdk.init(this, config.miMoAPPID , config.miMoAPPKEY , config.miMoAPPTOKEN)
 
 
-        //无感SDK
-        Vincent.getInstance().start(this)
 
         //初始化今日头条SDK
         ttAdManager = TTAdManagerFactory.getInstance(this)
@@ -166,4 +169,21 @@ class QBXApplication : Application(){
 
         AdSettings.setSupportHttps(true)
     }
+
+    fun isMyPid() : Boolean{
+        instance = this
+        //无感SDK
+        Vincent.getInstance().start(this)
+        Log.d("application","application onCreate()")
+        manager = this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for(i in  0..manager.runningAppProcesses.size){
+            var process = manager.runningAppProcesses[i]
+            if ("com.qubuxing.qbx" == process.processName) {
+                Log.d("application","${process.processName}")
+                return true
+            }
+        }
+        return false
+    }
+
 }
